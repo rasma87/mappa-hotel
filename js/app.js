@@ -261,7 +261,7 @@ function renderHotelInfo(lang) {
 // ── TRANSLATIONS ──────────────────────────────────────────────────────────────
 const T = {
     en: {
-        subtitle: "Naples \u00B7 Guest Guide",
+        subtitle: "Guest Guide",
         all: "All", monument: "Monuments", museum: "Museums",
         transport: "Transport", nature: "Viewpoints",
         catLabel: { monument:"Monument", museum:"Museum", transport:"Transport", nature:"Viewpoint" },
@@ -274,7 +274,7 @@ const T = {
         closed: "Closed"
     },
     it: {
-        subtitle: "Napoli \u00B7 Guest Guide",
+        subtitle: "Guest Guide",
         all: "Tutti", monument: "Monumenti", museum: "Musei",
         transport: "Trasporti", nature: "Panoramici",
         catLabel: { monument:"Monumento", museum:"Museo", transport:"Trasporti", nature:"Punto Panoramico" },
@@ -287,7 +287,7 @@ const T = {
         closed: "Chiuso"
     },
     fr: {
-        subtitle: "Naples \u00B7 Guide des H\u00F4tes",
+        subtitle: "Guide des H\u00F4tes",
         all: "Tout", monument: "Monuments", museum: "Mus\u00E9es",
         transport: "Transports", nature: "Points de vue",
         catLabel: { monument:"Monument", museum:"Mus\u00E9e", transport:"Transport", nature:"Point de vue" },
@@ -300,7 +300,7 @@ const T = {
         closed: "Ferm\u00E9"
     },
     es: {
-        subtitle: "N\u00E1poles \u00B7 Gu\u00EDa para Hu\u00E9spedes",
+        subtitle: "Gu\u00EDa para Hu\u00E9spedes",
         all: "Todo", monument: "Monumentos", museum: "Museos",
         transport: "Transportes", nature: "Miradores",
         catLabel: { monument:"Monumento", museum:"Museo", transport:"Transporte", nature:"Mirador" },
