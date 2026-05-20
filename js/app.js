@@ -1,0 +1,1321 @@
+
+
+// ── MOBILE TAB NAVIGATION ─────────────────────────────────────────────────────
+let currentMobileTab = 'map';
+let mobileCatFilter = 'all';
+
+function mobileTab(tab) {
+    if (window.innerWidth > 680) return;
+    currentMobileTab = tab;
+    const panel = document.getElementById('mobile-panel');
+
+    ['map','places','transit','hotel'].forEach(t => {
+        const el = document.getElementById('mob-tab-' + t);
+        if (el) el.classList.toggle('active', t === tab);
+    });
+
+    if (tab === 'map') {
+        panel.classList.remove('open');
+        return;
+    }
+
+    panel.classList.add('open');
+    const inner = document.getElementById('mobile-panel-inner');
+
+    if (tab === 'places') {
+        renderMobilePlaces();
+    } else if (tab === 'transit') {
+        renderTransit(currentLang);
+        inner.innerHTML = document.getElementById('panel-tab-transit').innerHTML;
+    } else if (tab === 'hotel') {
+        renderHotelInfo(currentLang);
+        inner.innerHTML = document.getElementById('panel-tab-hotel').innerHTML;
+    }
+}
+
+function renderMobilePlaces() {
+    const t = T[currentLang];
+    const inner = document.getElementById('mobile-panel-inner');
+    const cats    = ['all','monument','museum','transport','nature'];
+    const labels  = [t.all, t.monument, t.museum, t.transport, t.nature];
+
+    const filterBar = '<div style="display:flex;gap:6px;flex-wrap:wrap;padding:10px 0 12px;position:sticky;top:0;background:var(--cream);z-index:1;border-bottom:1px solid #E0D8CC;margin-bottom:4px">' +
+        cats.map((cat, i) => {
+            const active = mobileCatFilter === cat;
+            return '<button onclick="setMobileFilter(\'' + cat + '\')" style="touch-action:manipulation;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;border:1px solid ' + (active ? 'var(--gold)' : '#C8BFA8') + ';background:' + (active ? 'var(--gold)' : 'transparent') + ';color:' + (active ? 'white' : 'var(--text-muted)') + ';padding:5px 10px;border-radius:20px;cursor:pointer">' + labels[i] + '</button>';
+        }).join('') + '</div>';
+
+    const pois = mobileCatFilter === 'all' ? POI_DATA : POI_DATA.filter(p => p.cat === mobileCatFilter);
+    const list = pois.map(poi => {
+        const cat = CATEGORIE[poi.cat];
+        return '<div onclick="mobilePoi(\'' + poi.id + '\')" style="padding:13px 4px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer">' +
+            '<div style="width:10px;height:10px;border-radius:50%;background:' + cat.color + ';flex-shrink:0"></div>' +
+            '<div><div style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--dark)">' + (poi.nome[currentLang] || poi.nome.en) + '</div>' +
+            '<div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase">' + t.catLabel[poi.cat] + '</div></div></div>';
+    }).join('');
+
+    inner.innerHTML = filterBar + '<div>' + list + '</div>';
+}
+
+function setMobileFilter(cat) {
+    mobileCatFilter = cat;
+    renderMobilePlaces();
+}
+
+function mobilePoi(id) {
+    const poi = POI_DATA.find(p => p.id === id);
+    if (!poi) return;
+    mobileTab('map');
+    setTimeout(() => {
+        map.setView(poi.coor, 16, {animate:true});
+        openDetail(poi);
+    }, 350);
+}
+
+// ── MOBILE TAB LABEL TRANSLATIONS ────────────────────────────────────────────
+const MOBILE_TAB_LABELS = {
+    en: { map:"Map", places:"Places", transit:"Transport", hotel:"Hotel" },
+    it: { map:"Mappa", places:"Luoghi", transit:"Trasporti", hotel:"Hotel" },
+    fr: { map:"Carte", places:"Lieux", transit:"Transports", hotel:"H\u00F4tel" },
+    es: { map:"Mapa", places:"Lugares", transit:"Transportes", hotel:"Hotel" }
+};
+
+
+const HOTEL_STRINGS = {
+    en: {
+        reception_title: "Reception",
+        reception_desc: "Open 24 hours, 7 days a week",
+        reception_badge: "24/7",
+        door_title: "Front Door Code",
+        door_sub: "Enter the code on the keypad to open the door",
+        contacts_title: "Contacts",
+        phone_label: "Phone",
+        whatsapp_label: "WhatsApp",
+        address_title: "Address",
+        address_value: "Piazza Carit\u00E0 32, Naples",
+        wifi_title: "Wi-Fi",
+        wifi_desc: "Free Wi-Fi throughout the hotel. Ask at reception for the password.",
+        checkin_title: "Check-in / Check-out",
+        checkin_desc: "Check-in from 14:00 \u2022 Check-out by 11:00"
+    },
+    it: {
+        reception_title: "Reception",
+        reception_desc: "Aperta 24 ore su 24, 7 giorni su 7",
+        reception_badge: "24/7",
+        door_title: "Codice Portone",
+        door_sub: "Inserisci il codice sul tastierino per aprire il portone",
+        contacts_title: "Contatti",
+        phone_label: "Telefono",
+        whatsapp_label: "WhatsApp",
+        address_title: "Indirizzo",
+        address_value: "Piazza Carit\u00E0 32, Napoli",
+        wifi_title: "Wi-Fi",
+        wifi_desc: "Wi-Fi gratuito in tutto l\u2019hotel. Chiedere la password in reception.",
+        checkin_title: "Check-in / Check-out",
+        checkin_desc: "Check-in dalle 14:00 \u2022 Check-out entro le 11:00"
+    },
+    fr: {
+        reception_title: "R\u00E9ception",
+        reception_desc: "Ouverte 24h/24, 7j/7",
+        reception_badge: "24/7",
+        door_title: "Code de la Porte",
+        door_sub: "Entrez le code sur le clavier pour ouvrir la porte",
+        contacts_title: "Contacts",
+        phone_label: "T\u00E9l\u00E9phone",
+        whatsapp_label: "WhatsApp",
+        address_title: "Adresse",
+        address_value: "Piazza Carit\u00E0 32, Naples",
+        wifi_title: "Wi-Fi",
+        wifi_desc: "Wi-Fi gratuit dans tout l\u2019h\u00F4tel. Demandez le mot de passe \u00E0 la r\u00E9ception.",
+        checkin_title: "Check-in / Check-out",
+        checkin_desc: "Check-in \u00E0 partir de 14h00 \u2022 Check-out avant 11h00"
+    },
+    es: {
+        reception_title: "Recepci\u00F3n",
+        reception_desc: "Abierta las 24 horas, 7 d\u00EDas a la semana",
+        reception_badge: "24/7",
+        door_title: "C\u00F3digo del Port\u00F3n",
+        door_sub: "Introduce el c\u00F3digo en el teclado para abrir la puerta",
+        contacts_title: "Contactos",
+        phone_label: "Tel\u00E9fono",
+        whatsapp_label: "WhatsApp",
+        address_title: "Direcci\u00F3n",
+        address_value: "Piazza Carit\u00E0 32, N\u00E1poles",
+        wifi_title: "Wi-Fi",
+        wifi_desc: "Wi-Fi gratuito en todo el hotel. Pide la contrase\u00F1a en recepci\u00F3n.",
+        checkin_title: "Check-in / Check-out",
+        checkin_desc: "Check-in desde las 14:00 \u2022 Check-out antes de las 11:00"
+    }
+};
+
+function renderHotelInfo(lang) {
+    const s = HOTEL_STRINGS[lang] || HOTEL_STRINGS.en;
+    const el = document.getElementById("panel-tab-hotel");
+    el.innerHTML = `
+        <div class="hotel-info-section">
+            <div class="hotel-info-title">${s.reception_title}</div>
+            <div class="hotel-info-card">
+                <div class="hotel-info-row">
+                    <div class="hotel-info-icon">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="2" y="18" width="28" height="11" rx="2" fill="#C9A84C" opacity="0.15" stroke="#C9A84C" stroke-width="1.5"/>
+                          <rect x="5" y="20.5" width="22" height="6" rx="1" fill="#C9A84C" opacity="0.25"/>
+                          <circle cx="16" cy="13" r="5" stroke="#C9A84C" stroke-width="1.5" fill="#C9A84C" opacity="0.1"/>
+                          <path d="M11 18c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round"/>
+                          <path d="M9 29v-2M23 29v-2" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round"/>
+                          <path d="M8 23h3M21 23h3" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+                        </svg>
+                    </div>
+                    <div class="hotel-info-text">
+                        <h4>${s.reception_title}</h4>
+                        <p>${s.reception_desc}</p>
+                    </div>
+                    <span class="hotel-badge">\u2713 ${s.reception_badge}</span>
+                </div>
+            </div>
+            <div class="hotel-info-card">
+                <div class="hotel-info-row">
+                    <div class="hotel-info-icon">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="16" cy="16" r="12" stroke="#C9A84C" stroke-width="1.5" fill="#C9A84C" opacity="0.08"/>
+                          <path d="M16 9v7l4 2.5" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="hotel-info-text">
+                        <h4>${s.checkin_title}</h4>
+                        <p>${s.checkin_desc}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hotel-info-section">
+            <div class="hotel-info-title">${s.door_title}</div>
+            <div class="hotel-code-box">
+                <div class="hotel-code-label">${s.door_title}</div>
+                <div class="hotel-code-value">17+ok</div>
+                <div class="hotel-code-sub">${s.door_sub}</div>
+            </div>
+        </div>
+
+        <div class="hotel-info-section">
+            <div class="hotel-info-title">${s.contacts_title}</div>
+            <a class="hotel-contact-btn" href="tel:+390811847088">
+                <div class="hotel-contact-icon phone">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="#1565C0"/>
+                    </svg>
+                </div>
+                <div class="hotel-contact-text">
+                    <span>${s.phone_label}</span>
+                    <strong>+39 081-18470880</strong>
+                </div>
+                <span class="hotel-contact-arrow">&#x203A;</span>
+            </a>
+            <a class="hotel-contact-btn" href="https://wa.me/393939124682" target="_blank">
+                <div class="hotel-contact-icon whatsapp">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="#2E7D32"/>
+                      <path d="M11.99 2C6.476 2 2 6.477 2 11.99c0 1.79.468 3.47 1.28 4.934L2 22l5.233-1.237A9.953 9.953 0 0011.99 22C17.524 22 22 17.523 22 11.99 22 6.476 17.524 2 11.99 2zm0 18.18a8.177 8.177 0 01-4.17-1.143l-.3-.178-3.1.732.78-2.98-.195-.307A8.178 8.178 0 013.82 11.99c0-4.508 3.663-8.17 8.17-8.17 4.508 0 8.17 3.662 8.17 8.17 0 4.507-3.662 8.17-8.17 8.17z" fill="#2E7D32"/>
+                    </svg>
+                </div>
+                <div class="hotel-contact-text">
+                    <span>${s.whatsapp_label}</span>
+                    <strong>+39 393-9124682</strong>
+                </div>
+                <span class="hotel-contact-arrow">&#x203A;</span>
+            </a>
+            <div class="hotel-info-card" style="margin-top:4px">
+                <div class="hotel-info-row">
+                    <div class="hotel-info-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#C9A84C"/>
+                        </svg>
+                    </div>
+                    <div class="hotel-info-text">
+                        <h4>${s.address_title}</h4>
+                        <p>${s.address_value}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hotel-info-section">
+            <div class="hotel-info-title">${s.wifi_title}</div>
+            <div class="hotel-info-card">
+                <div class="hotel-info-row">
+                    <div class="hotel-info-icon">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M1 9l2 2c5.52-5.52 14.48-5.52 20 0l2-2C18.93 2.93 5.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" fill="#C9A84C"/>
+                        </svg>
+                    </div>
+                    <div class="hotel-info-text">
+                        <h4>${s.wifi_title}</h4>
+                        <p>${s.wifi_desc}</p>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+}
+
+// ── TRANSLATIONS ──────────────────────────────────────────────────────────────
+const T = {
+    en: {
+        subtitle: "Naples \u00B7 Guest Guide",
+        all: "All", monument: "Monuments", museum: "Museums",
+        transport: "Transport", nature: "Viewpoints",
+        catLabel: { monument:"Monument", museum:"Museum", transport:"Transport", nature:"Viewpoint" },
+        fromHotel: "From the hotel",
+        hours: "Hours", tickets: "Tickets",
+        ticketTitle: "\u{1F550} Opening Hours & Tickets",
+        directions: "Directions",
+        youAreHere: "You are here \u2736",
+        free: "Free",
+        closed: "Closed"
+    },
+    it: {
+        subtitle: "Napoli \u00B7 Guest Guide",
+        all: "Tutti", monument: "Monumenti", museum: "Musei",
+        transport: "Trasporti", nature: "Panoramici",
+        catLabel: { monument:"Monumento", museum:"Museo", transport:"Trasporti", nature:"Punto Panoramico" },
+        fromHotel: "Dall'hotel",
+        hours: "Orari", tickets: "Biglietti",
+        ticketTitle: "\u{1F550} Orari & Biglietti",
+        directions: "Indicazioni",
+        youAreHere: "Siete qui \u2736",
+        free: "Gratuito",
+        closed: "Chiuso"
+    },
+    fr: {
+        subtitle: "Naples \u00B7 Guide des H\u00F4tes",
+        all: "Tout", monument: "Monuments", museum: "Mus\u00E9es",
+        transport: "Transports", nature: "Points de vue",
+        catLabel: { monument:"Monument", museum:"Mus\u00E9e", transport:"Transport", nature:"Point de vue" },
+        fromHotel: "De l'h\u00F4tel",
+        hours: "Horaires", tickets: "Billets",
+        ticketTitle: "\u{1F550} Horaires & Billets",
+        directions: "Itin\u00E9raire",
+        youAreHere: "Vous \u00EAtes ici \u2736",
+        free: "Gratuit",
+        closed: "Ferm\u00E9"
+    },
+    es: {
+        subtitle: "N\u00E1poles \u00B7 Gu\u00EDa para Hu\u00E9spedes",
+        all: "Todo", monument: "Monumentos", museum: "Museos",
+        transport: "Transportes", nature: "Miradores",
+        catLabel: { monument:"Monumento", museum:"Museo", transport:"Transporte", nature:"Mirador" },
+        fromHotel: "Desde el hotel",
+        hours: "Horario", tickets: "Entradas",
+        ticketTitle: "\u{1F550} Horario & Entradas",
+        directions: "C\u00F3mo llegar",
+        youAreHere: "Est\u00E1is aqu\u00ED \u2736",
+        free: "Gratis",
+        closed: "Cerrado"
+    }
+};
+
+// ── POI DATA (multilingual) ───────────────────────────────────────────────────
+const POI_DATA = [
+    {
+        id: "plebiscito", cat: "monument", coor: [40.8359, 14.2488],
+        nome: { en:"Piazza del Plebiscito", it:"Piazza del Plebiscito", fr:"Piazza del Plebiscito", es:"Piazza del Plebiscito" },
+        desc: {
+            en: "The symbolic heart of Naples and its largest square, dominated by the grand Basilica of San Francesco di Paola and the Royal Palace. Unmissable in the evening when it glows golden.",
+            it: "Il cuore simbolico di Napoli: la piazza pi\u00F9 grande della citt\u00E0, dominata dalla grandiosa Basilica di San Francesco di Paola e dal Palazzo Reale. Imperdibile di sera, quando si illumina d\u2019oro.",
+            fr: "Le c\u0153ur symbolique de Naples, domin\u00E9 par la grandiose Basilique de San Francesco di Paola et le Palais Royal. Incontournable le soir, lorsqu\u2019elle s\u2019illumine dor\u00E9e.",
+            es: "El coraz\u00F3n simb\u00F3lico de N\u00E1poles, dominado por la imponente Bas\u00EDlica de San Francisco de Paula y el Palacio Real. Imprescindible por la noche, cuando se ilumina de dorado."
+        },
+        distanza: { en:"~15 min walk", it:"~15 min a piedi", fr:"~15 min \u00E0 pied", es:"~15 min a pie" },
+        sempreAperto: true
+    },
+    {
+        id: "castelovo", cat: "monument", coor: [40.8282, 14.2475],
+        nome: { en:"Castel dell'Ovo", it:"Castel dell'Ovo", fr:"Castel dell'Ovo", es:"Castel dell'Ovo" },
+        desc: {
+            en: "Naples\u2019 oldest castle, perched on a small island by the sea. Legend has it that the poet Virgil hid a magic egg in its foundations. Breathtaking panoramic views over the gulf.",
+            it: "Il castello pi\u00F9 antico di Napoli si erge su un isolotto sul mare. Secondo la leggenda, il poeta Virgilio nascose un uovo magico nelle sue fondamenta. Vista panoramica mozzafiato sul golfo.",
+            fr: "Le plus ancien ch\u00E2teau de Naples, perch\u00E9 sur un \u00EElot face \u00E0 la mer. La l\u00E9gende dit que Virgile y cacha un \u0153uf magique dans ses fondations. Vue panoramique \u00E9poustouflante sur le golfe.",
+            es: "El castillo m\u00E1s antiguo de N\u00E1poles, encaramado en un islote frente al mar. Seg\u00FAn la leyenda, el poeta Virgilio ocult\u00F3 un huevo m\u00E1gico en sus cimientos. Vistas panor\u00E1micas al golfo."
+        },
+        distanza: { en:"~25 min walk", it:"~25 min a piedi", fr:"~25 min \u00E0 pied", es:"~25 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Mon \u2013 Sat", it:"Lun \u2013 Sab", fr:"Lun \u2013 Sam", es:"Lun \u2013 S\u00E1b" }, ore:"9:00 \u2013 19:30" },
+                { giorni:{ en:"Sunday", it:"Domenica", fr:"Dimanche", es:"Domingo" }, ore:"9:00 \u2013 14:00" }
+            ],
+            biglietti: [{ tipo:{ en:"Admission", it:"Ingresso", fr:"Entr\u00E9e", es:"Entrada" }, prezzo:"Free" }],
+            note: { en:"Last entry 30 min before closing", it:"Ultimo ingresso 30 min prima della chiusura", fr:"Derni\u00E8re entr\u00E9e 30 min avant la fermeture", es:"\u00DAltima entrada 30 min antes del cierre" }
+        }
+    },
+    {
+        id: "angioino", cat: "monument", coor: [40.8384, 14.2525],
+        nome: { en:"Maschio Angioino", it:"Maschio Angioino", fr:"Maschio Angioino", es:"Maschio Angioino" },
+        desc: {
+            en: "An imposing medieval fortress built in 1279, with five mighty cylindrical towers. Houses the Civic Museum with frescoes and sculptures from the Aragonese period.",
+            it: "Imponente fortezza medievale costruita nel 1279, con cinque possenti torri cilindriche. Ospita il Museo Civico con affreschi e sculture di et\u00E0 aragonese.",
+            fr: "Une imposante forteresse m\u00E9di\u00E9vale construite en 1279, avec cinq puissantes tours cylindriques. Abrite le Mus\u00E9e Civique avec fresques et sculptures de l\u2019\u00E9poque aragonaise.",
+            es: "Una imponente fortaleza medieval construida en 1279, con cinco poderosas torres cilind\u00E9ricas. Alberga el Museo C\u00EDvico con frescos y esculturas de \u00E9poca aragonesa."
+        },
+        distanza: { en:"~20 min walk", it:"~20 min a piedi", fr:"~20 min \u00E0 pied", es:"~20 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Mon \u2013 Sat", it:"Lun \u2013 Sab", fr:"Lun \u2013 Sam", es:"Lun \u2013 S\u00E1b" }, ore:"9:00 \u2013 18:00" },
+                { giorni:{ en:"Sunday", it:"Domenica", fr:"Dimanche", es:"Domingo" }, ore:{ en:"Closed", it:"Chiuso", fr:"Ferm\u00E9", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC6" },
+                { tipo:{ en:"Reduced", it:"Ridotto", fr:"R\u00E9duit", es:"Reducido" }, prezzo:"\u20AC3" }
+            ],
+            note: { en:"Civic Museum included in the ticket", it:"Museo Civico incluso nel biglietto", fr:"Mus\u00E9e Civique inclus dans le billet", es:"Museo C\u00EDvico incluido en la entrada" }
+        }
+    },
+    {
+        id: "galleria", cat: "monument", coor: [40.8386, 14.2494],
+        nome: { en:"Galleria Umberto I", it:"Galleria Umberto I", fr:"Galerie Umberto I", es:"Galer\u00EDa Umberto I" },
+        desc: {
+            en: "A cathedral of iron and glass built in 1890. The most elegant covered gallery in Southern Italy, with its cross-shaped dome inspired by the Galleria Vittorio Emanuele II in Milan.",
+            it: "Una cattedrale di ferro e vetro realizzata nel 1890. La galleria coperta pi\u00F9 elegante del Sud Italia, con la sua cupola a crociera ispirata alla Galleria Vittorio Emanuele II di Milano.",
+            fr: "Une cath\u00E9drale de fer et de verre construite en 1890. La galerie couverte la plus \u00E9l\u00E9gante du Sud de l\u2019Italie, avec sa coupole en croix inspir\u00E9e de la Galleria Vittorio Emanuele II \u00E0 Milan.",
+            es: "Una catedral de hierro y vidrio construida en 1890. La galer\u00EDa cubierta m\u00E1s elegante del sur de Italia, con su c\u00FApula cruciforme inspirada en la Galleria Vittorio Emanuele II de Mil\u00E1n."
+        },
+        distanza: { en:"~18 min walk", it:"~18 min a piedi", fr:"~18 min \u00E0 pied", es:"~18 min a pie" },
+        sempreAperto: true
+    },
+    {
+        id: "museo", cat: "museum", coor: [40.8534, 14.2505],
+        nome: { en:"Museo Archeologico Nazionale", it:"Museo Archeologico Nazionale", fr:"Mus\u00E9e Arch\u00E9ologique National", es:"Museo Arqueol\u00F3gico Nacional" },
+        desc: {
+            en: "One of the world\u2019s most important museums for Greco-Roman antiquity. Houses treasures from Pompeii and Herculaneum: extraordinary mosaics, frescoes, the Farnese Collection and the famous Secret Cabinet.",
+            it: "Uno dei pi\u00F9 importanti musei al mondo per l\u2019antichit\u00E0 greco-romana. Conserva i tesori di Pompei ed Ercolano: mosaici straordinari, affreschi, la Collezione Farnese e il celebre Gabinetto Segreto.",
+            fr: "L\u2019un des mus\u00E9es les plus importants au monde pour l\u2019Antiquit\u00E9 gr\u00E9co-romaine. Il abrite les tr\u00E9sors de Pomp\u00E9i et d\u2019Herculanum : mosa\u00EFques, fresques, la Collection Farn\u00E8se et le Cabinet Secret.",
+            es: "Uno de los museos m\u00E1s importantes del mundo para la antig\u00FCedad grecorromana. Alberga los tesoros de Pompeya y Herculano: mosaicos extraordinarios, frescos, la Colecci\u00F3n Farnesio y el famoso Gabinete Secreto."
+        },
+        distanza: { en:"~10 min walk", it:"~10 min a piedi", fr:"~10 min \u00E0 pied", es:"~10 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Wed \u2013 Mon", it:"Mer \u2013 Lun", fr:"Mer \u2013 Lun", es:"Mi\u00E9 \u2013 Lun" }, ore:"9:00 \u2013 19:30" },
+                { giorni:{ en:"Tuesday", it:"Marted\u00EC", fr:"Mardi", es:"Martes" }, ore:{ en:"Closed", it:"Chiuso", fr:"Ferm\u00E9", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC15" },
+                { tipo:{ en:"Reduced", it:"Ridotto", fr:"R\u00E9duit", es:"Reducido" }, prezzo:"\u20AC2" },
+                { tipo:{ en:"Under 18 EU", it:"Under 18 UE", fr:"Moins de 18 ans UE", es:"Menores 18 UE" }, prezzo:"Free" }
+            ],
+            note: { en:"Free admission on the first Sunday of each month", it:"Gratuito la prima domenica del mese", fr:"Gratuit le premier dimanche du mois", es:"Entrada gratuita el primer domingo de cada mes" }
+        }
+    },
+    {
+        id: "sansevero", cat: "museum", coor: [40.8494, 14.2549],
+        img: "https://back.museosansevero.it/uploads/statua-cristo-velato-napoli.jpg",
+        nome: { en:"Cappella Sansevero & Cristo Velato", it:"Cappella Sansevero e Cristo Velato", fr:"Chapelle Sansevero & Christ Voil\u00E9", es:"Capilla Sansevero & Cristo Velado" },
+        desc: {
+            en: "An absolute masterpiece of 18th-century Neapolitan art. Giuseppe Sanmartino\u2019s Veiled Christ is considered one of the most extraordinary marble sculptures ever created \u2014 the veil looks like real fabric.",
+            it: "Un capolavoro assoluto dell\u2019arte napoletana del \u201800. Il Cristo Velato di Giuseppe Sanmartino \u00E8 considerato uno dei marmi pi\u00F9 straordinari mai scolpiti: il velo sembra vero tessuto.",
+            fr: "Un chef-d\u2019\u0153uvre absolu de l\u2019art napolitain du XVIIIe si\u00E8cle. Le Christ Voil\u00E9 de Sanmartino est consid\u00E9r\u00E9 comme l\u2019une des sculptures en marbre les plus extraordinaires jamais cr\u00E9\u00E9es.",
+            es: "Una obra maestra absoluta del arte napolitano del siglo XVIII. El Cristo Velado de Sanmartino es considerado una de las esculturas en m\u00E1rmol m\u00E1s extraordinarias jam\u00E1s creadas \u2014 el velo parece tejido real."
+        },
+        distanza: { en:"~12 min walk", it:"~12 min a piedi", fr:"~12 min \u00E0 pied", es:"~12 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Wed \u2013 Mon", it:"Mer \u2013 Lun", fr:"Mer \u2013 Lun", es:"Mi\u00E9 \u2013 Lun" }, ore:"9:00 \u2013 19:00" },
+                { giorni:{ en:"Tuesday", it:"Marted\u00EC", fr:"Mardi", es:"Martes" }, ore:{ en:"Closed", it:"Chiuso", fr:"Ferm\u00E9", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC8" },
+                { tipo:{ en:"Reduced (ages 6\u201325)", it:"Ridotto (6\u201325 anni)", fr:"R\u00E9duit (6\u201325 ans)", es:"Reducido (6\u201325 a\u00F1os)" }, prezzo:"\u20AC5" }
+            ],
+            note: { en:"Online booking strongly recommended \u2014 often sold out", it:"Prenotazione online consigliata \u2014 spesso esaurito", fr:"R\u00E9servation en ligne fortement conseill\u00E9e \u2014 souvent complet", es:"Reserva online muy recomendada \u2014 a menudo agotado" }
+        }
+    },
+    {
+        id: "spaccanapoli", cat: "monument", coor: [40.8493, 14.2563],
+        img: "https://www.campania.info/wp-content/uploads/sites/111/spaccanapoli-hd.jpg",
+        nome: { en:"Spaccanapoli", it:"Spaccanapoli", fr:"Spaccanapoli", es:"Spaccanapoli" },
+        desc: {
+            en: "The street that literally splits Naples in two, as straight as a cardo of ancient Neapolis. Baroque churches, palaces, nativity-scene workshops and street food stalls combine in an authentic Neapolitan kaleidoscope.",
+            it: "La via che spacca letteralmente Napoli in due, rettilinea come un cardo dell\u2019antica Neapolis. Chiese, palazzi barocchi, presepi e friggitorie in un caleidoscopio di vita napoletana autentica.",
+            fr: "La rue qui coupe litt\u00E9ralement Naples en deux, aussi droite qu\u2019un cardo de l\u2019ancienne Neapolis. \u00C9glises baroques, palais, boutiques de cr\u00E8ches et friteries s\u2019y c\u00F4toient.",
+            es: "La calle que literalmente parte N\u00E1poles en dos, tan recta como un cardo de la antigua Neapolis. Iglesias barrocas, palacios, talleres de belenes y puestos de comida conforman un caleidoscopio napolitano."
+        },
+        distanza: { en:"~10 min walk", it:"~10 min a piedi", fr:"~10 min \u00E0 pied", es:"~10 min a pie" },
+        sempreAperto: true
+    },
+    {
+        id: "sangregorio", cat: "monument", coor: [40.8502, 14.2578],
+        img: "https://www.laneapolissotterrata.it/Images/san-gregorio-armeno-.jpg",
+        nome: { en:"San Gregorio Armeno", it:"San Gregorio Armeno", fr:"San Gregorio Armeno", es:"San Gregorio Armeno" },
+        desc: {
+            en: "The famous street of shepherds and the Neapolitan nativity scene, busy all year round. Artisan workshops where sacred figures sit alongside satirical reproductions of contemporary celebrities.",
+            it: "La celebre via dei pastori e del presepe napoletano, attiva tutto l\u2019anno. Botteghe artigiane dove figure sacre convivono con riproduzioni di personaggi contemporanei.",
+            fr: "La c\u00E9l\u00E8bre rue des santons et de la cr\u00E8che napolitaine, anim\u00E9e toute l\u2019ann\u00E9e. Des ateliers artisanaux o\u00F9 les figures sacr\u00E9es voisinent avec des repr\u00E9sentations satiriques de c\u00E9l\u00E9brit\u00E9s.",
+            es: "La famosa calle de los pastores y el bel\u00E9n napolitano, animada todo el a\u00F1o. Talleres artesanales donde las figuras sagradas conviven con reproducciones sat\u00EDricas de famosos contempor\u00E1neos."
+        },
+        distanza: { en:"~13 min walk", it:"~13 min a piedi", fr:"~13 min \u00E0 pied", es:"~13 min a pie" },
+        sempreAperto: true
+    },
+    {
+        id: "sotterranea", cat: "monument", coor: [40.8511, 14.2568],
+        img: "https://www.finestresullarte.info/rivista/immagini/2022/fn/catacombe-di-san-gennaro.jpg",
+        nome: { en:"Napoli Sotterranea", it:"Napoli Sotterranea", fr:"Naples Souterraine", es:"N\u00E1poles Subterr\u00E1nea" },
+        desc: {
+            en: "A labyrinth of galleries, cisterns and tunnels carved into volcanic tuff, some dating back to the 4th century BC. A city beneath the city, also used as an air-raid shelter during World War II.",
+            it: "Un labirinto di gallerie, cisterne e cunicoli scavati nel tufo vulcanico, alcuni risalenti al IV secolo a.C. Una citt\u00E0 sotto la citt\u00E0, usata come rifugio antiaereo nella Seconda Guerra Mondiale.",
+            fr: "Un labyrinthe de galeries, citernes et tunnels creus\u00E9s dans le tuf volcanique, certains datant du IVe si\u00E8cle av. J.-C. Une ville sous la ville, utilis\u00E9e comme abri anti-a\u00E9rien pendant la Seconde Guerre mondiale.",
+            es: "Un laberinto de galer\u00EDas, cisternas y t\u00FAneles excavados en la toba volc\u00E1nica, algunos del siglo IV a.C. Una ciudad bajo la ciudad, usada como refugio anticreo durante la Segunda Guerra Mundial."
+        },
+        distanza: { en:"~12 min walk", it:"~12 min a piedi", fr:"~12 min \u00E0 pied", es:"~12 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"Every day", it:"Tutti i giorni", fr:"Tous les jours", es:"Todos los d\u00EDas" }, ore:"10:00 \u2013 18:00" }],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC10" },
+                { tipo:{ en:"Reduced (under 10)", it:"Ridotto (under 10)", fr:"R\u00E9duit (moins de 10 ans)", es:"Reducido (menores 10)" }, prezzo:"\u20AC8" }
+            ],
+            note: { en:"Guided tours every hour, ~80 min. Bring a jacket \u2014 constant 12\u00B0C", it:"Tour guidati ogni ora, ~80 min. Portare giacca \u2014 temperatura costante 12\u00B0C", fr:"Visites guid\u00E9es toutes les heures, ~80 min. Pr\u00E9voir une veste \u2014 temp\u00E9rature constante 12\u00B0C", es:"Visitas guiadas cada hora, ~80 min. Llevar chaqueta \u2014 temperatura constante 12\u00B0C" }
+        }
+    },
+    {
+        id: "duomo", cat: "monument", coor: [40.852770097801915, 14.259266853001233],
+        nome: { en:"Naples Cathedral", it:"Duomo di Napoli", fr:"Cath\u00E9drale de Naples", es:"Catedral de N\u00E1poles" },
+        desc: {
+            en: "The cathedral dedicated to San Gennaro, patron saint of Naples. Three times a year the miracle of the liquefaction of the saint\u2019s blood takes place here. The Treasury Chapel is a baroque masterpiece.",
+            it: "La cattedrale dedicata a San Gennaro, patrono della citt\u00E0. Tre volte l\u2019anno si compie il miracolo della liquefazione del sangue del santo. La cappella del Tesoro \u00E8 un capolavoro barocco.",
+            fr: "La cath\u00E9drale d\u00E9di\u00E9e \u00E0 San Gennaro, saint patron de Naples. Trois fois par an s\u2019y accomplit le miracle de la liqu\u00E9faction du sang du saint. La chapelle du Tr\u00E9sor est un chef-d\u2019\u0153uvre baroque.",
+            es: "La catedral dedicada a San Jenaro, patr\u00F3n de N\u00E1poles. Tres veces al a\u00F1o se produce el milagro de la licuefacci\u00F3n de la sangre del santo. La capilla del Tesoro es una obra maestra barroca."
+        },
+        distanza: { en:"~15 min walk", it:"~15 min a piedi", fr:"~15 min \u00E0 pied", es:"~15 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Mon \u2013 Sat", it:"Lun \u2013 Sab", fr:"Lun \u2013 Sam", es:"Lun \u2013 S\u00E1b" }, ore:"8:30 \u2013 13:00 / 14:30 \u2013 19:30" },
+                { giorni:{ en:"Sunday", it:"Domenica", fr:"Dimanche", es:"Domingo" }, ore:"8:00 \u2013 13:30" }
+            ],
+            biglietti: [
+                { tipo:{ en:"Cathedral", it:"Cattedrale", fr:"Cath\u00E9drale", es:"Catedral" }, prezzo:"Free" },
+                { tipo:{ en:"Diocesan Museum", it:"Museo Diocesano", fr:"Mus\u00E9e Dioc\u00E9sain", es:"Museo Diocesano" }, prezzo:"\u20AC3" }
+            ],
+            note: { en:"Tourist access limited during religious services", it:"Durante le funzioni l\u2019accesso turistico \u00E8 limitato", fr:"L\u2019acc\u00E8s touristique est limit\u00E9 pendant les offices", es:"El acceso tur\u00EDstico es limitado durante los oficios religiosos" }
+        }
+    },
+    {
+        id: "santelmo", cat: "nature", coor: [40.84457321478196, 14.238862910672024],
+        nome: { en:"Castel Sant'Elmo", it:"Castel Sant'Elmo", fr:"Castel Sant'Elmo", es:"Castel Sant'Elmo" },
+        desc: {
+            en: "A star-shaped 16th-century fortress perched on the Vomero hill. Offers the most complete panorama over Naples, Vesuvius and the gulf. Reachable by the Chiaia funicular.",
+            it: "Fortezza stellare del \u201800 arroccata sulla collina del Vomero. Offre il panorama pi\u00F9 completo su Napoli, il Vesuvio e il golfo. Raggiungibile con la funicolare di Chiaia.",
+            fr: "Une forteresse \u00E9toil\u00E9e du XVIe si\u00E8cle perch\u00E9e sur la colline du Vomero. Offre le panorama le plus complet sur Naples, le V\u00E9suve et le golfe. Accessible par le funiculaire de Chiaia.",
+            es: "Una fortaleza estrellada del siglo XVI encaramada en la colina del Vomero. Ofrece el panorama m\u00E1s completo sobre N\u00E1poles, el Vesubio y el golfo. Accesible por el funicular de Chiaia."
+        },
+        distanza: { en:"~20 min by funicular", it:"~20 min in funicolare", fr:"~20 min en funiculaire", es:"~20 min en funicular" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Wed \u2013 Mon", it:"Mer \u2013 Lun", fr:"Mer \u2013 Lun", es:"Mi\u00E9 \u2013 Lun" }, ore:"9:00 \u2013 19:30" },
+                { giorni:{ en:"Tuesday", it:"Marted\u00EC", fr:"Mardi", es:"Martes" }, ore:{ en:"Closed", it:"Chiuso", fr:"Ferm\u00E9", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC5" },
+                { tipo:{ en:"Reduced", it:"Ridotto", fr:"R\u00E9duit", es:"Reducido" }, prezzo:"\u20AC2.50" },
+                { tipo:{ en:"Under 18 EU", it:"Under 18 UE", fr:"Moins de 18 ans UE", es:"Menores 18 UE" }, prezzo:"Free" }
+            ],
+            note: { en:"Chiaia funicular: \u20AC1.30 (integrated with ANM ticket)", it:"Funicolare di Chiaia: \u20AC1,30 (integrata con biglietto ANM)", fr:"Funiculaire de Chiaia\u00A0: \u20AC1,30 (int\u00E9gr\u00E9 au billet ANM)", es:"Funicular de Chiaia: \u20AC1,30 (integrado en billete ANM)" }
+        }
+    },
+    {
+        id: "beverello", cat: "transport", coor: [40.8384, 14.2550],
+        nome: { en:"Molo Beverello", it:"Molo Beverello", fr:"Embarcad\u00E8re Beverello", es:"Muelle Beverello" },
+        desc: {
+            en: "Naples\u2019 main port for hydrofoils and ferries to Capri, Ischia, Procida and the Amalfi Coast. Departures also for the Aeolian Islands and Sicily.",
+            it: "Il porto principale di Napoli per aliscafi e traghetti verso Capri, Ischia, Procida e la Costiera Amalfitana. Partenze anche per le Eolie e la Sicilia.",
+            fr: "Le principal port de Naples pour les hydroglisseurs et ferries vers Capri, Ischia, Procida et la C\u00F4te Amalfitaine. D\u00E9parts aussi pour les \u00CEles \u00C9oliennes et la Sicile.",
+            es: "El principal puerto de N\u00E1poles para aliscafos y ferris hacia Capri, Isquia, P\u00F3cida y la Costa Amalfitana. Tambi\u00E9n salidas hacia las Islas Eolias y Sicilia."
+        },
+        distanza: { en:"~20 min walk", it:"~20 min a piedi", fr:"~20 min \u00E0 pied", es:"~20 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"Every day", it:"Tutti i giorni", fr:"Tous les jours", es:"Todos los d\u00EDas" }, ore:"From 6:00" }],
+            biglietti: [
+                { tipo:{ en:"Capri (hydrofoil)", it:"Capri (aliscafo)", fr:"Capri (hydroglisseur)", es:"Capri (aliscafo)" }, prezzo:"~\u20AC20" },
+                { tipo:{ en:"Ischia (ferry)", it:"Ischia (traghetto)", fr:"Ischia (ferry)", es:"Isquia (ferry)" }, prezzo:"~\u20AC14" },
+                { tipo:{ en:"Procida", it:"Procida", fr:"Procida", es:"P\u00F3cida" }, prezzo:"~\u20AC13" }
+            ],
+            note: { en:"Prices vary by company & season. Book ahead in summer", it:"Prezzi variabili per compagnia e stagione. Prenotare in anticipo d\u2019estate", fr:"Prix variables selon la compagnie et la saison. R\u00E9server \u00E0 l\u2019avance en \u00E9t\u00E9", es:"Precios variables por compa\u00F1\u00EDa y temporada. Reservar con antelaci\u00F3n en verano" }
+        }
+    },
+    {
+        id: "stazione", cat: "transport", coor: [40.8529, 14.2726],
+	img: "https://www.napolivillage.com/wp-content/uploads/2023/06/Stazione-Napoli-Centrale-scaled.jpg",
+        nome: { en:"Naples Central Station", it:"Stazione Napoli Centrale", fr:"Gare Centrale de Naples", es:"Estaci\u00F3n Central de N\u00E1poles" },
+        desc: {
+            en: "The main railway hub: high-speed trains to Rome (1h 10m) and Milan. Also hub for the Circumvesuviana line to Pompeii, Herculaneum and Sorrento.",
+            it: "Il principale hub ferroviario: Frecce per Roma (1h 10m) e Milano. Hub anche per la Circumvesuviana verso Pompei, Ercolano e Sorrento.",
+            fr: "Le principal hub ferroviaire\u00A0: trains \u00E0 grande vitesse pour Rome (1h10) et Milan. Hub aussi pour la Circumvesuviana vers Pomp\u00E9i, Herculanum et Sorrente.",
+            es: "El principal hub ferroviario: trenes de alta velocidad a Roma (1h 10m) y Mil\u00E1n. Tambi\u00E9n hub de la Circumvesuviana hacia Pompeya, Herculano y Sorrento."
+        },
+        distanza: { en:"~20 min walk", it:"~20 min a piedi", fr:"~20 min \u00E0 pied", es:"~20 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"Every day", it:"Tutti i giorni", fr:"Tous les jours", es:"Todos los d\u00EDas" }, ore:{ en:"Open 24h", it:"Aperta 24h", fr:"Ouverte 24h/24", es:"Abierta 24h" } }],
+            biglietti: [
+                { tipo:{ en:"Rome (Frecciarossa)", it:"Roma (Frecciarossa)", fr:"Rome (Frecciarossa)", es:"Roma (Frecciarossa)" }, prezzo:"from \u20AC19" },
+                { tipo:{ en:"Pompeii (Circumvesuv.)", it:"Pompei (Circumvesuv.)", fr:"Pomp\u00E9i (Circumvesuv.)", es:"Pompeya (Circumvesuv.)" }, prezzo:"\u20AC2.80" },
+                { tipo:{ en:"Sorrento (Circumvesuv.)", it:"Sorrento (Circumvesuv.)", fr:"Sorrente (Circumvesuv.)", es:"Sorrento (Circumvesuv.)" }, prezzo:"\u20AC4.60" }
+            ],
+            note: { en:"Circumvesuviana: separate platforms on Piazza Garibaldi side", it:"Circumvesuviana: binari separati, lato piazza Garibaldi", fr:"Circumvesuviana\u00A0: quais s\u00E9par\u00E9s, c\u00F4t\u00E9 piazza Garibaldi", es:"Circumvesuviana: andenes separados, lado Piazza Garibaldi" }
+        }
+    },
+    {
+        id: "lungomare", cat: "nature", coor: [40.8247, 14.2209],
+        nome: { en:"Lungomare Caracciolo", it:"Lungomare Caracciolo", fr:"Promenade Caracciolo", es:"Paseo Mar\u00EDtimo Caracciolo" },
+	img: "https://naplespompeii.com/images/what-to-do-in-naples.jpg",
+        desc: {
+            en: "The most beautiful seafront promenade in Southern Italy, with views of Vesuvius and the islands of the gulf. At sunset it bursts into colour. Perfect for a morning run or an evening aperitivo.",
+            it: "La passeggiata a mare pi\u00F9 bella del Mezzogiorno, con vista sul Vesuvio e sulle isole del golfo. Al tramonto diventa un\u2019esplosione di colori. Perfetta per una corsa mattutina o un aperitivo serale.",
+            fr: "La plus belle promenade maritime du sud de l\u2019Italie, avec vue sur le V\u00E9suve et les \u00EEles du golfe. Au coucher du soleil, c\u2019est une explosion de couleurs. Parfaite pour un jogging matinal ou un ap\u00E9ritif.",
+            es: "El paseo mar\u00EDtimo m\u00E1s bello del sur de Italia, con vistas al Vesubio y las islas del golfo. Al atardecer es una explosi\u00F3n de colores. Perfecto para correr por la ma\u00F1ana o tomar un aperitivo al atardecer."
+        },
+        distanza: { en:"~35 min walk", it:"~35 min a piedi", fr:"~35 min \u00E0 pied", es:"~35 min a pie" },
+        sempreAperto: true
+    },
+    {
+        id: "teatrosancarlo", cat: "museum", coor: [40.8376226617232, 14.249680712520334],
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Naples_-_Teatro_San_Carlo.jpg/1280px-Naples_-_Teatro_San_Carlo.jpg",
+        nome: { en:"Teatro San Carlo", it:"Teatro San Carlo", fr:"Théâtre San Carlo", es:"Teatro San Carlo" },
+        desc: {
+            en: "One of the oldest and most prestigious opera houses in the world, built in 1737 — even older than La Scala in Milan. Its sumptuous auditorium seats over 1,300 spectators and is a UNESCO World Heritage Site.",
+            it: "Uno dei teatri lirici più antichi e prestigiosi del mondo, costruito nel 1737 — persino più antico della Scala di Milano. Il suo sontuoso auditorium ospita oltre 1.300 spettatori ed è Patrimonio UNESCO.",
+            fr: "L’un des opéras les plus anciens et prestigieux du monde, construit en 1737 — plus ancien que la Scala de Milan. Son somptueux auditorium accueille plus de 1 300 spectateurs et est classé au patrimoine UNESCO.",
+            es: "Uno de los teatros de ópera más antiguos y prestigiosos del mundo, construido en 1737 — incluso más antiguo que La Scala de Milán. Su suntuoso auditorio acoge a más de 1.300 espectadores y es Patrimonio UNESCO."
+        },
+        distanza: { en:"~18 min walk", it:"~18 min a piedi", fr:"~18 min à pied", es:"~18 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Tue – Sun", it:"Mar – Dom", fr:"Mar – Dim", es:"Mar – Dom" }, ore:"10:30 – 17:30" },
+                { giorni:{ en:"Monday", it:"Lunedì", fr:"Lundi", es:"Lunes" }, ore:{ en:"Closed", it:"Chiuso", fr:"Fermé", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Tour (full)", it:"Tour (intero)", fr:"Visite (plein)", es:"Visita (normal)" }, prezzo:"€9" },
+                { tipo:{ en:"Tour (reduced)", it:"Tour (ridotto)", fr:"Visite (réduit)", es:"Visita (reducido)" }, prezzo:"€7" },
+                { tipo:{ en:"Opera tickets", it:"Biglietti opera", fr:"Billets opéra", es:"Entradas ópera" }, prezzo:"from €30" }
+            ],
+            note: { en:"Book opera tickets well in advance on the official website", it:"Prenotare i biglietti dell’opera con largo anticipo sul sito ufficiale", fr:"Réserver les billets d’opéra longtemps à l’avance sur le site officiel", es:"Reserve entradas de ópera con mucha antelación en el sitio oficial" }
+        }
+    },
+    {
+        id: "maradona", cat: "monument", coor: [40.8414159495332, 14.245237310587731],
+        img: "https://dimages2.corriereobjects.it/files/image_1200_900/files/fp/uploads/2024/09/03/66d733d42b9b4.r_d.426-147-0.jpeg",
+        nome: { en:"Maradona Mural", it:"Murale di Maradona", fr:"Mural de Maradona", es:"Mural de Maradona" },
+        desc: {
+            en: "The iconic mural of Diego Armando Maradona in the Quartieri Spagnoli, a pilgrimage site for football fans from around the world. The legend who won two Serie A titles with Napoli (1987, 1990) is worshipped here as a deity.",
+            it: "L’iconico murale di Diego Armando Maradona nei Quartieri Spagnoli, meta di pellegrinaggio per i tifosi di tutto il mondo. La leggenda che vincò due scudetti con il Napoli (1987, 1990) è venerata qui come una divinità.",
+            fr: "Le célèbre mural de Diego Armando Maradona dans les Quartieri Spagnoli, lieu de pèlerinage pour les fans de football du monde entier. La légende qui remporta deux titres de Serie A avec Naples (1987, 1990) y est vénérée comme un dieu.",
+            es: "El icónico mural de Diego Armando Maradona en los Quartieri Spagnoli, lugar de peregrinación para aficionados al fútbol de todo el mundo. La leyenda que ganó dos ligas con el Nápoles (1987, 1990) es venerada aquí como una deidad."
+        },
+        distanza: { en:"~20 min walk", it:"~20 min a piedi", fr:"~20 min à pied", es:"~20 min a pie" },
+        sempreAperto: true
+    },
+    {
+        id: "fontanelle", cat: "museum", coor: [40.85878287417965, 14.238719368343455],
+        img: "https://www.fondazioneconilsud.it/wp-content/uploads/2026/04/foto-cimitero-2-scaled.jpg",
+        nome: { en:"Fontanelle Cemetery", it:"Cimitero delle Fontanelle", fr:"Cimetière des Fontanelle", es:"Cementerio de las Fontanelle" },
+        desc: {
+            en: "A hypogeum carved into the tuff of the Materdei hill, housing the bones of around 40,000 victims of plague and famine. A place of deep popular devotion, where Neapolitans traditionally ‘adopted’ skulls of the anonymous dead.",
+            it: "Un ipogeo scavato nel tufo della collina di Materdei, che custodisce le ossa di circa 40.000 vittime di peste e carestia. Luogo di profonda devozione popolare, dove i napoletani adottavano tradizionalmente i teschi dei morti anonimi.",
+            fr: "Un hypogée creusé dans le tuf de la colline de Materdei, abritant les ossements d’environ 40 000 victimes de la peste et de la famine. Lieu de profonde dévotion populaire, où les Napolitains adoptaient traditionnellement les crânes des morts anonymes.",
+            es: "Un hipógeo excavado en la toba de la colina de Materdei, que alberga los huesos de unas 40.000 víctimas de la peste y el hambre. Lugar de profunda devoción popular, donde los napolitanos adoptaban tradicionalmente los cráneos de los muertos anónimos."
+        },
+        distanza: { en:"~18 min walk", it:"~18 min a piedi", fr:"~18 min à pied", es:"~18 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"Every day", it:"Tutti i giorni", fr:"Tous les jours", es:"Todos los días" }, ore:"10:00 – 17:00" }],
+            biglietti: [{ tipo:{ en:"Admission", it:"Ingresso", fr:"Entrée", es:"Entrada" }, prezzo:"Free" }],
+            note: { en:"Last entry 30 min before closing", it:"Ultimo ingresso 30 min prima della chiusura", fr:"Dernière entrée 30 min avant la fermeture", es:"Última entrada 30 min antes del cierre" }
+        }
+    },
+    {
+        id: "jago", cat: "museum", coor: [40.856483211135995, 14.255901024165945],
+        img: "https://artslife.com/wp-content/uploads/2023/05/Lo-Jago-Museum-a-Napoli-foto-Facebook-Jago-Museum.jpg",
+        nome: { en:"Museo Jago", it:"Museo di Jago", fr:"Musée Jago", es:"Museo Jago" },
+        desc: {
+            en: "A free museum dedicated to Jacopo Cardillo, known as Jago, a contemporary sculptor who has redefined hyperrealistic marble carving. His works — including the famous ‘The First Baby’ — are displayed in the deconsecrated church of Sant’Aspreno.",
+            it: "Un museo gratuito dedicato a Jacopo Cardillo, detto Jago, scultore contemporaneo che ha ridefinito la scultura iperrealista in marmo. Le sue opere — tra cui il celebre ‘The First Baby’ — sono esposte nell’ex chiesa di Sant’Aspreno.",
+            fr: "Un musée gratuit dédié à Jacopo Cardillo, dit Jago, sculpteur contemporain qui a redéfini la sculpture hyperraéliste en marbre. Ses œuvres — dont le célèbre ‘The First Baby’ — sont exposées dans l’église désacralisée de Sant’Aspreno.",
+            es: "Un museo gratuito dedicado a Jacopo Cardillo, conocido como Jago, escultor contemporáneo que ha redefinido la escultura hipperrealista en mármol. Sus obras — incluido el famoso ‘The First Baby’ — se exponen en la iglesia desacralizada de Sant’Aspreno."
+        },
+        distanza: { en:"~12 min walk", it:"~12 min a piedi", fr:"~12 min à pied", es:"~12 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Thu – Mon", it:"Gio – Lun", fr:"Jeu – Lun", es:"Jue – Lun" }, ore:"10:00 – 20:00" },
+                { giorni:{ en:"Tue – Wed", it:"Mar – Mer", fr:"Mar – Mer", es:"Mar – Mié" }, ore:{ en:"Closed", it:"Chiuso", fr:"Fermé", es:"Cerrado" } }
+            ],
+            biglietti: [{ tipo:{ en:"Admission", it:"Ingresso", fr:"Entrée", es:"Entrada" }, prezzo:"Free" }],
+            note: { en:"One of the very few free contemporary art spaces in Naples", it:"Uno dei rari spazi d’arte contemporanea gratuiti a Napoli", fr:"L’un des rares espaces d’art contemporain gratuits de Naples", es:"Uno de los pocos espacios de arte contemporáneo gratuitos de Nápoles" }
+        }
+    },
+    {
+        id: "acqua", cat: "museum", coor: [40.850464769811744, 14.25456832649659],
+	img: "https://www.lapismuseum.com/wp-content/uploads/2022/04/P1270249-1240x930.jpg",
+        nome: { en:"Museo dell’Acqua", it:"Museo dell’Acqua", fr:"Musée de l’Eau", es:"Museo del Agua" },
+        desc: {
+            en: "A hidden gem inside a 19th-century water treatment plant. The museum traces Naples’ ancient water system, from Greek cisterns to the modern aqueduct, through original machinery, tunnels and evocative underground spaces.",
+            it: "Una gemma nascosta all’interno di un impianto idrico ottocentesco. Il museo ripercorre il sistema idrico antico di Napoli, dalle cisterne greche all’acquedotto moderno, attraverso macchinari originali, gallerie e suggestivi spazi sotterranei.",
+            fr: "Un joyau caché au sein d’une station de traitement des eaux du XIXe siècle. Le musée retrace le système hydraulique antique de Naples, des citernes grecques à l’aqueduc moderne, à travers machines originales, tunnels et espaces souterrains.",
+            es: "Una joya oculta dentro de una planta de tratamiento de agua del siglo XIX. El museo recorre el antiguo sistema hídrico de Nápoles, desde las cisternas griegas hasta el acueducto moderno, a través de maquinaria original, túneles y espacios subterráneos."
+        },
+        distanza: { en:"~15 min walk", it:"~15 min a piedi", fr:"~15 min à pied", es:"~15 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"Sat – Sun", it:"Sab – Dom", fr:"Sam – Dim", es:"Sáb – Dom" }, ore:"10:00 – 13:00" }],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"€5" },
+                { tipo:{ en:"Reduced", it:"Ridotto", fr:"Réduit", es:"Reducido" }, prezzo:"€3" }
+            ],
+            note: { en:"Guided tours on request on weekdays — call ahead", it:"Visite guidate su prenotazione nei giorni feriali — chiamare prima", fr:"Visites guidées sur demande en semaine — appeler à l’avance", es:"Visitas guiadas bajo petición entre semana — llamar antes" }
+        }
+    },
+    {
+        id: "santachiara", cat: "monument", coor: [40.84730350255232, 14.252659630051257],
+        img: "https://www.10cose.it/wp-content/uploads/2015/12/maioliche-chiostro-santa-chiara-napoli.jpg",
+        nome: { en:"Santa Chiara Basilica & Cloister", it:"Basilica e Chiostro di Santa Chiara", fr:"Basilique et Cloître de Santa Chiara", es:"Basílica y Claustro de Santa Chiara" },
+        desc: {
+            en: "A jewel of Neapolitan Gothic architecture, built in the 14th century. The stunning cloister of the Clarisse nuns, decorated with colourful majolica tiles depicting scenes of everyday life, is one of the most charming corners of Naples.",
+            it: "Un gioiello dell’architettura gotica napoletana, costruita nel XIV secolo. Il magnifico chiostro delle clarisse, decorato con vivaci mattonelle di maiolica raffiguranti scene di vita quotidiana, è uno degli angoli più incantevoli di Napoli.",
+            fr: "Un joyau de l’architecture gothique napolitaine, construite au XIVe siècle. Le magnifique cloître des clarisses, décoré de carreaux de majolique colorés représentant des scènes de la vie quotidienne, est l’un des coins les plus charmants de Naples.",
+            es: "Una joya de la arquitectura gótica napolitana, construida en el siglo XIV. El magnífico claustro de las clarisas, decorado con vistosos azulejos de mayólica que representan escenas de la vida cotidiana, es uno de los rincones más encantadores de Nápoles."
+        },
+        distanza: { en:"~10 min walk", it:"~10 min a piedi", fr:"~10 min à pied", es:"~10 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Mon – Sat", it:"Lun – Sab", fr:"Lun – Sam", es:"Lun – Sáb" }, ore:"9:30 – 17:30" },
+                { giorni:{ en:"Sunday", it:"Domenica", fr:"Dimanche", es:"Domingo" }, ore:"10:00 – 14:30" }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"€6" },
+                { tipo:{ en:"Reduced", it:"Ridotto", fr:"Réduit", es:"Reducido" }, prezzo:"€4.50" }
+            ],
+            note: { en:"Museum and church included in the ticket", it:"Museo e chiesa inclusi nel biglietto", fr:"Musée et église inclus dans le billet", es:"Museo e iglesia incluidos en la entrada" }
+        }
+    },
+    {
+        id: "gesunuovo", cat: "monument", coor: [40.8476102070297, 14.251990700524747],
+        img: "https://upload.wikimedia.org/wikipedia/commons/8/82/Chiesa_del_Gesu_Nuovo.jpg",
+        nome: { en:"Gesù Nuovo Church", it:"Chiesa del Gesù Nuovo", fr:"Église du Gesù Nuovo", es:"Iglesia del Gesú Nuevo" },
+        desc: {
+            en: "An extraordinary Baroque church whose facade is covered in diamond-shaped piperno stone — a unique sight in world architecture. Inside, magnificent frescoes and the chapel of San Giuseppe Moscati, a doctor canonised in 1987.",
+            it: "Una straordinaria chiesa barocca la cui facciata è rivestita di piperno a punta di diamante — un unicum nell’architettura mondiale. All’interno, magnifici affreschi e la cappella di San Giuseppe Moscati, medico canonizzato nel 1987.",
+            fr: "Une extraordinaire église baroque dont la façade est revêtue de piperno en pointe de diamant — un unicum dans l’architecture mondiale. À l’intérieur, de magnifiques fresques et la chapelle de San Giuseppe Moscati, médecin canonnisé en 1987.",
+            es: "Una extraordinaria iglesia barroca cuya fachada está revestida de piperno en punta de diamante — un único en la arquitectura mundial. En su interior, magnos frescos y la capilla de San Giuseppe Moscati, médico canonizado en 1987."
+        },
+        distanza: { en:"~10 min walk", it:"~10 min a piedi", fr:"~10 min à pied", es:"~10 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Mon – Sat", it:"Lun – Sab", fr:"Lun – Sam", es:"Lun – Sáb" }, ore:"7:00 – 13:00 / 16:00 – 20:00" },
+                { giorni:{ en:"Sunday", it:"Domenica", fr:"Dimanche", es:"Domingo" }, ore:"7:30 – 13:30 / 16:30 – 20:00" }
+            ],
+            biglietti: [{ tipo:{ en:"Admission", it:"Ingresso", fr:"Entrée", es:"Entrada" }, prezzo:"Free" }],
+            note: { en:"Access limited during religious services", it:"Accesso limitato durante le funzioni religiose", fr:"Accès limité pendant les offices religieux", es:"Acceso limitado durante los oficios religiosos" }
+        }
+    },
+    {
+        id: "tunnelborbonico", cat: "museum", coor: [40.83295939410339, 14.243427386383743],
+        img: "https://www.galleriaborbonica.com/images/bg.jpg",
+        nome: { en:"Bourbon Tunnel", it:"Tunnel Borbonico", fr:"Tunnel Bourbon", es:"Túnel Borbónico" },
+        desc: {
+            en: "A secret escape route built in 1853 by King Ferdinand II to connect the Royal Palace to the barracks. Rediscovered in 1999, it reveals a time capsule: WWII air-raid shelters, vintage cars, Vespa scooters and ancient cisterns.",
+            it: "Un percorso di fuga segreto fatto costruire nel 1853 da re Ferdinando II per collegare il Palazzo Reale alle caserme. Riscoperto nel 1999, custodisce una capsula del tempo: rifugi antiaerei della Seconda Guerra Mondiale, auto d’epoca, Vespa e cisterne antiche.",
+            fr: "Une voie de fuite secrète construite en 1853 par le roi Ferdinand II pour relier le Palais Royal aux casernes. Redécouvert en 1999, il recycle une capsule temporelle : abris anti-aériens de la Seconde Guerre mondiale, voitures d’époque, Vespa et citernes antiques.",
+            es: "Una ruta de escape secreta construida en 1853 por el rey Fernando II para conectar el Palacio Real con los cuarteles. Redescubierto en 1999, alberga una cápsula del tiempo: refugios antiaéreos de la Segunda Guerra Mundial, coches de época, Vespa y cisternas antiguas."
+        },
+        distanza: { en:"~17 min walk", it:"~17 min a piedi", fr:"~17 min à pied", es:"~17 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"Every day", it:"Tutti i giorni", fr:"Tous les jours", es:"Todos los días" }, ore:"10:00 – 17:00" }],
+            biglietti: [
+                { tipo:{ en:"Standard tour", it:"Tour standard", fr:"Visite standard", es:"Visita estándar" }, prezzo:"€10" },
+                { tipo:{ en:"Adventure tour", it:"Tour avventura", fr:"Visite aventure", es:"Visita aventura" }, prezzo:"€15" }
+            ],
+            note: { en:"Guided tours only — duration approx. 1h. Wear comfortable shoes", it:"Solo visite guidate — durata circa 1h. Indossare scarpe comode", fr:"Visites guidées uniquement — durée environ 1h. Porter des chaussures confortables", es:"Solo visitas guiadas — duración aprox. 1h. Usar calzado cómodo" }
+        }
+    },
+    {
+        id: "capodimonte", cat: "museum", coor: [40.86716898102535, 14.251104579435037],
+        img: "https://campaniateatrofestival.it/wp-content/uploads/2020/06/capodimonte.jpeg",
+        nome: { en:"Capodimonte Museum & Park", it:"Museo e Bosco di Capodimonte", fr:"Musée et Parc de Capodimonte", es:"Museo y Parque de Capodimonte" },
+        desc: {
+            en: "A Bourbon royal palace turned world-class art museum, housing masterpieces by Caravaggio, Titian, Raphael and El Greco. Surrounded by a vast 130-hectare park — the largest green lung in Naples — with panoramic views over the city.",
+            it: "Una reggia borbonica trasformata in museo d’arte di livello mondiale, con capolavori di Caravaggio, Tiziano, Raffaello ed El Greco. Circondato da un vasto parco di 130 ettari — il più grande polmone verde di Napoli — con vista panoramica sulla città.",
+            fr: "Un palais royal bourbon transformé en musée d’art de renommée mondiale, abritant des chefs-d’œuvre de Caravage, Titien, Raphaël et El Greco. Entouré d’un vaste parc de 130 hectares — le plus grand poumon vert de Naples — avec vue panoramique.",
+            es: "Un palacio real borbónico convertido en museo de arte de clase mundial, con obras maestras de Caravaggio, Tiziano, Rafael y El Greco. Rodeado por un extenso parque de 130 hectáreas — el mayor pulmón verde de Nápoles — con vistas panorámicas."
+        },
+        distanza: { en:"~30 min by bus (C63)", it:"~30 min in autobus (C63)", fr:"~30 min en bus (C63)", es:"~30 min en autobus (C63)" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Thu – Tue", it:"Gio – Mar", fr:"Jeu – Mar", es:"Jue – Mar" }, ore:"9:00 – 19:30" },
+                { giorni:{ en:"Wednesday", it:"Mercoledì", fr:"Mercredi", es:"Miércoles" }, ore:{ en:"Closed", it:"Chiuso", fr:"Fermé", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"€12" },
+                { tipo:{ en:"Reduced", it:"Ridotto", fr:"Réduit", es:"Reducido" }, prezzo:"€2" },
+                { tipo:{ en:"Park only", it:"Solo parco", fr:"Parc seulement", es:"Solo parque" }, prezzo:"Free" }
+            ],
+            note: { en:"Free on the first Sunday of the month. Take bus C63 from P.za Cavour", it:"Gratuito la prima domenica del mese. Autobus C63 da P.za Cavour", fr:"Gratuit le premier dimanche du mois. Bus C63 depuis P. Cavour", es:"Gratis el primer domingo del mes. Autobus C63 desde P. Cavour" }
+        }
+    },
+    {
+        id: "madre", cat: "museum", coor: [40.85526768020886, 14.258543599027554],
+        img: "https://upload.wikimedia.org/wikipedia/commons/6/65/Museo_Madre%2C.jpg",
+        nome: { en:"MADRE Museum", it:"Museo Madre", fr:"Musée MADRE", es:"Museo MADRE" },
+        desc: {
+            en: "The Museum of Contemporary Art Donnaregina (MADRE) is Naples’ leading contemporary art museum. Housed in a 19th-century palazzo, it features a permanent collection of international giants — Jeff Koons, Damien Hirst, Richard Serra — alongside rotating exhibitions.",
+            it: "Il Museo d’Arte contemporanea Donna Regina (MADRE) è il principale museo d’arte contemporanea di Napoli. Ospitato in un palazzo ottocentesco, presenta una collezione permanente con grandi nomi internazionali — Jeff Koons, Damien Hirst, Richard Serra — e mostre temporanee.",
+            fr: "Le Musée d’Art Contemporain Donnaregina (MADRE) est le principal musée d’art contemporain de Naples. Logis dans un palazzo du XIXe siècle, il présente une collection permanente avec des grands noms internationaux et des expositions temporaires.",
+            es: "El Museo de Arte Contemporáneo Donnaregina (MADRE) es el principal museo de arte contemporáneo de Nápoles. Alojado en un palacio del siglo XIX, presenta una colección permanente con grandes nombres internacionales y exposiciones temporales."
+        },
+        distanza: { en:"~15 min walk", it:"~15 min a piedi", fr:"~15 min à pied", es:"~15 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Mon, Wed – Sat", it:"Lun, Mer – Sab", fr:"Lun, Mer – Sam", es:"Lun, Mié – Sáb" }, ore:"10:00 – 19:30" },
+                { giorni:{ en:"Sunday", it:"Domenica", fr:"Dimanche", es:"Domingo" }, ore:"10:00 – 20:00" },
+                { giorni:{ en:"Tuesday", it:"Martedì", fr:"Mardi", es:"Martes" }, ore:{ en:"Closed", it:"Chiuso", fr:"Fermé", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"€8" },
+                { tipo:{ en:"Reduced", it:"Ridotto", fr:"Réduit", es:"Reducido" }, prezzo:"€4" }
+            ],
+            note: { en:"Free on Monday afternoons", it:"Gratuito il lunedì pomeriggio", fr:"Gratuit le lundi après-midi", es:"Gratis los lunes por la tarde" }
+        }
+    },
+    {
+        id: "sanmartino", cat: "nature", coor: [40.844199867634934, 14.240761914556685],
+        img: "https://www.napolitoday.it/~media/horizontal-hi/22804218395165/belvedere-san-martino.jpg",
+        nome: { en:"Castel Sant’Elmo & Piazza San Martino", it:"Castel Sant’Elmo e P.za San Martino", fr:"Castel Sant’Elmo & Place San Martino", es:"Castel Sant’Elmo y Plaza San Martino" },
+        desc: {
+            en: "The hilltop piazza between the star fortress and the Certosa di San Martino monastery offers the most iconic panorama of Naples. The Certosa museum houses remarkable Baroque art, Christmas cribs and a historic ship collection.",
+            it: "La piazza in cima alla collina tra la fortezza stellata e la Certosa di San Martino offre il panorama più iconico su Napoli. Il museo della Certosa ospita notevole arte barocca, presepi storici e una collezione di imbarcazioni d’epoca.",
+            fr: "La place au sommet de la colline entre la forteresse étoilée et la Certosa di San Martino offre le panorama le plus icônique de Naples. Le musée de la Certosa abrite un art baroque remarquable, des crèches historiques et une collection de navires.",
+            es: "La plaza en la cima de la colina entre la fortaleza estrellada y la Certosa di San Martino ofrece el panorama más icónico de Nápoles. El museo de la Certosa alberga notable arte barroco, belenes históricos y una colección de embarcaciones."
+        },
+        distanza: { en:"~20 min by funicular", it:"~20 min in funicolare", fr:"~20 min en funiculaire", es:"~20 min en funicular" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Certosa: Thu – Tue", it:"Certosa: Gio – Mar", fr:"Certosa: Jeu – Mar", es:"Certosa: Jue – Mar" }, ore:"8:30 – 19:30" },
+                { giorni:{ en:"Certosa: Wednesday", it:"Certosa: Mercoledì", fr:"Certosa: Mercredi", es:"Certosa: Miércoles" }, ore:{ en:"Closed", it:"Chiuso", fr:"Fermé", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Certosa (full)", it:"Certosa (intero)", fr:"Certosa (plein)", es:"Certosa (normal)" }, prezzo:"€6" },
+                { tipo:{ en:"Castel Sant’Elmo", it:"Castel Sant’Elmo", fr:"Castel Sant’Elmo", es:"Castel Sant’Elmo" }, prezzo:"€5" },
+                { tipo:{ en:"Piazza (panorama)", it:"Piazza (panorama)", fr:"Place (panorama)", es:"Plaza (panorama)" }, prezzo:"Free" }
+            ],
+            note: { en:"Combined ticket Castel + Certosa: €8. Reach via Chiaia or Montesanto funicular", it:"Biglietto combinato Castel + Certosa: €8. Raggiungibile con funicolare di Chiaia o Montesanto", fr:"Billet combiné Castel + Certosa : €8. Accessible par le funiculaire de Chiaia ou Montesanto", es:"Entrada combinada Castel + Certosa: €8. Accesible en funicular de Chiaia o Montesanto" }
+        }
+    },
+    {
+        id: "spagnolo", cat: "monument", coor: [40.85686314801832, 14.254399327863053],
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnkzIHhTqd3b4tDhhtwkE5ODW642sufO9Nlw&s",
+        nome: { en:"Palazzo dello Spagnolo", it:"Palazzo dello Spagnolo", fr:"Palazzo dello Spagnolo", es:"Palazzo dello Spagnolo" },
+        desc: {
+            en: "A Baroque palace built in 1738 by the architect Ferdinando Sanfelice, famous for its breathtaking ‘star staircase’ (scala a ’naca) — a double-ramp external stairway with dramatic arched wings. A masterpiece of Neapolitan civil architecture.",
+            it: "Un palazzo barocco costruito nel 1738 dall’architetto Ferdinando Sanfelice, famoso per la sua mozzafiato ‘scala a ’naca’ — una doppia rampa esterna con spettacolari ali arcuate. Un capolavoro dell’architettura civile napoletana.",
+            fr: "Un palais baroque construit en 1738 par l’architecte Ferdinando Sanfelice, célèbre pour son impressionnant ‘escalier à naca’ — une double rampe extérieure avec des ailes arquées spectaculaires. Un chef-d’œuvre de l’architecture civile napolitaine.",
+            es: "Un palacio barroco construido en 1738 por el arquitecto Ferdinando Sanfelice, famoso por su impresionante ‘escalera a naca’ — una doble rampa exterior con espectaculares alas arqueadas. Una obra maestra de la arquitectura civil napolitana."
+        },
+        distanza: { en:"~15 min walk", it:"~15 min a piedi", fr:"~15 min à pied", es:"~15 min a pie" },
+        sempreAperto: true
+    },
+    {
+        id: "monteechia", cat: "nature", coor: [40.830966614123085, 14.248118799978041],
+        img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/21/45/48/caption.jpg?w=900&h=500&s=1",
+        nome: { en:"Monte Echia", it:"Monte Echia", fr:"Monte Echia", es:"Monte Echia" },
+        desc: {
+            en: "The oldest inhabited hill in Naples, where the Greek colony of Parthenope was founded in the 7th century BC. Today it offers one of the most spectacular and lesser-known panoramic terraces over the gulf, the Castel dell'Ovo and the Vesuvius.",
+            it: "Il colle pi\u00F9 antico abitato di Napoli, dove nel VII secolo a.C. sorse la colonia greca di Partenope. Oggi offre una delle terrazze panoramiche pi\u00F9 spettacolari e meno conosciute sul golfo, su Castel dell\u2019Ovo e sul Vesuvio.",
+            fr: "La colline la plus ancienne de Naples, o\u00F9 fut fond\u00E9e au VIIe si\u00E8cle av. J.-C. la colonie grecque de Parthenope. Elle offre aujourd\u2019hui l\u2019une des terrasses panoramiques les plus spectaculaires et m\u00E9connues sur le golfe, le Castel dell\u2019Ovo et le V\u00E9suve.",
+            es: "La colina m\u00E1s antigua habitada de N\u00E1poles, donde en el siglo VII a.C. se fund\u00F3 la colonia griega de Partenope. Hoy ofrece una de las terrazas panor\u00E1micas m\u00E1s espectaculares y menos conocidas sobre el golfo, el Castel dell\u2019Ovo y el Vesubio."
+        },
+        distanza: { en:"~30 min walk", it:"~30 min a piedi", fr:"~30 min \u00E0 pied", es:"~30 min a pie" },
+        sempreAperto: true
+    }
+];
+
+const WIKI_PAGES = {
+    "Piazza del Plebiscito": "Piazza_del_Plebiscito",
+    "Castel dell'Ovo": "Castel_dell'Ovo",
+    "Maschio Angioino": "Castel_Nuovo",
+    "Galleria Umberto I": "Galleria_Umberto_I",
+    "Galerie Umberto I": "Galleria_Umberto_I",
+    "Galer\u00EDa Umberto I": "Galleria_Umberto_I",
+    "Museo Archeologico Nazionale": "National_Archaeological_Museum,_Naples",
+    "Mus\u00E9e Arch\u00E9ologique National": "National_Archaeological_Museum,_Naples",
+    "Museo Arqueol\u00F3gico Nacional": "National_Archaeological_Museum,_Naples",
+    "Napoli Sotterranea": "Napoli_sotterranea",
+    "Naples Souterraine": "Napoli_sotterranea",
+    "N\u00E1poles Subterr\u00E1nea": "Napoli_sotterranea",
+    "Naples Cathedral": "Naples_Cathedral",
+    "Duomo di Napoli": "Naples_Cathedral",
+    "Cath\u00E9drale de Naples": "Naples_Cathedral",
+    "Catedral de N\u00E1poles": "Naples_Cathedral",
+    "Castel Sant'Elmo": "Castel_Sant'Elmo",
+    "Molo Beverello": "Port_of_Naples",
+    "Embarcad\u00E8re Beverello": "Port_of_Naples",
+    "Muelle Beverello": "Port_of_Naples",
+    "Naples Central Station": "Naples_Central_Station",
+    "Stazione Napoli Centrale": "Naples_Central_Station",
+    "Gare Centrale de Naples": "Naples_Central_Station",
+    "Estaci\u00F3n Central de N\u00E1poles": "Naples_Central_Station",
+    "Lungomare Caracciolo": "Via_Francesco_Caracciolo,_Naples",
+    "Promenade Caracciolo": "Via_Francesco_Caracciolo,_Naples",
+    "Paseo Mar\u00EDtimo Caracciolo": "Via_Francesco_Caracciolo,_Naples",
+    "Teatro San Carlo": "Teatro_di_San_Carlo",
+    "Th\u00E9\u00E2tre San Carlo": "Teatro_di_San_Carlo",
+    "Fontanelle Cemetery": "Cimitero_delle_Fontanelle",
+    "Cimitero delle Fontanelle": "Cimitero_delle_Fontanelle",
+    "Cimeti\u00E8re des Fontanelle": "Cimitero_delle_Fontanelle",
+    "Cementerio de las Fontanelle": "Cimitero_delle_Fontanelle",
+    "Santa Chiara Basilica & Cloister": "Basilica_of_Santa_Chiara,_Naples",
+    "Basilica e Chiostro di Santa Chiara": "Basilica_of_Santa_Chiara,_Naples",
+    "Bourbon Tunnel": "Bourbon_tunnel,_Naples",
+    "Tunnel Borbonico": "Bourbon_tunnel,_Naples",
+    "Capodimonte Museum & Park": "National_Museum_of_Capodimonte",
+    "Museo e Bosco di Capodimonte": "National_Museum_of_Capodimonte",
+    "MADRE Museum": "Madre_(museum)",
+    "Museo Madre": "Madre_(museum)",
+    "Palazzo dello Spagnolo": "Palazzo_dello_Spagnolo"
+};
+
+const CATEGORIE = {
+    monument: { color:"#C9A84C", emoji:"\u{1F3DB}\uFE0F" },
+    museum:   { color:"#7B6FA0", emoji:"\u{1F3A8}" },
+    transport:{ color:"#4A7BC4", emoji:"\u{1F6A2}" },
+    nature:   { color:"#5A9E6A", emoji:"\u{1F305}" }
+};
+
+const HOTEL = { coor:[40.84338, 14.24868] };
+const imgCache = {};
+let currentLang = "it";
+let currentOpenPoi = null;
+
+// ── MAP ───────────────────────────────────────────────────────────────────────
+const map = L.map("map", { zoomControl:false }).setView(HOTEL.coor, 14);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    attribution:"\u00A9 OpenStreetMap, \u00A9 CARTO", subdomains:"abcd", maxZoom:19
+}).addTo(map);
+L.control.zoom({ position:"bottomright" }).addTo(map);
+
+const hotelIcon = L.divIcon({
+    html:'<div class="hotel-marker-wrap"><img src="data:image/webp;base64,UklGRsQEAABXRUJQVlA4ILgEAADQGACdASpgAGAAPp1InUolpKKho5gN+LATiWkAFec/zHtV/u/LNJGPsZ+f4Qd4n/IP8XvbYAPqD/qeMDuR+LmoAfy7+0+gBnceivYK/mf9o62/o5fsyalwxnjIfP+QG3DyRpxBX9qsvj85dCbj7lMNV40woiOHveWYWGWKpQkZJBVK6lC5K+m/zn78R2RVsN0Al+kNTdrVGR4600g4qCjY7Y/c5EZGeFPHg51VERYN+p2ByG8o5eN5HexGYOIm3kwFm8WaA1znXlbOdK3pAAAA/rPxFltnyU4voRzFW3QSELreyyoNmuRNl03lhiIznedVGPjmxQa0Zbj65cG02dzb7LaRnVbkL6eOXDeAKahpjV8L7l5Lf9M/L4GtOD24yrskaaet94jLCVSpTjfbJk/KcocSZi//gR8lCYHcHwlF1+6G5xlrWAWN0mEtgAAIG8J5OAdrh/9h78fgM4uoIYWfwfj65XjGQuplz5FIf9K6rV5uqv+h3wca9+dHkk4D1qm1ff2WeSjaMSgNtEOPrRsGvKKIVoOtKDTQzEqj1Llg0XgIsGVXpi1OTyzhVcsWIV4dd6ruvoJFsO0fDjdaWQ/8LMNRg7kXdZtWOVy4aIRwZD0EA1gbaVD8hHRlmZKrez9CsHQ/SwkhNyhtR2is6fE+CalP4qdfij96Cuu8OBgGarH8JdwrHlXz3uftJtGDQwOfgtNc5SYWdM/OP4pUoOZjE2i62UaTY5cS7UWu+UNc46/xzzlFDnf5GlCIssGOB5f8dh9JLhfNYAXRjyK27gpby7ubcBfDT57f/5E6irvkaN+QyEEnljI44zWTjtU0htKGC6fjyFW82FRCWoE5/f/xgAtGV1lCRQN5/LBaAYY4XlOK/o8+bBH/gllCldd7Qfx4yQqiZWgVcAQNBPXKfDVN0ksnkWOIYDVjwG5/yvMM1TkDZjTM5Hb+wahs5nVTYvglCEpXU38ukkkD1z3KaX7tcsRJpwuEGMjdeiZ4k0da+YDhadfSRysPuUcsnSND3EF9fi2Ji6e2DeAHToGiJijo7n4HWTjoYes6G7CbEmro5Q/48whN6W4UFbg3vaQ8Qpr/imTT+7sK2GnB3/m46xWS37MbJxa5lDqyDuU56QcniF0DVF/pX9T+4vEu5Ql0jiXj8fAi8dTuzed9nKs1KZV/xrzClpWgdzVrwu0O8g11zpOTZAmWEjZUVZmaL7vk5ncsN5XSE7aPuNRrkA1xSSncHk/nLbcs0zXQBHbF37Np9h7nhpRHGBJy7JXBbqx9uXz/W9BQLyIkBCvu4Yf/ETA1F8Z6KCNrvgnK4Lu1NYzrl7xstGW0k3MyWCSyM1Cgf+wP9rWmWaHeOc/O9idF+bUGpKOpRnFyeVFi3FCYvuy0jPLbuZzPVjFgwtdLHqfcsd+jfVa7suaiecxjYizpOJOjI45hUY548TeZtyALNHuKeOhrJnMuRRlHRI8a2L4C5iUm2laRnt87d1hjpyRMwKSTxjJVsTvrR/1rcaD7Jo7GcH/Dgl/7X/CRy+pPUMbNKUhNxK1gwGlVUN4s9Hkh7IP1K3xZQzpsrAHnjYK8OamkCz9KAjcSFKRgW4z5tT9HQD5sl8gJAHAAAA==" alt="SA"></div>',
+    className:"", iconSize:[44,44], iconAnchor:[22,22], popupAnchor:[0,-26]
+});
+const hotelMarker = L.marker(HOTEL.coor, { icon:hotelIcon }).addTo(map);
+
+// ── BUILD LIST & MARKERS ──────────────────────────────────────────────────────
+const listEl = document.getElementById("poi-list");
+const poiMarkers = {};
+
+POI_DATA.forEach(poi => {
+    const cat = CATEGORIE[poi.cat];
+    const icon = L.divIcon({
+        html:'<div class="custom-marker" style="background:' + cat.color + '">' + cat.emoji + '</div>',
+        className:"", iconSize:[32,32], iconAnchor:[16,16], popupAnchor:[0,-18]
+    });
+    const marker = L.marker(poi.coor, { icon }).addTo(map);
+    marker.on("click", () => { map.setView(poi.coor, 16, {animate:true}); openDetail(poi); });
+    poiMarkers[poi.id] = marker;
+
+    const item = document.createElement("div");
+    item.className = "poi-item";
+    item.dataset.cat = poi.cat;
+    item.dataset.id = poi.id;
+    item.innerHTML = '<div class="poi-dot" style="background:' + cat.color + '"></div><div class="poi-info"><h3 class="poi-name">' + poi.nome.en + '</h3><span>' + cat.emoji + ' <span class="poi-cat-label">Monument</span></span></div>';
+    item.addEventListener("click", () => {
+        map.setView(poi.coor, 16, {animate:true});
+        openDetail(poi);
+        document.querySelectorAll(".poi-item").forEach(el => el.classList.remove("active"));
+        item.classList.add("active");
+    });
+    listEl.appendChild(item);
+});
+
+// ── IMAGE LOADING ─────────────────────────────────────────────────────────────
+function loadImage(poi) {
+    const imgEl = document.getElementById("detail-img");
+    const wrap  = document.getElementById("detail-img-wrap");
+    imgEl.classList.remove("loaded");
+    imgEl.src = "";
+    const oldPh = wrap.querySelector("#detail-img-placeholder");
+    if (oldPh) oldPh.remove();
+
+    const poiName = poi.nome[currentLang] || poi.nome.en;
+    const page = WIKI_PAGES[poiName] || WIKI_PAGES[poi.nome.en];
+
+    if (imgCache[poi.id]) { applyImg(imgEl, imgCache[poi.id], wrap, poi); return; }
+    if (!page) { poi.img ? applyImg(imgEl, poi.img, wrap, poi) : showFallback(wrap, poi); return; }
+
+    fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(page))
+        .then(r => r.json())
+        .then(d => {
+            const src = (d && d.originalimage && d.originalimage.source) || (d && d.thumbnail && d.thumbnail.source);
+            if (src) { imgCache[poi.id] = src; applyImg(imgEl, src, wrap, poi); }
+            else if (poi.img) { applyImg(imgEl, poi.img, wrap, poi); }
+            else showFallback(wrap, poi);
+        })
+        .catch(() => poi.img ? applyImg(imgEl, poi.img, wrap, poi) : showFallback(wrap, poi));
+}
+
+function applyImg(imgEl, src, wrap, poi) {
+    imgEl.onload  = () => imgEl.classList.add("loaded");
+    imgEl.onerror = () => showFallback(wrap, poi);
+    imgEl.src = src;
+}
+function showFallback(wrap, poi) {
+    const ph = document.createElement("div");
+    ph.id = "detail-img-placeholder";
+    ph.textContent = poi ? CATEGORIE[poi.cat].emoji : "\u{1F4CD}";
+    wrap.appendChild(ph);
+}
+
+// ── OPEN DETAIL ───────────────────────────────────────────────────────────────
+function openDetail(poi) {
+    currentOpenPoi = poi;
+    const t  = T[currentLang];
+    const cat = CATEGORIE[poi.cat];
+
+    document.getElementById("detail-category").textContent = cat.emoji + "  " + t.catLabel[poi.cat];
+    document.getElementById("detail-name").textContent = poi.nome[currentLang] || poi.nome.en;
+    document.getElementById("detail-desc").textContent = poi.desc[currentLang] || poi.desc.en;
+    loadImage(poi);
+
+    const dist = typeof poi.distanza === "object" ? (poi.distanza[currentLang] || poi.distanza.en) : poi.distanza;
+    document.getElementById("detail-meta").innerHTML =
+        '<div class="meta-item"><span class="meta-icon">\u{1F4CD}</span><div><span class="meta-label">' + t.fromHotel + '</span><span class="meta-value">' + dist + '</span></div></div>';
+
+    const tc = document.getElementById("detail-ticket");
+    if (!poi.sempreAperto && poi.ticketInfo) {
+        const ti = poi.ticketInfo;
+        const orHtml = ti.orari.map(o => {
+            const g = typeof o.giorni === "object" ? (o.giorni[currentLang] || o.giorni.en) : o.giorni;
+            const r = typeof o.ore === "object" ? (o.ore[currentLang] || o.ore.en) : o.ore;
+            return '<div class="ticket-row"><span class="ticket-row-label">' + g + '</span><span class="ticket-row-value">' + r + '</span></div>';
+        }).join("");
+        const biHtml = ti.biglietti.map(b => {
+            const tipo = typeof b.tipo === "object" ? (b.tipo[currentLang] || b.tipo.en) : b.tipo;
+            const isFree = b.prezzo === "Free";
+            const prLabel = isFree ? t.free : b.prezzo;
+            return '<div class="ticket-row"><span class="ticket-row-label">' + tipo + '</span><span class="ticket-row-value' + (isFree ? " free" : "") + '">' + prLabel + '</span></div>';
+        }).join("");
+        const noteText = ti.note ? (typeof ti.note === "object" ? (ti.note[currentLang] || ti.note.en) : ti.note) : "";
+        tc.innerHTML = '<div class="ticket-box"><div class="ticket-box-title">' + t.ticketTitle + '</div><div class="ticket-section"><div><div class="ticket-col-label">' + t.hours + '</div>' + orHtml + '</div><div><div class="ticket-col-label">' + t.tickets + '</div>' + biHtml + '</div></div>' + (noteText ? '<div class="ticket-note">\u2139\uFE0F ' + noteText + '</div>' : '') + '</div>';
+        tc.style.display = "block";
+    } else {
+        tc.innerHTML = "";
+        tc.style.display = "none";
+    }
+
+    document.getElementById("dir-label").textContent = t.directions;
+    document.getElementById("detail-directions").href =
+        "https://www.google.com/maps/dir/?api=1&origin=" + HOTEL.coor[0] + "," + HOTEL.coor[1] + "&destination=" + poi.coor[0] + "," + poi.coor[1] + "&travelmode=walking";
+    document.getElementById("detail-card").classList.add("open");
+}
+
+// ── LANGUAGE SWITCH ───────────────────────────────────────────────────────────
+function setLang(lang) {
+    currentLang = lang;
+    const t = T[lang];
+
+    // Update all lang buttons (panel + mobile)
+    document.querySelectorAll(".lang-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.lang === lang);
+    });
+
+    // Header subtitle
+    document.getElementById("hdr-subtitle").textContent = t.subtitle;
+    const mobSub = document.getElementById("mob-subtitle");
+    if (mobSub) mobSub.textContent = "Guest Guide";
+
+    // Filter labels
+    document.getElementById("f-all").textContent = t.all;
+    document.getElementById("f-monument").textContent = t.monument;
+    document.getElementById("f-museum").textContent = t.museum;
+    document.getElementById("f-transport").textContent = t.transport;
+    document.getElementById("f-nature").textContent = t.nature;
+
+    // Hotel popup
+    hotelMarker.setPopupContent('<b style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif">Soul Art Hotel</b><br><small style="color:#888">' + t.youAreHere + '</small>');
+
+    // List items
+    document.querySelectorAll(".poi-item").forEach(item => {
+        const poi = POI_DATA.find(p => p.id === item.dataset.id);
+        if (!poi) return;
+        item.querySelector(".poi-name").textContent = poi.nome[lang] || poi.nome.en;
+        item.querySelector(".poi-cat-label").textContent = t.catLabel[poi.cat];
+    });
+
+    // Re-render open card if any
+    if (currentOpenPoi) openDetail(currentOpenPoi);
+
+    // Update tab labels
+    const tl = TAB_LABELS[lang];
+    if (tl) {
+        document.getElementById("tab-places-label").textContent = tl.places;
+        document.getElementById("tab-transit-label").textContent = tl.transit;
+    }
+
+    // Re-render transit if visible
+    const transitEl = document.getElementById("panel-tab-transit");
+    if (transitEl && transitEl.style.display !== "none") renderTransit(lang);
+    const hotelEl = document.getElementById("panel-tab-hotel");
+    if (hotelEl && hotelEl.style.display !== "none") renderHotelInfo(lang);
+
+    // Update mobile tab labels
+    const ml = MOBILE_TAB_LABELS[lang] || MOBILE_TAB_LABELS.en;
+    ['map','places','transit','hotel'].forEach(t => {
+        const el = document.getElementById('mobt-' + t);
+        if (el) el.textContent = ml[t];
+    });
+    // Re-render mobile panel if open
+    if (currentMobileTab !== 'map') mobileTab(currentMobileTab);
+}
+
+// ── TRANSIT DATA ──────────────────────────────────────────────────────────────
+const TRANSIT = {
+    metro: {
+        lines: [
+            {
+                name: { en:"Line 1 \u2013 Piscinola / Garibaldi", it:"Linea 1 \u2013 Piscinola / Garibaldi", fr:"Ligne 1 \u2013 Piscinola / Garibaldi", es:"L\u00EDnea 1 \u2013 Piscinola / Garibaldi" },
+                sub:  { en:"Vomero \u00B7 Chiaia \u00B7 City Centre", it:"Vomero \u00B7 Chiaia \u00B7 Centro", fr:"Vomero \u00B7 Chiaia \u00B7 Centre-ville", es:"Vomero \u00B7 Chiaia \u00B7 Centro" },
+                color:"#E53935", icon:"M1",
+                first:"5:30", last:"23:00",
+                freq: { en:"Every 6\u201310 min", it:"Ogni 6\u201310 min", fr:"Toutes les 6\u201310 min", es:"Cada 6\u201310 min" },
+                note: { en:"Until 2:00 on Fri & Sat nights", it:"Fino alle 2:00 ven. e sab. notte", fr:"Jusqu\u2019\u00E0 2h le ven. et sam.", es:"Hasta las 2:00 vier. y s\u00E1b." }
+            },
+            {
+                name: { en:"Line 2 \u2013 Pozzuoli / Gianturco", it:"Linea 2 \u2013 Pozzuoli / Gianturco", fr:"Ligne 2 \u2013 Pozzuoli / Gianturco", es:"L\u00EDnea 2 \u2013 Pozzuoli / Gianturco" },
+                sub:  { en:"Mergellina \u00B7 P. Amedeo \u00B7 Garibaldi", it:"Mergellina \u00B7 P.za Amedeo \u00B7 Garibaldi", fr:"Mergellina \u00B7 P. Amedeo \u00B7 Garibaldi", es:"Mergellina \u00B7 P. Amedeo \u00B7 Garibaldi" },
+                color:"#E53935", icon:"M2",
+                first:"5:00", last:"23:00",
+                freq: { en:"Every 8\u201312 min", it:"Ogni 8\u201312 min", fr:"Toutes les 8\u201312 min", es:"Cada 8\u201312 min" },
+                note: null
+            }
+        ]
+    },
+    funicolare: {
+        lines: [
+            {
+                name: { en:"Funicolare Centrale", it:"Funicolare Centrale", fr:"Funiculaire Central", es:"Funicular Central" },
+                sub:  { en:"Augusteo \u2192 Vomero (P. Fuga)", it:"Augusteo \u2192 Vomero (P.za Fuga)", fr:"Augusteo \u2192 Vomero (P. Fuga)", es:"Augusteo \u2192 Vomero (P. Fuga)" },
+                color:"#1565C0", icon:"FC",
+                first:"6:00", last:"00:30",
+                freq: { en:"Every 10 min", it:"Ogni 10 min", fr:"Toutes les 10 min", es:"Cada 10 min" },
+                note: { en:"Until 1:30 on Fri & Sat", it:"Fino all\u20191:30 ven. e sab.", fr:"Jusqu\u2019\u00E0 1h30 ven. & sam.", es:"Hasta la 1:30 vier. y s\u00E1b." }
+            },
+            {
+                name: { en:"Funicolare di Chiaia", it:"Funicolare di Chiaia", fr:"Funiculaire de Chiaia", es:"Funicular de Chiaia" },
+                sub:  { en:"P. Margherita \u2192 Via Cimarosa", it:"P. Margherita \u2192 Via Cimarosa", fr:"P. Margherita \u2192 Via Cimarosa", es:"P. Margherita \u2192 Via Cimarosa" },
+                color:"#1565C0", icon:"CH",
+                first:"6:30", last:"00:30",
+                freq: { en:"Every 10 min", it:"Ogni 10 min", fr:"Toutes les 10 min", es:"Cada 10 min" },
+                note: { en:"Closest stop to Castel Sant\u2019Elmo", it:"Pi\u00F9 vicina a Castel Sant\u2019Elmo", fr:"La plus proche du Castel Sant\u2019Elmo", es:"M\u00E1s cercana al Castel Sant\u2019Elmo" }
+            },
+            {
+                name: { en:"Funicolare di Montesanto", it:"Funicolare di Montesanto", fr:"Funiculaire de Montesanto", es:"Funicular de Montesanto" },
+                sub:  { en:"Montesanto \u2192 Via Morghen", it:"Montesanto \u2192 Via Morghen", fr:"Montesanto \u2192 Via Morghen", es:"Montesanto \u2192 Via Morghen" },
+                color:"#1565C0", icon:"MO",
+                first:"7:00", last:"22:00",
+                freq: { en:"Every 10 min", it:"Ogni 10 min", fr:"Toutes les 10 min", es:"Cada 10 min" },
+                note: null
+            },
+            {
+                name: { en:"Funicolare di Mergellina", it:"Funicolare di Mergellina", fr:"Funiculaire de Mergellina", es:"Funicular de Mergellina" },
+                sub:  { en:"Via Mergellina \u2192 Via Manzoni", it:"Via Mergellina \u2192 Via Manzoni", fr:"Via Mergellina \u2192 Via Manzoni", es:"Via Mergellina \u2192 Via Manzoni" },
+                color:"#1565C0", icon:"ME",
+                first:"7:00", last:"22:00",
+                freq: { en:"Every 12 min", it:"Ogni 12 min", fr:"Toutes les 12 min", es:"Cada 12 min" },
+                note: null
+            }
+        ]
+    }
+};
+
+const TRANSIT_UI = {
+    en: { metro:"Metro", funicolare:"Funiculars", first:"First", last:"Last", freq:"Frequency", tipTitle:"\uD83C\uDFAB Tickets & Fares", tip:"Single ticket (ANM): \u20AC1.30 \u00B7 valid 90 min on all lines. Daily pass: \u20AC4.50. Weekly: \u20AC15.80. Available at stations, tobacconists and ANM app." },
+    it: { metro:"Metro", funicolare:"Funicolari", first:"Prima", last:"Ultima", freq:"Frequenza", tipTitle:"\uD83C\uDFAB Biglietti & Tariffe", tip:"Biglietto singolo (ANM): \u20AC1,30 \u00B7 valido 90 min su tutte le linee. Giornaliero: \u20AC4,50. Settimanale: \u20AC15,80. Disponibile alle stazioni, tabaccherie e app ANM." },
+    fr: { metro:"M\u00E9tro", funicolare:"Funiculaires", first:"Premier", last:"Dernier", freq:"Fr\u00E9quence", tipTitle:"\uD83C\uDFAB Billets & Tarifs", tip:"Billet simple (ANM)\u00A0: \u20AC1,30 \u00B7 valable 90 min sur toutes les lignes. Journalier\u00A0: \u20AC4,50. Hebdomadaire\u00A0: \u20AC15,80. Disponible aux stations, bureaux de tabac et app ANM." },
+    es: { metro:"Metro", funicolare:"Funiculares", first:"Primero", last:"\u00DAltimo", freq:"Frecuencia", tipTitle:"\uD83C\uDFAB Billetes & Tarifas", tip:"Billete sencillo (ANM): \u20AC1,30 \u00B7 v\u00E1lido 90 min en todas las l\u00EDneas. Bono diario: \u20AC4,50. Semanal: \u20AC15,80. Disponible en estaciones, estancos y app ANM." }
+};
+
+function renderTransit(lang) {
+    const tu = TRANSIT_UI[lang] || TRANSIT_UI.en;
+    let html = '';
+
+    // Helper to render a group of lines
+    function renderGroup(sectionTitle, lines) {
+        html += '<div class="transit-section"><div class="transit-section-title">' + sectionTitle + '</div>';
+        lines.forEach(l => {
+            html += '<div class="transit-line">';
+            html += '<div class="transit-line-header">';
+            html += '<span class="transit-badge" style="background:' + l.color + ';border-radius:6px;font-size:0.58rem">' + l.icon + '</span>';
+            html += '<div><div class="transit-line-name">' + (l.name[lang]||l.name.en) + '</div>';
+            html += '<div class="transit-line-sub">' + (l.sub[lang]||l.sub.en) + '</div></div></div>';
+            html += '<div class="transit-hours">';
+            html += '<div class="transit-hour-item"><span class="transit-hour-label">' + tu.first + '</span><span class="transit-hour-value">' + l.first + '</span></div>';
+            html += '<div class="transit-hour-item"><span class="transit-hour-label">' + tu.last + '</span><span class="transit-hour-value">' + l.last + '</span></div>';
+            html += '</div>';
+            html += '<div class="transit-freq">' + (l.freq[lang]||l.freq.en) + '</div>';
+            if (l.note) html += '<div style="font-size:0.65rem;color:#888;margin-top:5px;font-style:italic">\u2139\uFE0F ' + (l.note[lang]||l.note.en) + '</div>';
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+
+    renderGroup('<span class="transit-badge" style="background:#E53935;margin-right:4px">M</span>' + tu.metro, TRANSIT.metro.lines);
+    html += '<div class="transit-divider"></div>';
+    renderGroup('<span class="transit-badge" style="background:#1565C0;margin-right:4px">F</span>' + tu.funicolare, TRANSIT.funicolare.lines);
+    html += '<div class="transit-tip"><strong>' + tu.tipTitle + '</strong>' + tu.tip + '</div>';
+
+    document.getElementById("panel-tab-transit").innerHTML = html;
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────────────────────────────
+function switchTab(tab) {
+    const isPlaces  = (tab === 'places');
+    const isTransit = (tab === 'transit');
+    const isHotel   = (tab === 'hotel');
+    document.getElementById('tab-places').classList.toggle('active', isPlaces);
+    document.getElementById('tab-transit').classList.toggle('active', isTransit);
+    document.getElementById('tab-hotel').classList.toggle('active', isHotel);
+    document.getElementById('panel-tab-places').style.display  = isPlaces  ? 'flex'  : 'none';
+    document.getElementById('panel-tab-transit').style.display = isTransit ? 'block' : 'none';
+    document.getElementById('panel-tab-hotel').style.display   = isHotel   ? 'block' : 'none';
+    if (isTransit) renderTransit(currentLang);
+    if (isHotel)   renderHotelInfo(currentLang);
+    if (typeof transitMarkers !== 'undefined') {
+        transitMarkers.forEach(m => {
+            if (isTransit) { if (!map.hasLayer(m)) m.addTo(map); }
+            else { if (map.hasLayer(m)) map.removeLayer(m); }
+        });
+    }
+}
+
+const TAB_LABELS = {
+    en: { places:"\uD83D\uDDFA Places",   transit:"\uD83D\uDE87 Transport", hotel:"\uD83C\uDFE8 Hotel" },
+    it: { places:"\uD83D\uDDFA Luoghi",   transit:"\uD83D\uDE87 Trasporti", hotel:"\uD83C\uDFE8 Hotel" },
+    fr: { places:"\uD83D\uDDFA Lieux",    transit:"\uD83D\uDE87 Transports", hotel:"\uD83C\uDFE8 H\u00F4tel" },
+    es: { places:"\uD83D\uDDFA Lugares",  transit:"\uD83D\uDE87 Transportes", hotel:"\uD83C\uDFE8 Hotel" }
+};
+
+// Bind lang buttons
+document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.addEventListener("click", () => setLang(btn.dataset.lang));
+});
+
+// Close card
+document.getElementById("detail-close").addEventListener("click", () => {
+    document.getElementById("detail-card").classList.remove("open");
+    document.querySelectorAll(".poi-item").forEach(el => el.classList.remove("active"));
+    currentOpenPoi = null;
+});
+
+// Filters
+document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const cat = btn.dataset.cat;
+        document.querySelectorAll(".poi-item").forEach(item => {
+            item.style.display = (cat === "all" || item.dataset.cat === cat) ? "flex" : "none";
+        });
+    });
+});
+
+// ── TRANSIT STATIONS ON MAP ───────────────────────────────────────────────────
+const TRANSIT_STATIONS = [
+    // Metro L1
+    { type:"M1", label:"Piscinola",        coor:[40.89298982993001, 14.239798149111499] },
+    { type:"M1", label:"Chiaiano",         coor:[40.890854875079235, 14.22330531907403] },
+    { type:"M1", label:"Frullone",         coor:[40.88040896755757, 14.23117126439655] },
+    { type:"M1", label:"Colli Aminei",     coor:[40.869830985022716, 14.22845927976055] },
+    { type:"M1", label:"Rione Alto",       coor:[40.861262798187, 14.220807883710497] },
+    { type:"M1", label:"Montedonzelli",    coor:[40.85618295632831, 14.223901353024868] },
+    { type:"M1", label:"Medaglie d'Oro",   coor:[40.85080084250615, 14.230696008846309] },
+    { type:"M1", label:"Vanvitelli",       coor:[40.844060629708814, 14.231822512545579] },
+    { type:"M1", label:"Salvator Rosa",    coor:[40.85141566368461, 14.236417883710125] },
+    { type:"M1", label:"Materdei",         coor:[40.855881427570004, 14.243276012545921] },
+    { type:"M1", label:"Museo",            coor:[40.85397677281112, 14.251992497203231] },
+    { type:"M1", label:"Dante",            coor:[40.848773952670285, 14.25000342021712] },
+    { type:"M1", label:"Toledo",           coor:[40.84261536825952, 14.248956541381174] },
+    { type:"M1", label:"Municipio",        coor:[40.84004125694725, 14.251943542198333] },
+    { type:"M1", label:"Università",       coor:[40.84408180152788, 14.255692881860183] },
+    { type:"M1", label:"Garibaldi",        coor:[40.852036632302095, 14.269559203465954] },
+    // Metro L2
+    { type:"M2", label:"Pozzuoli",         coor:[40.82774136464286, 14.126538520810362] },
+    { type:"M2", label:"Bagnoli",          coor:[40.819529471087044, 14.16664353000944] },
+    { type:"M2", label:"Cavalleggeri",	coor:[40.819357197198336, 14.187180807821434] },
+    { type:"M2", label:"Campi Flegrei",    coor:[40.8226093700316, 14.194420945352237] },
+    { type:"M2", label:"Leopardi",      coor:[40.8249970538682, 14.200423111476768] },
+    { type:"M2", label:"Mergellina",       coor:[40.83157460636615, 14.21923582391593] },
+    { type:"M2", label:"P.za Amedeo",      coor:[40.83752612604927, 14.233630359506304] },
+    { type:"M2", label:"Montesanto",       coor:[40.84773663565816, 14.244148539531599] },
+    { type:"M2", label:"Cavour",           coor:[40.85549573940782, 14.255049610672424] },
+    { type:"M2", label:"Garibaldi",        coor:[40.852343857138685, 14.272035959472955] },
+    { type:"M2", label:"Gianturco",        coor:[40.85390557298563, 14.287950572066961] },
+    // Funicolare Centrale
+    { type:"FC", label:"Augusteo",         coor:[40.83960906081489, 14.248131091335388] },
+    { type:"FC", label:"Corso Vittorio Em.",coor:[40.83977507378117, 14.242635217868681] },
+    { type:"FC", label:"Petraio",          coor:[40.84160986853483, 14.23871679278687] },
+    { type:"FC", label:"P.za Fuga",        coor:[40.84293007373718, 14.233543760148116] },
+    // Funicolare di Chiaia
+    { type:"CH", label:"P.za Margherita",  coor:[40.8342, 14.2415] },
+    { type:"CH", label:"C.so V. E.", coor:[40.839393750687826, 14.233980040003107] },
+    { type:"CH", label:"Palazzolo",        coor:[40.841274837360814, 14.232673454874162] },
+    { type:"CH", label:"Via Cimarosa",     coor:[40.84247615310109, 14.231941904874127] },
+    // Funicolare di Montesanto
+    { type:"MO", label:"Montesanto",       coor:[40.84719077397959, 14.24568318270698] },
+    { type:"MO", label:"Corso V. E.",   coor:[40.846452196930755, 14.24226270605364] },
+    { type:"MO", label:"Via Morghen",      coor:[40.84432690165668, 14.235852357382303] },
+];
+
+const STATION_STYLE = {
+    M1: { bg:"#E53935", label:"M1" },
+    M2: { bg:"#E53935", label:"M2" },
+    FC: { bg:"#1565C0", label:"FC" },
+    CH: { bg:"#1565C0", label:"CH" },
+    MO: { bg:"#1565C0", label:"MO" },
+};
+
+const transitMarkers = [];
+
+TRANSIT_STATIONS.forEach(st => {
+    const s = STATION_STYLE[st.type];
+    const isMetro = st.type.startsWith("M");
+    const icon = L.divIcon({
+        html: '<div style="width:' + (isMetro ? 22 : 20) + 'px;height:' + (isMetro ? 22 : 20) + 'px;border-radius:50%;background:' + s.bg + ';border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:white;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,0.35)">' + s.label + '</div>',
+        className: "", iconSize: [isMetro ? 22 : 20, isMetro ? 22 : 20], iconAnchor: [isMetro ? 11 : 10, isMetro ? 11 : 10]
+    });
+    const marker = L.marker(st.coor, { icon, interactive:true });
+    marker.bindPopup(
+        '<div style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif;min-width:120px">' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">' +
+        '<span style="background:' + s.bg + ';color:white;border-radius:4px;padding:2px 6px;font-size:0.6rem;font-weight:700">' + st.type + '</span>' +
+        '<b style="font-size:0.85rem">' + st.label + '</b></div>' +
+        '<div style="font-size:0.7rem;color:#888">' + (isMetro ? 'Metro' : 'Funicolare') + '</div></div>'
+    );
+    transitMarkers.push(marker);
+});
+
+// Show/hide transit markers when switching tabs
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+hotelMarker.bindPopup('<b style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif">Soul Art Hotel</b><br><small style="color:#888">' + T.it.youAreHere + '</small>');
+switchTab('places');
+setLang("it");
+
