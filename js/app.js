@@ -845,6 +845,52 @@ const POI_DATA = [
         },
         distanza: { en:"~30 min walk", it:"~30 min a piedi", fr:"~30 min \u00E0 pied", es:"~30 min a pie" },
         sempreAperto: true
+    },
+    {
+        id: "palazzoreale", cat: "monument", coor: [40.83555, 14.24913],
+        nome: { en:"Royal Palace of Naples", it:"Palazzo Reale di Napoli", fr:"Palais Royal de Naples", es:"Palacio Real de N\u00E1poles" },
+        desc: {
+            en: "Built in 1600 by architect Domenico Fontana as the residence of the Spanish viceroys, the Royal Palace dominates Piazza del Plebiscito. Its eighteen rooms house a magnificent museum of furnishings, tapestries and paintings from the Bourbon era. Don\u2019t miss the Royal Chapel and the monumental staircase.",
+            it: "Costruito nel 1600 dall\u2019architetto Domenico Fontana come residenza dei vicer\u00E9 spagnoli, il Palazzo Reale domina Piazza del Plebiscito. Le sue diciotto sale ospitano un magnifico museo di arredi, arazzi e dipinti di et\u00E0 borbonica. Da non perdere la Cappella Reale e lo scalone monumentale.",
+            fr: "Construit en 1600 par l\u2019architecte Domenico Fontana comme r\u00E9sidence des vice-rois espagnols, le Palais Royal domine la Piazza del Plebiscito. Ses dix-huit salles abritent un magnifique mus\u00E9e de mobilier, tapisseries et peintures de l\u2019\u00E8re bourbonienne. Ne manquez pas la Chapelle Royale et l\u2019escalier monumental.",
+            es: "Construido en 1600 por el arquitecto Domenico Fontana como residencia de los virreyes espa\u00F1oles, el Palacio Real domina la Piazza del Plebiscito. Sus dieciocho salas albergan un magn\u00EDfico museo de mobiliario, tapices y pinturas de la \u00E9poca borbonica. No te pierdas la Capilla Real y la escalinata monumental."
+        },
+        distanza: { en:"~15 min walk", it:"~15 min a piedi", fr:"~15 min \u00E0 pied", es:"~15 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Thu \u2013 Tue", it:"Gio \u2013 Mar", fr:"Jeu \u2013 Mar", es:"Jue \u2013 Mar" }, ore:"9:00 \u2013 20:00" },
+                { giorni:{ en:"Wednesday", it:"Mercoled\u00EC", fr:"Mercredi", es:"Mi\u00E9rcoles" }, ore:{ en:"Closed", it:"Chiuso", fr:"Ferm\u00E9", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC10" },
+                { tipo:{ en:"Reduced", it:"Ridotto", fr:"R\u00E9duit", es:"Reducido" }, prezzo:"\u20AC5" },
+                { tipo:{ en:"Under 18 EU", it:"Under 18 UE", fr:"Moins de 18 ans UE", es:"Menores 18 UE" }, prezzo:"Free" }
+            ],
+            note:{ en:"Free on the first Sunday of the month. Last entry 1h before closing.", it:"Gratuito la prima domenica del mese. Ultimo ingresso 1h prima della chiusura.", fr:"Gratuit le premier dimanche du mois. Derni\u00E8re entr\u00E9e 1h avant la fermeture.", es:"Gratis el primer domingo del mes. \u00DAltima entrada 1h antes del cierre." }
+        }
+    },
+    {
+        id: "catacombegennaro", cat: "museum", coor: [40.86175, 14.24985],
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Catacombe_di_San_Gennaro_-_panoramio.jpg/1280px-Catacombe_di_San_Gennaro_-_panoramio.jpg",
+        nome: { en:"Catacombs of San Gennaro", it:"Catacombe di San Gennaro", fr:"Catacombes de San Gennaro", es:"Catacumbas de San Genaro" },
+        desc: {
+            en: "The largest and most important early Christian catacombs in Southern Italy, dating back to the 2nd century AD. Carved into the tuff of the Rione Sanit\u00E0 hill, they hold extraordinary frescoes, mosaics and tombs of bishops and martyrs. A guided tour lasting about 45 minutes reveals 2000 years of Neapolitan history underground.",
+            it: "Le catacombe paleocristiane pi\u00F9 grandi e importanti del Sud Italia, risalenti al II secolo d.C. Scavate nel tufo della collina del Rione Sanit\u00E0, conservano straordinari affreschi, mosaici e tombe di vescovi e martiri. Una visita guidata di circa 45 minuti svela 2000 anni di storia napoletana sottoterra.",
+            fr: "Les plus grandes et importantes catacombes pal\u00E9ochr\u00E9tiennes du sud de l\u2019Italie, datant du IIe si\u00E8cle apr. J.-C. Creus\u00E9es dans le tuf de la colline du Rione Sanit\u00E0, elles conservent d\u2019extraordinaires fresques, mosa\u00EFques et tombeaux d\u2019\u00E9v\u00EAques et de martyrs. Une visite guid\u00E9e d\u2019environ 45 min r\u00E9v\u00E8le 2000 ans d\u2019histoire napolitaine souterraine.",
+            es: "Las catacumbas paleocristianas m\u00E1s grandes e importantes del sur de Italia, que datan del siglo II d.C. Excavadas en la toba de la colina del Rione Sanit\u00E0, conservan extraordinarios frescos, mosaicos y tumbas de obispos y m\u00E1rtires. Una visita guiada de unos 45 minutos revela 2000 a\u00F1os de historia napolitana bajo tierra."
+        },
+        distanza: { en:"~25 min walk or Metro L1 \u2192 Materdei + 10 min walk", it:"~25 min a piedi o Metro L1 \u2192 Materdei + 10 min", fr:"~25 min \u00E0 pied ou M\u00E9tro L1 \u2192 Materdei + 10 min", es:"~25 min a pie o Metro L1 \u2192 Materdei + 10 min" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"Every day", it:"Tutti i giorni", fr:"Tous les jours", es:"Todos los d\u00EDas" }, ore:"10:00 \u2013 17:00" }],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC9" },
+                { tipo:{ en:"Reduced (ages 6\u201312)", it:"Ridotto (6\u201312 anni)", fr:"R\u00E9duit (6\u201312 ans)", es:"Reducido (6\u201312 a\u00F1os)" }, prezzo:"\u20AC7" },
+                { tipo:{ en:"Under 6", it:"Under 6", fr:"Moins de 6 ans", es:"Menores de 6" }, prezzo:"Free" }
+            ],
+            note:{ en:"Guided tours only \u2014 depart every hour. Via Capodimonte 13, Rione Sanit\u00E0.", it:"Solo visite guidate \u2014 partenza ogni ora. Via Capodimonte 13, Rione Sanit\u00E0.", fr:"Visites guid\u00E9es uniquement \u2014 d\u00E9part toutes les heures. Via Capodimonte 13, Rione Sanit\u00E0.", es:"Solo visitas guiadas \u2014 salen cada hora. Via Capodimonte 13, Rione Sanit\u00E0." }
+        }
     }
 ];
 
@@ -890,7 +936,15 @@ const WIKI_PAGES = {
     "Museo e Bosco di Capodimonte": "National_Museum_of_Capodimonte",
     "MADRE Museum": "Madre_(museum)",
     "Museo Madre": "Madre_(museum)",
-    "Palazzo dello Spagnolo": "Palazzo_dello_Spagnolo"
+    "Palazzo dello Spagnolo": "Palazzo_dello_Spagnolo",
+    "Royal Palace of Naples": "Royal_Palace_of_Naples",
+    "Palazzo Reale di Napoli": "Royal_Palace_of_Naples",
+    "Palais Royal de Naples": "Royal_Palace_of_Naples",
+    "Palacio Real de Nápoles": "Royal_Palace_of_Naples",
+    "Catacombs of San Gennaro": "Catacombs_of_San_Gennaro",
+    "Catacombe di San Gennaro": "Catacombs_of_San_Gennaro",
+    "Catacombes de San Gennaro": "Catacombs_of_San_Gennaro",
+    "Catacumbas de San Genaro": "Catacombs_of_San_Gennaro"
 };
 
 const CATEGORIE = {
