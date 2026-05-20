@@ -167,11 +167,11 @@
         #panel-tab-transit              { background: var(--pb); }
         #panel-tab-hotel                { background: var(--pb); }
 
-        /* Header: grigio chiaro, logo grande, solo "Guest Guide" */
-        #panel-header                   { background: #F0F0F0; border-bottom: 1px solid var(--pb2); padding: 28px 20px 20px; }
+        /* Header: logo orizzontale SoulArt, solo "Guest Guide" sotto */
+        #panel-header                   { background: #FFFFFF; border-bottom: 1px solid var(--pb2); padding: 32px 28px 24px; }
         #panel-header::after            { display: none; }
-        #panel-header p                 { color: var(--pm); font-size: 0.7rem; letter-spacing: 3px; margin-top: 10px; }
-        .hotel-logo-img                 { width: 130px; height: 130px; border-color: var(--pa); border-width: 3px; margin-bottom: 0; }
+        #panel-header p                 { color: var(--pm); font-size: 0.65rem; letter-spacing: 4px; margin-top: 14px; }
+        .hotel-logo-img                 { width: 200px; height: auto; border-radius: 0; border: none; margin: 0 auto; }
 
         /* Lang switcher */
         #lang-switcher                  { background: #F0F0F0; border-bottom: 1px solid var(--pb2); }
