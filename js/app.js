@@ -432,19 +432,6 @@ const POI_DATA = [
         }
     },
     {
-        id: "spaccanapoli", cat: "monument", coor: [40.8493, 14.2563],
-        img: "https://www.campania.info/wp-content/uploads/sites/111/spaccanapoli-hd.jpg",
-        nome: { en:"Spaccanapoli", it:"Spaccanapoli", fr:"Spaccanapoli", es:"Spaccanapoli" },
-        desc: {
-            en: "The street that literally splits Naples in two, as straight as a cardo of ancient Neapolis. Baroque churches, palaces, nativity-scene workshops and street food stalls combine in an authentic Neapolitan kaleidoscope.",
-            it: "La via che spacca letteralmente Napoli in due, rettilinea come un cardo dell\u2019antica Neapolis. Chiese, palazzi barocchi, presepi e friggitorie in un caleidoscopio di vita napoletana autentica.",
-            fr: "La rue qui coupe litt\u00E9ralement Naples en deux, aussi droite qu\u2019un cardo de l\u2019ancienne Neapolis. \u00C9glises baroques, palais, boutiques de cr\u00E8ches et friteries s\u2019y c\u00F4toient.",
-            es: "La calle que literalmente parte N\u00E1poles en dos, tan recta como un cardo de la antigua Neapolis. Iglesias barrocas, palacios, talleres de belenes y puestos de comida conforman un caleidoscopio napolitano."
-        },
-        distanza: { en:"~10 min walk", it:"~10 min a piedi", fr:"~10 min \u00E0 pied", es:"~10 min a pie" },
-        sempreAperto: true
-    },
-    {
         id: "sangregorio", cat: "monument", coor: [40.8502, 14.2578],
         img: "https://www.laneapolissotterrata.it/Images/san-gregorio-armeno-.jpg",
         nome: { en:"San Gregorio Armeno", it:"San Gregorio Armeno", fr:"San Gregorio Armeno", es:"San Gregorio Armeno" },
