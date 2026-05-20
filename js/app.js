@@ -287,7 +287,7 @@ const T = {
         closed: "Chiuso"
     },
     fr: {
-        subtitle: "Guide des H\u00F4tes",
+        subtitle: "Guest Guide",
         all: "Tout", monument: "Monuments", museum: "Mus\u00E9es",
         transport: "Transports", nature: "Points de vue",
         catLabel: { monument:"Monument", museum:"Mus\u00E9e", transport:"Transport", nature:"Point de vue" },
@@ -300,7 +300,7 @@ const T = {
         closed: "Ferm\u00E9"
     },
     es: {
-        subtitle: "Gu\u00EDa para Hu\u00E9spedes",
+        subtitle: "Guest Guide",
         all: "Todo", monument: "Monumentos", museum: "Museos",
         transport: "Transportes", nature: "Miradores",
         catLabel: { monument:"Monumento", museum:"Museo", transport:"Transporte", nature:"Mirador" },
