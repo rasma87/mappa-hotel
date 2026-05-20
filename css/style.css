@@ -149,15 +149,15 @@
         #mobile-panel.open { transform:translateY(0); pointer-events:auto; }
         #mobile-panel-inner { padding:12px 14px 80px; }
 
-        /* ── TEMA PANNELLO NERO / SCALE DI GRIGI ───────────────────────────── */
+        /* ── TEMA PANNELLO BIANCO / SCALE DI GRIGI ─────────────────────────── */
         :root {
-            --pb:  #0D0D0D;   /* panel background      */
-            --ps:  #1A1A1A;   /* panel surface (cards) */
-            --ps2: #242424;   /* panel surface 2       */
-            --pb2: #2E2E2E;   /* panel border          */
-            --pt:  #E0E0E0;   /* panel text            */
-            --pm:  #888888;   /* panel muted           */
-            --pa:  #FFFFFF;   /* panel accent (bianco) */
+            --pb:  #FFFFFF;   /* panel background - bianco   */
+            --ps:  #F4F4F4;   /* panel surface (card)        */
+            --ps2: #EBEBEB;   /* panel surface 2             */
+            --pb2: #DEDEDE;   /* panel border                */
+            --pt:  #1A1A1A;   /* panel text - quasi nero     */
+            --pm:  #777777;   /* panel muted                 */
+            --pa:  #2E2E2E;   /* panel accent - grigio scuro */
         }
 
         /* Sfondo pannello */
@@ -167,62 +167,65 @@
         #panel-tab-transit              { background: var(--pb); }
         #panel-tab-hotel                { background: var(--pb); }
 
-        /* Header */
-        #panel-header                   { background: #000; }
+        /* Header: grigio chiaro al posto del nero */
+        #panel-header                   { background: #F0F0F0; border-bottom: 1px solid var(--pb2); }
         #panel-header::after            { background: var(--pa); }
-        #panel-header p                 { color: #999; }
+        #panel-header h1                { color: var(--pt); }
+        #panel-header p                 { color: var(--pm); }
         .hotel-logo-img                 { border-color: var(--pa); }
 
-        /* Language buttons */
-        .lang-btn                       { border-color: #3A3A3A; color: #777; }
-        .lang-btn.active                { background: var(--pa); border-color: var(--pa); color: #111; }
-        .lang-btn:hover:not(.active)    { border-color: #666; color: #ccc; }
+        /* Lang switcher */
+        #lang-switcher                  { background: #F0F0F0; border-bottom: 1px solid var(--pb2); }
+        .lang-btn                       { border-color: #CCCCCC; color: var(--pm); }
+        .lang-btn.active                { background: var(--pa); border-color: var(--pa); color: #FFF; }
+        .lang-btn:hover:not(.active)    { border-color: #999; color: var(--pt); }
 
         /* Filter buttons */
-        .filter-btn                     { border-color: #333; color: var(--pm); }
+        .filter-btn                     { border-color: #CCCCCC; color: var(--pm); }
         .filter-btn.active,
-        .filter-btn:hover               { background: var(--pa); border-color: var(--pa); color: #111; }
+        .filter-btn:hover               { background: var(--pa); border-color: var(--pa); color: #FFF; }
 
         /* Tab labels */
         .panel-tab                      { color: var(--pm); }
         .panel-tab.active               { color: var(--pa); border-bottom-color: var(--pa); }
 
         /* POI list */
-        .poi-item                       { border-bottom-color: rgba(255,255,255,0.06); }
-        .poi-item:hover                 { background: rgba(255,255,255,0.06); }
-        .poi-item.active                { background: rgba(255,255,255,0.11); }
+        .poi-item                       { border-bottom-color: rgba(0,0,0,0.06); }
+        .poi-item:hover                 { background: rgba(0,0,0,0.04); }
+        .poi-item.active                { background: rgba(0,0,0,0.08); }
         .poi-info h3                    { color: var(--pt); }
         .poi-info span                  { color: var(--pm); }
         #poi-list::-webkit-scrollbar-thumb,
         #panel-tab-transit::-webkit-scrollbar-thumb,
-        #panel-tab-hotel::-webkit-scrollbar-thumb { background: #444; }
+        #panel-tab-hotel::-webkit-scrollbar-thumb { background: #CCCCCC; }
 
         /* Hotel info tab */
         .hotel-info-title               { color: var(--pa); border-bottom-color: var(--pb2); }
         .hotel-info-card                { background: var(--ps); border-color: var(--pb2); }
         .hotel-info-text h4             { color: var(--pt); }
         .hotel-info-text p              { color: var(--pm); }
-        .hotel-code-box                 { background: #000; border: 1px solid var(--pb2); }
-        .hotel-code-label               { color: #999; }
-        .hotel-code-sub                 { color: var(--pm); }
-        .hotel-contact-btn              { background: var(--ps); border-color: var(--pb2); }
-        .hotel-contact-btn:hover        { background: var(--ps2); border-color: #555; }
+        .hotel-code-box                 { background: var(--pa); }
+        .hotel-code-label               { color: #AAAAAA; }
+        .hotel-code-value               { color: #FFFFFF; }
+        .hotel-code-sub                 { color: #AAAAAA; }
+        .hotel-contact-btn              { background: var(--pb); border-color: var(--pb2); }
+        .hotel-contact-btn:hover        { background: var(--ps); border-color: #AAAAAA; }
         .hotel-contact-text span        { color: var(--pm); }
         .hotel-contact-text strong      { color: var(--pt); }
-        .hotel-contact-arrow            { color: #555; }
-        .hotel-badge                    { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); color: #aaa; }
+        .hotel-contact-arrow            { color: #BBBBBB; }
+        .hotel-badge                    { background: #EFEFEF; border-color: #CCCCCC; color: #555; }
 
         /* Transit tab */
         .transit-section-title          { color: var(--pt); }
         .transit-line                   { background: var(--ps); border-color: var(--pb2); }
         .transit-line-name              { color: var(--pt); }
         .transit-line-sub               { color: var(--pm); }
-        .transit-hour-item              { background: var(--ps2); }
+        .transit-hour-item              { background: var(--pb); border: 1px solid var(--pb2); }
         .transit-hour-label             { color: var(--pm); }
         .transit-hour-value             { color: var(--pt); }
-        .transit-freq                   { color: #aaa; }
+        .transit-freq                   { color: var(--pm); }
         .transit-freq::before           { background: var(--pa); }
-        .transit-tip                    { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); color: #bbb; }
+        .transit-tip                    { background: #F4F4F4; border-color: #CCCCCC; color: #555; }
         .transit-tip strong             { color: var(--pa); }
         .transit-divider                { background: var(--pb2); }
 
