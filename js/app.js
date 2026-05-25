@@ -318,15 +318,34 @@ const T = {
 const POI_DATA = [
     {
         id: "plebiscito", cat: "monument", coor: [40.8359, 14.2488],
-        nome: { en:"Piazza del Plebiscito", it:"Piazza del Plebiscito", fr:"Piazza del Plebiscito", es:"Piazza del Plebiscito" },
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Piazza_del_Plebiscito_-_Naples.jpg/1280px-Piazza_del_Plebiscito_-_Naples.jpg",
+        nome: {
+            en: "Piazza del Plebiscito & Royal Palace",
+            it: "Piazza del Plebiscito e Palazzo Reale",
+            fr: "Piazza del Plebiscito & Palais Royal",
+            es: "Piazza del Plebiscito y Palacio Real"
+        },
         desc: {
-            en: "The symbolic heart of Naples and its largest square, dominated by the grand Basilica of San Francesco di Paola and the Royal Palace. Unmissable in the evening when it glows golden.",
-            it: "Il cuore simbolico di Napoli: la piazza pi\u00F9 grande della citt\u00E0, dominata dalla grandiosa Basilica di San Francesco di Paola e dal Palazzo Reale. Imperdibile di sera, quando si illumina d\u2019oro.",
-            fr: "Le c\u0153ur symbolique de Naples, domin\u00E9 par la grandiose Basilique de San Francesco di Paola et le Palais Royal. Incontournable le soir, lorsqu\u2019elle s\u2019illumine dor\u00E9e.",
-            es: "El coraz\u00F3n simb\u00F3lico de N\u00E1poles, dominado por la imponente Bas\u00EDlica de San Francisco de Paula y el Palacio Real. Imprescindible por la noche, cuando se ilumina de dorado."
+            en: "The symbolic heart of Naples: its largest square, framed by the Basilica of San Francesco di Paola, opens directly onto the Royal Palace (1600) \u2014 residence of the Spanish viceroys and later the Bourbons. The eighteen royal apartments house extraordinary tapestries, paintings and period furniture. The square is free and unmissable at sunset; the Palace requires a ticket.",
+            it: "Il cuore simbolico di Napoli: la piazza pi\u00F9 grande della citt\u00E0, incorniciata dalla Basilica di San Francesco di Paola, si apre direttamente sul Palazzo Reale (1600) \u2014 residenza dei vicer\u00E9 spagnoli e poi dei Borbone. I diciotto appartamenti reali conservano straordinari arazzi, dipinti e arredi d\u2019epoca. La piazza \u00E8 libera e imperdibile al tramonto; il Palazzo \u00E8 a pagamento.",
+            fr: "Le c\u0153ur symbolique de Naples\u00A0: sa plus grande place, encadr\u00E9e par la Basilique de San Francesco di Paola, s\u2019ouvre directement sur le Palais Royal (1600) \u2014 r\u00E9sidence des vice-rois espagnols puis des Bourbons. Les dix-huit appartements royaux conservent tapisseries, peintures et meubles d\u2019\u00E9poque. La place est gratuite et incontournable au coucher du soleil\u00A0; le Palais est payant.",
+            es: "El coraz\u00F3n simb\u00F3lico de N\u00E1poles: su plaza m\u00E1s grande, enmarcada por la Bas\u00EDlica de San Francisco de Paula, se abre directamente al Palacio Real (1600) \u2014 residencia de los virreyes espa\u00F1oles y luego de los Borbones. Los dieciocho apartamentos reales conservan tapices, pinturas y muebles de \u00E9poca. La plaza es gratuita e imprescindible al atardecer; el Palacio es de pago."
         },
         distanza: { en:"~15 min walk", it:"~15 min a piedi", fr:"~15 min \u00E0 pied", es:"~15 min a pie" },
-        sempreAperto: true
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Piazza", it:"Piazza", fr:"Piazza", es:"Plaza" }, ore:{ en:"Always open", it:"Sempre aperta", fr:"Toujours ouverte", es:"Siempre abierta" } },
+                { giorni:{ en:"Palace: Thu \u2013 Tue", it:"Palazzo: Gio \u2013 Mar", fr:"Palais\u00A0: Jeu \u2013 Mar", es:"Palacio: Jue \u2013 Mar" }, ore:"9:00 \u2013 20:00" },
+                { giorni:{ en:"Palace: Wednesday", it:"Palazzo: Mercoled\u00EC", fr:"Palais\u00A0: Mercredi", es:"Palacio: Mi\u00E9rcoles" }, ore:{ en:"Closed", it:"Chiuso", fr:"Ferm\u00E9", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Piazza (square)", it:"Piazza", fr:"Piazza", es:"Plaza" }, prezzo:"Free" },
+                { tipo:{ en:"Palace \u2013 full", it:"Palazzo \u2013 intero", fr:"Palais \u2013 plein", es:"Palacio \u2013 normal" }, prezzo:"\u20AC10" },
+                { tipo:{ en:"Palace \u2013 reduced", it:"Palazzo \u2013 ridotto", fr:"Palais \u2013 r\u00E9duit", es:"Palacio \u2013 reducido" }, prezzo:"\u20AC5" }
+            ],
+            note:{ en:"Palace free on the first Sunday of the month. Last entry 1h before closing.", it:"Palazzo gratuito la prima domenica del mese. Ultimo ingresso 1h prima della chiusura.", fr:"Palais gratuit le premier dimanche du mois. Derni\u00E8re entr\u00E9e 1h avant la fermeture.", es:"Palacio gratis el primer domingo del mes. \u00DAltima entrada 1h antes del cierre." }
+        }
     },
     {
         id: "castelovo", cat: "monument", coor: [40.8282, 14.2475],
@@ -834,30 +853,6 @@ const POI_DATA = [
         sempreAperto: true
     },
     {
-        id: "palazzoreale", cat: "monument", coor: [40.83555, 14.24913],
-        nome: { en:"Royal Palace of Naples", it:"Palazzo Reale di Napoli", fr:"Palais Royal de Naples", es:"Palacio Real de N\u00E1poles" },
-        desc: {
-            en: "Built in 1600 by architect Domenico Fontana as the residence of the Spanish viceroys, the Royal Palace dominates Piazza del Plebiscito. Its eighteen rooms house a magnificent museum of furnishings, tapestries and paintings from the Bourbon era. Don\u2019t miss the Royal Chapel and the monumental staircase.",
-            it: "Costruito nel 1600 dall\u2019architetto Domenico Fontana come residenza dei vicer\u00E9 spagnoli, il Palazzo Reale domina Piazza del Plebiscito. Le sue diciotto sale ospitano un magnifico museo di arredi, arazzi e dipinti di et\u00E0 borbonica. Da non perdere la Cappella Reale e lo scalone monumentale.",
-            fr: "Construit en 1600 par l\u2019architecte Domenico Fontana comme r\u00E9sidence des vice-rois espagnols, le Palais Royal domine la Piazza del Plebiscito. Ses dix-huit salles abritent un magnifique mus\u00E9e de mobilier, tapisseries et peintures de l\u2019\u00E8re bourbonienne. Ne manquez pas la Chapelle Royale et l\u2019escalier monumental.",
-            es: "Construido en 1600 por el arquitecto Domenico Fontana como residencia de los virreyes espa\u00F1oles, el Palacio Real domina la Piazza del Plebiscito. Sus dieciocho salas albergan un magn\u00EDfico museo de mobiliario, tapices y pinturas de la \u00E9poca borbonica. No te pierdas la Capilla Real y la escalinata monumental."
-        },
-        distanza: { en:"~15 min walk", it:"~15 min a piedi", fr:"~15 min \u00E0 pied", es:"~15 min a pie" },
-        sempreAperto: false,
-        ticketInfo: {
-            orari: [
-                { giorni:{ en:"Thu \u2013 Tue", it:"Gio \u2013 Mar", fr:"Jeu \u2013 Mar", es:"Jue \u2013 Mar" }, ore:"9:00 \u2013 20:00" },
-                { giorni:{ en:"Wednesday", it:"Mercoled\u00EC", fr:"Mercredi", es:"Mi\u00E9rcoles" }, ore:{ en:"Closed", it:"Chiuso", fr:"Ferm\u00E9", es:"Cerrado" } }
-            ],
-            biglietti: [
-                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC10" },
-                { tipo:{ en:"Reduced", it:"Ridotto", fr:"R\u00E9duit", es:"Reducido" }, prezzo:"\u20AC5" },
-                { tipo:{ en:"Under 18 EU", it:"Under 18 UE", fr:"Moins de 18 ans UE", es:"Menores 18 UE" }, prezzo:"Free" }
-            ],
-            note:{ en:"Free on the first Sunday of the month. Last entry 1h before closing.", it:"Gratuito la prima domenica del mese. Ultimo ingresso 1h prima della chiusura.", fr:"Gratuit le premier dimanche du mois. Derni\u00E8re entr\u00E9e 1h avant la fermeture.", es:"Gratis el primer domingo del mes. \u00DAltima entrada 1h antes del cierre." }
-        }
-    },
-    {
         id: "catacombegennaro", cat: "museum", coor: [40.86175, 14.24985],
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Catacombe_di_San_Gennaro_-_panoramio.jpg/1280px-Catacombe_di_San_Gennaro_-_panoramio.jpg",
         nome: { en:"Catacombs of San Gennaro", it:"Catacombe di San Gennaro", fr:"Catacombes de San Gennaro", es:"Catacumbas de San Genaro" },
@@ -924,10 +919,6 @@ const WIKI_PAGES = {
     "MADRE Museum": "Madre_(museum)",
     "Museo Madre": "Madre_(museum)",
     "Palazzo dello Spagnolo": "Palazzo_dello_Spagnolo",
-    "Royal Palace of Naples": "Royal_Palace_of_Naples",
-    "Palazzo Reale di Napoli": "Royal_Palace_of_Naples",
-    "Palais Royal de Naples": "Royal_Palace_of_Naples",
-    "Palacio Real de Nápoles": "Royal_Palace_of_Naples",
     "Catacombs of San Gennaro": "Catacombs_of_San_Gennaro",
     "Catacombe di San Gennaro": "Catacombs_of_San_Gennaro",
     "Catacombes de San Gennaro": "Catacombs_of_San_Gennaro",
