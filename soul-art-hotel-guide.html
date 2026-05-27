@@ -1483,11 +1483,14 @@ function loadImage(poi) {
     const oldPh = wrap.querySelector("#detail-img-placeholder");
     if (oldPh) oldPh.remove();
 
+    // Se il POI ha un'immagine custom impostata esplicitamente, usala sempre
+    if (poi.img) { applyImg(imgEl, poi.img, wrap, poi); return; }
+
     const poiName = poi.nome[currentLang] || poi.nome.en;
     const page = WIKI_PAGES[poiName] || WIKI_PAGES[poi.nome.en];
 
     if (imgCache[poi.id]) { applyImg(imgEl, imgCache[poi.id], wrap, poi); return; }
-    if (!page) { poi.img ? applyImg(imgEl, poi.img, wrap, poi) : showFallback(wrap, poi); return; }
+    if (!page) { showFallback(wrap, poi); return; }
 
     fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(page))
         .then(r => r.json())
