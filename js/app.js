@@ -876,6 +876,7 @@ const POI_DATA = [
     },
     {
         id: "piomonte", cat: "museum", coor: [40.85098, 14.25786],
+        img: "https://www.repstatic.it/content/localirep/img/rep-napoli/2024/05/11/100629280-fce13049-072e-42df-a1ba-b01e505c5ec7.jpg",
         nome: { en:"Pio Monte della Misericordia", it:"Pio Monte della Misericordia", fr:"Pio Monte della Misericordia", es:"Pio Monte della Misericordia" },
         desc: {
             en: "A hidden gem of Naples: a small Baroque church that houses one of the most important paintings of the 17th century \u2014 Caravaggio's 'Seven Acts of Mercy' (1607), painted for this very chapel. The dramatic chiaroscuro and emotional intensity of this single canvas are breathtaking. The upper gallery also contains works by Luca Giordano and Jusepe de Ribera.",
@@ -949,7 +950,7 @@ const POI_DATA = [
     },
     {
         id: "capri", cat: "daytrip", coor: [40.55008, 14.22907],
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Capri_-_Panorama_%28pixinn.net%29.jpg/1280px-Capri_-_Panorama_%28pixinn.net%29.jpg",
+        img: "https://viaggioin.it/wp-content/uploads/2023/05/Capri.png",
         nome: { en:"Capri", it:"Capri", fr:"Capri", es:"Capri" },
         desc: {
             en: "The jewel of the Gulf of Naples: a glamorous island of dramatic cliffs, turquoise waters, the legendary Blue Grotto, the Gardens of Augustus and the ruins of Emperor Tiberius's Villa Jovis. Take the funicular up to Capri town for boutiques and views, or a bus to Anacapri for wilder scenery. Best visited on weekdays to avoid summer crowds.",
