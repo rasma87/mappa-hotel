@@ -231,3 +231,25 @@
         /* Mobile panel e tab bar */
         #mobile-panel                   { background: var(--pb); }
         .mob-tab.active                 { color: var(--pa); }
+
+        /* ── Banner offline ──────────────────────────────────────────── */
+        #offline-banner {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #1A1A1A;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 10px 16px;
+            z-index: 9999;
+            border-top: 1px solid #444;
+        }
+        body.is-offline #offline-banner { display: block; }
+
+        /* Su mobile solleva il banner sopra la tab bar */
+        @media (max-width: 680px) {
+            #offline-banner { bottom: 56px; border-radius: 8px 8px 0 0; }
+        }

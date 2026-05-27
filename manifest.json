@@ -1,0 +1,20 @@
+{
+    "name": "Soul Art Hotel – Guest Guide",
+    "short_name": "Soul Art",
+    "description": "Guida interattiva per gli ospiti del Soul Art Hotel di Napoli",
+    "start_url": "./index.html",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "background_color": "#FFFFFF",
+    "theme_color": "#2E2E2E",
+    "lang": "it",
+    "icons": [
+        {
+            "src": "img/logo-hotel.png",
+            "sizes": "any",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}

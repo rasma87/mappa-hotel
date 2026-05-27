@@ -1116,6 +1116,9 @@ function setLang(lang) {
     });
     // Re-render mobile panel if open
     if (currentMobileTab !== 'map') mobileTab(currentMobileTab);
+
+    // Aggiorna testo banner offline nella nuova lingua
+    if (typeof window._updateOfflineBanner === 'function') window._updateOfflineBanner();
 }
 
 // ── TRANSIT DATA ──────────────────────────────────────────────────────────────
@@ -1345,6 +1348,32 @@ TRANSIT_STATIONS.forEach(st => {
 });
 
 // Show/hide transit markers when switching tabs
+
+// ── OFFLINE INDICATOR ─────────────────────────────────────────────────────────
+const OFFLINE_MSG = {
+    it: "📡 Modalità offline — la mappa e i contenuti in cache sono disponibili",
+    en: "📡 Offline mode — map and cached content are available",
+    fr: "📡 Mode hors ligne — la carte et le contenu en cache sont disponibles",
+    es: "📡 Modo sin conexión — el mapa y el contenido en caché están disponibles"
+};
+
+(function () {
+    const banner = document.createElement('div');
+    banner.id = 'offline-banner';
+    document.body.appendChild(banner);
+
+    function updateStatus() {
+        document.body.classList.toggle('is-offline', !navigator.onLine);
+        banner.textContent = OFFLINE_MSG[currentLang] || OFFLINE_MSG.en;
+    }
+    window.addEventListener('online',  updateStatus);
+    window.addEventListener('offline', updateStatus);
+    // Esponi per aggiornare il testo al cambio lingua
+    window._updateOfflineBanner = () => {
+        banner.textContent = OFFLINE_MSG[currentLang] || OFFLINE_MSG.en;
+    };
+    updateStatus();
+})();
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 hotelMarker.bindPopup('<b style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif">Soul Art Hotel</b><br><small style="color:#888">' + T.it.youAreHere + '</small>');
