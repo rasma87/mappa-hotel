@@ -9,6 +9,7 @@
     "background_color": "#FFFFFF",
     "theme_color": "#2E2E2E",
     "lang": "it",
+    "categories": ["travel", "navigation"],
     "icons": [
         {
             "src": "img/logo-hotel.png",
