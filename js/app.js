@@ -36,8 +36,8 @@ function mobileTab(tab) {
 function renderMobilePlaces() {
     const t = T[currentLang];
     const inner = document.getElementById('mobile-panel-inner');
-    const cats    = ['all','monument','museum','transport','nature'];
-    const labels  = [t.all, t.monument, t.museum, t.transport, t.nature];
+    const cats    = ['all','monument','museum','transport','nature','daytrip'];
+    const labels  = [t.all, t.monument, t.museum, t.transport, t.nature, t.daytrip];
 
     const filterBar = '<div style="display:flex;gap:6px;flex-wrap:wrap;padding:10px 0 12px;position:sticky;top:0;background:var(--cream);z-index:1;border-bottom:1px solid #E0D8CC;margin-bottom:4px">' +
         cats.map((cat, i) => {
@@ -263,8 +263,8 @@ const T = {
     en: {
         subtitle: "Guest Guide",
         all: "All", monument: "Monuments", museum: "Museums",
-        transport: "Transport", nature: "Viewpoints",
-        catLabel: { monument:"Monument", museum:"Museum", transport:"Transport", nature:"Viewpoint" },
+        transport: "Transport", nature: "Viewpoints", daytrip: "Day Trips",
+        catLabel: { monument:"Monument", museum:"Museum", transport:"Transport", nature:"Viewpoint", daytrip:"Day Trip" },
         fromHotel: "From the hotel",
         hours: "Hours", tickets: "Tickets",
         ticketTitle: "\u{1F550} Opening Hours & Tickets",
@@ -276,8 +276,8 @@ const T = {
     it: {
         subtitle: "Guest Guide",
         all: "Tutti", monument: "Monumenti", museum: "Musei",
-        transport: "Trasporti", nature: "Panoramici",
-        catLabel: { monument:"Monumento", museum:"Museo", transport:"Trasporti", nature:"Punto Panoramico" },
+        transport: "Trasporti", nature: "Panoramici", daytrip: "Gite",
+        catLabel: { monument:"Monumento", museum:"Museo", transport:"Trasporti", nature:"Punto Panoramico", daytrip:"Gita di un giorno" },
         fromHotel: "Dall'hotel",
         hours: "Orari", tickets: "Biglietti",
         ticketTitle: "\u{1F550} Orari & Biglietti",
@@ -289,8 +289,8 @@ const T = {
     fr: {
         subtitle: "Guest Guide",
         all: "Tout", monument: "Monuments", museum: "Mus\u00E9es",
-        transport: "Transports", nature: "Points de vue",
-        catLabel: { monument:"Monument", museum:"Mus\u00E9e", transport:"Transport", nature:"Point de vue" },
+        transport: "Transports", nature: "Points de vue", daytrip: "Excursions",
+        catLabel: { monument:"Monument", museum:"Mus\u00E9e", transport:"Transport", nature:"Point de vue", daytrip:"Excursion" },
         fromHotel: "De l'h\u00F4tel",
         hours: "Horaires", tickets: "Billets",
         ticketTitle: "\u{1F550} Horaires & Billets",
@@ -302,8 +302,8 @@ const T = {
     es: {
         subtitle: "Guest Guide",
         all: "Todo", monument: "Monumentos", museum: "Museos",
-        transport: "Transportes", nature: "Miradores",
-        catLabel: { monument:"Monumento", museum:"Museo", transport:"Transporte", nature:"Mirador" },
+        transport: "Transportes", nature: "Miradores", daytrip: "Excursiones",
+        catLabel: { monument:"Monumento", museum:"Museo", transport:"Transporte", nature:"Mirador", daytrip:"Excursión" },
         fromHotel: "Desde el hotel",
         hours: "Horario", tickets: "Entradas",
         ticketTitle: "\u{1F550} Horario & Entradas",
@@ -873,6 +873,142 @@ const POI_DATA = [
             ],
             note:{ en:"Guided tours only \u2014 depart every hour. Via Capodimonte 13, Rione Sanit\u00E0.", it:"Solo visite guidate \u2014 partenza ogni ora. Via Capodimonte 13, Rione Sanit\u00E0.", fr:"Visites guid\u00E9es uniquement \u2014 d\u00E9part toutes les heures. Via Capodimonte 13, Rione Sanit\u00E0.", es:"Solo visitas guiadas \u2014 salen cada hora. Via Capodimonte 13, Rione Sanit\u00E0." }
         }
+    },
+    {
+        id: "piomonte", cat: "museum", coor: [40.85098, 14.25786],
+        nome: { en:"Pio Monte della Misericordia", it:"Pio Monte della Misericordia", fr:"Pio Monte della Misericordia", es:"Pio Monte della Misericordia" },
+        desc: {
+            en: "A hidden gem of Naples: a small Baroque church that houses one of the most important paintings of the 17th century \u2014 Caravaggio's 'Seven Acts of Mercy' (1607), painted for this very chapel. The dramatic chiaroscuro and emotional intensity of this single canvas are breathtaking. The upper gallery also contains works by Luca Giordano and Jusepe de Ribera.",
+            it: "Un gioiello nascosto di Napoli: una piccola chiesa barocca che custodisce uno dei dipinti pi\u00F9 importanti del Seicento \u2014 le 'Sette opere di Misericordia' di Caravaggio (1607), realizzate proprio per questa cappella. Il drammatico chiaroscuro e l'intensit\u00E0 emotiva di questa tela sono mozzafiato. La galleria superiore ospita anche opere di Luca Giordano e Jusepe de Ribera.",
+            fr: "Un joyau cach\u00E9 de Naples : une petite \u00E9glise baroque qui abrite l'une des peintures les plus importantes du XVIIe si\u00E8cle \u2014 les 'Sept Actes de Mis\u00E9ricorde' du Caravage (1607), peintes pour cette chapelle m\u00EAme. Le dramatique clair-obscur et l'intensit\u00E9 \u00E9motionnelle de cette toile sont saisissants. La galerie sup\u00E9rieure conserve aussi des \u0153uvres de Luca Giordano et Jusepe de Ribera.",
+            es: "Una joya oculta de N\u00E1poles: una peque\u00F1a iglesia barroca que alberga una de las pinturas m\u00E1s importantes del siglo XVII \u2014 las 'Siete Obras de Misericordia' de Caravaggio (1607), pintadas para esta misma capilla. El dram\u00E1tico claroscuro y la intensidad emocional de este lienzo son impresionantes. La galer\u00EDa superior tambi\u00E9n contiene obras de Luca Giordano y Jusepe de Ribera."
+        },
+        distanza: { en:"~10 min walk", it:"~10 min a piedi", fr:"~10 min \u00E0 pied", es:"~10 min a pie" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Mon \u2013 Sat", it:"Lun \u2013 Sab", fr:"Lun \u2013 Sam", es:"Lun \u2013 S\u00E1b" }, ore:"9:00 \u2013 14:30" },
+                { giorni:{ en:"Sunday", it:"Domenica", fr:"Dimanche", es:"Domingo" }, ore:{ en:"Closed", it:"Chiuso", fr:"Ferm\u00E9", es:"Cerrado" } }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC7" },
+                { tipo:{ en:"Reduced", it:"Ridotto", fr:"R\u00E9duit", es:"Reducido" }, prezzo:"\u20AC5" }
+            ],
+            note:{ en:"Via dei Tribunali 253 \u2014 in the heart of the historic centre, near the Duomo.", it:"Via dei Tribunali 253 \u2014 nel cuore del centro storico, vicino al Duomo.", fr:"Via dei Tribunali 253 \u2014 au c\u0153ur du centre historique, pr\u00E8s du D\u00F4me.", es:"Via dei Tribunali 253 \u2014 en el coraz\u00F3n del centro hist\u00F3rico, cerca del Duomo." }
+        }
+    },
+    {
+        id: "pompei", cat: "daytrip", coor: [40.74927, 14.48541],
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg/1280px-Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg",
+        nome: { en:"Pompeii", it:"Pompei", fr:"Pomp\u00E9i", es:"Pompeya" },
+        desc: {
+            en: "The most famous archaeological site in the world: a Roman city frozen in time by the eruption of Mount Vesuvius in 79 AD. Walking through its streets, bakeries, temples and villas \u2014 with plaster casts of victims still in place \u2014 is an unforgettable experience. Allow at least 3 hours. Reachable by Circumvesuviana train from Napoli Centrale.",
+            it: "Il sito archeologico pi\u00F9 famoso al mondo: una citt\u00E0 romana fermata nel tempo dall'eruzione del Vesuvio nel 79 d.C. Passeggiare tra le sue strade, le panetterie, i templi e le ville \u2014 con i calchi delle vittime ancora al loro posto \u2014 \u00E8 un'esperienza indimenticabile. Prevedete almeno 3 ore. Raggiungibile con la Circumvesuviana da Napoli Centrale.",
+            fr: "Le site arch\u00E9ologique le plus c\u00E9l\u00E8bre au monde : une ville romaine fig\u00E9e dans le temps par l'\u00E9ruption du V\u00E9suve en 79 ap. J.-C. Se promener dans ses rues, boulangeries, temples et villas \u2014 avec les moulages des victimes encore en place \u2014 est une exp\u00E9rience inoubliable. Pr\u00E9voyez au moins 3 heures. Accessible en train Circumv\u00E9suvien depuis la Gare Centrale.",
+            es: "El sitio arqueol\u00F3gico m\u00E1s famoso del mundo: una ciudad romana congelada en el tiempo por la erupci\u00F3n del Vesubio en el a\u00F1o 79 d.C. Pasear por sus calles, panader\u00EDas, templos y villas \u2014 con los moldes de yeso de las v\u00EDctimas a\u00FAn en su lugar \u2014 es una experiencia inolvidable. Reserva al menos 3 horas. Accesible en tren Circumvesuviana desde la Estaci\u00F3n Central."
+        },
+        distanza: { en:"~40 min by Circumvesuviana train from Napoli Centrale", it:"~40 min con Circumvesuviana da Napoli Centrale", fr:"~40 min en train Circumv\u00E9suvien depuis la Gare Centrale", es:"~40 min en tren Circumvesuviana desde la Estaci\u00F3n Central" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Apr \u2013 Oct", it:"Apr \u2013 Ott", fr:"Avr \u2013 Oct", es:"Abr \u2013 Oct" }, ore:"9:00 \u2013 19:00" },
+                { giorni:{ en:"Nov \u2013 Mar", it:"Nov \u2013 Mar", fr:"Nov \u2013 Mar", es:"Nov \u2013 Mar" }, ore:"9:00 \u2013 17:00" }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC16" },
+                { tipo:{ en:"EU ages 18\u201325", it:"EU 18\u201325 anni", fr:"UE 18\u201325 ans", es:"UE 18\u201325 a\u00F1os" }, prezzo:"\u20AC2" },
+                { tipo:{ en:"Under 18 / Over 65 EU", it:"Under 18 / Over 65 UE", fr:"Moins 18 / Plus 65 UE", es:"Menos 18 / M\u00E1s 65 UE" }, prezzo:"Free" }
+            ],
+            note:{ en:"Free on the first Sunday of the month. Train: Circumvesuviana to 'Pompei Scavi \u2013 Villa dei Misteri', \u20AC2.80 each way.", it:"Gratuito la prima domenica del mese. Treno: Circumvesuviana fino a 'Pompei Scavi \u2013 Villa dei Misteri', \u20AC2,80 a/r.", fr:"Gratuit le premier dimanche du mois. Train : Circumv\u00E9suvien jusqu'\u00E0 'Pompei Scavi \u2013 Villa dei Misteri', \u20AC2,80 l'aller.", es:"Gratis el primer domingo del mes. Tren: Circumvesuviana hasta 'Pompei Scavi \u2013 Villa dei Misteri', \u20AC2,80 ida." }
+        }
+    },
+    {
+        id: "ercolano", cat: "daytrip", coor: [40.80560, 14.34820],
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Ercolano_-_panoramio_%2868%29.jpg/1280px-Ercolano_-_panoramio_%2868%29.jpg",
+        nome: { en:"Herculaneum", it:"Ercolano", fr:"Herculanum", es:"Herculano" },
+        desc: {
+            en: "Often overlooked in favour of Pompeii, Herculaneum was a wealthier Roman city and is far better preserved \u2014 wooden furniture, food, and even papyrus scrolls survived. Much smaller and less crowded, it can be explored in 2 hours. The site sits right in the modern town of Ercolano, just 20 minutes by train from Naples.",
+            it: "Spesso trascurata a favore di Pompei, Ercolano era una citt\u00E0 romana pi\u00F9 ricca ed \u00E8 molto meglio conservata \u2014 sono sopravvissuti mobili in legno, cibo e persino rotoli di papiro. Molto pi\u00F9 piccola e meno affollata, si esplora in 2 ore. Il sito si trova nel centro della moderna Ercolano, a soli 20 minuti di treno da Napoli.",
+            fr: "Souvent oubli\u00E9e au profit de Pomp\u00E9i, Herculanum \u00E9tait une ville romaine plus ais\u00E9e et est bien mieux conserv\u00E9e \u2014 mobilier en bois, nourriture et m\u00EAme des rouleaux de papyrus ont surv\u00E9cu. Beaucoup plus petite et moins fr\u00E9quent\u00E9e, elle se visite en 2 heures. Le site se trouve au c\u0153ur de la ville moderne d'Ercolano, \u00E0 seulement 20 minutes en train de Naples.",
+            es: "A menudo ignorada en favor de Pompeya, Herculano era una ciudad romana m\u00E1s rica y est\u00E1 mucho mejor conservada \u2014 sobrevivieron muebles de madera, comida e incluso rollos de papiro. Mucho m\u00E1s peque\u00F1a y menos concurrida, se puede explorar en 2 horas. El yacimiento est\u00E1 en el centro de la moderna Ercolano, a solo 20 minutos en tren desde N\u00E1poles."
+        },
+        distanza: { en:"~20 min by Circumvesuviana train from Napoli Centrale", it:"~20 min con Circumvesuviana da Napoli Centrale", fr:"~20 min en train Circumv\u00E9suvien depuis la Gare Centrale", es:"~20 min en tren Circumvesuviana desde la Estaci\u00F3n Central" },
+        sempreAperto: false,
+        ticketInfo: {
+            orari: [
+                { giorni:{ en:"Apr \u2013 Oct", it:"Apr \u2013 Ott", fr:"Avr \u2013 Oct", es:"Abr \u2013 Oct" }, ore:"9:00 \u2013 19:00" },
+                { giorni:{ en:"Nov \u2013 Mar", it:"Nov \u2013 Mar", fr:"Nov \u2013 Mar", es:"Nov \u2013 Mar" }, ore:"9:00 \u2013 17:00" }
+            ],
+            biglietti: [
+                { tipo:{ en:"Full price", it:"Intero", fr:"Plein tarif", es:"Precio normal" }, prezzo:"\u20AC13" },
+                { tipo:{ en:"EU ages 18\u201325", it:"EU 18\u201325 anni", fr:"UE 18\u201325 ans", es:"UE 18\u201325 a\u00F1os" }, prezzo:"\u20AC2" },
+                { tipo:{ en:"Under 18 / Over 65 EU", it:"Under 18 / Over 65 UE", fr:"Moins 18 / Plus 65 UE", es:"Menos 18 / M\u00E1s 65 UE" }, prezzo:"Free" }
+            ],
+            note:{ en:"Free on the first Sunday of the month. Train: Circumvesuviana to 'Ercolano Scavi', \u20AC2.50 each way.", it:"Gratuito la prima domenica del mese. Treno: Circumvesuviana fino a 'Ercolano Scavi', \u20AC2,50 a/r.", fr:"Gratuit le premier dimanche du mois. Train : Circumv\u00E9suvien jusqu'\u00E0 'Ercolano Scavi', \u20AC2,50 l'aller.", es:"Gratis el primer domingo del mes. Tren: Circumvesuviana hasta 'Ercolano Scavi', \u20AC2,50 ida." }
+        }
+    },
+    {
+        id: "capri", cat: "daytrip", coor: [40.55008, 14.22907],
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Capri_-_Panorama_%28pixinn.net%29.jpg/1280px-Capri_-_Panorama_%28pixinn.net%29.jpg",
+        nome: { en:"Capri", it:"Capri", fr:"Capri", es:"Capri" },
+        desc: {
+            en: "The jewel of the Gulf of Naples: a glamorous island of dramatic cliffs, turquoise waters, the legendary Blue Grotto, the Gardens of Augustus and the ruins of Emperor Tiberius's Villa Jovis. Take the funicular up to Capri town for boutiques and views, or a bus to Anacapri for wilder scenery. Best visited on weekdays to avoid summer crowds.",
+            it: "Il gioiello del Golfo di Napoli: un'isola affascinante di falesie drammatiche, acque turchesi, la leggendaria Grotta Azzurra, i Giardini di Augusto e le rovine della Villa Jovis dell'Imperatore Tiberio. Prendete la funicolare fino al centro di Capri per boutique e panorami, o un bus per Anacapri per paesaggi pi\u00F9 selvaggi. Meglio visitarla nei giorni feriali per evitare la calca estiva.",
+            fr: "Le joyau du golfe de Naples : une \u00EEle glamour aux falaises spectaculaires, aux eaux turquoise, \u00E0 la l\u00E9gendaire Grotte Bleue, aux Jardins d'Auguste et aux ruines de la Villa Jovis de l'Empereur Tib\u00E8re. Prenez le funiculaire jusqu'au centre de Capri pour les boutiques et les panoramas, ou un bus vers Anacapri pour des paysages plus sauvages. Mieux vaut la visiter en semaine pour \u00E9viter les foules estivales.",
+            es: "La joya del Golfo de N\u00E1poles: una glamorosa isla de acantilados dram\u00E1ticos, aguas turquesas, la legendaria Gruta Azul, los Jardines de Augusto y las ruinas de la Villa Jovis del Emperador Tiberio. Toma el funicular hasta el centro de Capri para las boutiques y las vistas, o un autob\u00FAs a Anacapri para paisajes m\u00E1s salvajes. Mejor visitarla entre semana para evitar las aglomeraciones veraniegas."
+        },
+        distanza: { en:"~50 min by hydrofoil from Molo Beverello", it:"~50 min con aliscafo da Molo Beverello", fr:"~50 min en hydroglisseur depuis Molo Beverello", es:"~50 min en aliscafo desde Molo Beverello" },
+        sempreAperto: true,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"All year", it:"Tutto l'anno", fr:"Toute l'ann\u00E9e", es:"Todo el a\u00F1o" }, ore:{ en:"Several daily departures", it:"Diverse partenze giornaliere", fr:"Plusieurs d\u00E9parts quotidiens", es:"Varias salidas diarias" } }],
+            biglietti: [
+                { tipo:{ en:"Hydrofoil (aliscafo) one way", it:"Aliscafo andata", fr:"Hydroglisseur aller", es:"Aliscafo ida" }, prezzo:"~\u20AC22" },
+                { tipo:{ en:"Ferry (traghetto) one way", it:"Traghetto andata", fr:"Ferry aller", es:"Ferry ida" }, prezzo:"~\u20AC15" }
+            ],
+            note:{ en:"Departs from Molo Beverello (already on the map). Book in advance in summer. Ferry is slower (~80 min) but cheaper.", it:"Partenze da Molo Beverello (gi\u00E0 in mappa). Prenotate in anticipo d'estate. Il traghetto \u00E8 pi\u00F9 lento (~80 min) ma pi\u00F9 economico.", fr:"D\u00E9part depuis Molo Beverello (d\u00E9j\u00E0 sur la carte). R\u00E9servez \u00E0 l'avance en \u00E9t\u00E9. Le ferry est plus lent (~80 min) mais moins cher.", es:"Sale desde Molo Beverello (ya en el mapa). Reserva con antelaci\u00F3n en verano. El ferry es m\u00E1s lento (~80 min) pero m\u00E1s barato." }
+        }
+    },
+    {
+        id: "ischia", cat: "daytrip", coor: [40.73680, 13.90056],
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Ischia_panorama.jpg/1280px-Ischia_panorama.jpg",
+        nome: { en:"Ischia", it:"Ischia", fr:"Ischia", es:"Ischia" },
+        desc: {
+            en: "The largest island in the Gulf of Naples, known for its volcanic thermal spas, sandy beaches and the towering Aragonese Castle rising from a rocky islet. Less touristy than Capri, Ischia is perfect for a relaxing day of hot springs (terme), sea and local cuisine. The island has several thermal parks open to the public.",
+            it: "La pi\u00F9 grande isola del Golfo di Napoli, famosa per le terme vulcaniche, le spiagge sabbiose e l'imponente Castello Aragonese che si erge da uno scoglio. Meno turistica di Capri, Ischia \u00E8 perfetta per una giornata rilassante tra terme, mare e cucina locale. L'isola dispone di diversi parchi termali aperti al pubblico.",
+            fr: "La plus grande \u00EEle du golfe de Naples, connue pour ses thermes volcaniques, ses plages de sable et l'imposant Ch\u00E2teau Aragonais dress\u00E9 sur un \u00EElot rocheux. Moins touristique que Capri, Ischia est parfaite pour une journ\u00E9e relaxante entre sources thermales, mer et cuisine locale. L'\u00EEle poss\u00E8de plusieurs parcs thermaux ouverts au public.",
+            es: "La isla m\u00E1s grande del Golfo de N\u00E1poles, conocida por sus spas termales volc\u00E1nicos, playas de arena y el imponente Castillo Aragon\u00E9s que se alza desde un islote rocoso. Menos tur\u00EDstica que Capri, Ischia es perfecta para un d\u00EDa relajante de aguas termales, mar y cocina local. La isla cuenta con varios parques termales abiertos al p\u00FAblico."
+        },
+        distanza: { en:"~75 min by hydrofoil from Molo Beverello", it:"~75 min con aliscafo da Molo Beverello", fr:"~75 min en hydroglisseur depuis Molo Beverello", es:"~75 min en aliscafo desde Molo Beverello" },
+        sempreAperto: true,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"All year", it:"Tutto l'anno", fr:"Toute l'ann\u00E9e", es:"Todo el a\u00F1o" }, ore:{ en:"Several daily departures", it:"Diverse partenze giornaliere", fr:"Plusieurs d\u00E9parts quotidiens", es:"Varias salidas diarias" } }],
+            biglietti: [
+                { tipo:{ en:"Hydrofoil one way", it:"Aliscafo andata", fr:"Hydroglisseur aller", es:"Aliscafo ida" }, prezzo:"~\u20AC22" },
+                { tipo:{ en:"Ferry one way", it:"Traghetto andata", fr:"Ferry aller", es:"Ferry ida" }, prezzo:"~\u20AC14" }
+            ],
+            note:{ en:"Departs from Molo Beverello. Also reachable from Pozzuoli (closer, cheaper). Thermal parks: Giardini Poseidon, Negombo, Castiglione.", it:"Partenze da Molo Beverello. Raggiungibile anche da Pozzuoli (pi\u00F9 vicino, pi\u00F9 economico). Parchi termali: Giardini Poseidon, Negombo, Castiglione.", fr:"D\u00E9part de Molo Beverello. Accessible aussi depuis Pozzuoli (plus proche, moins cher). Parcs thermaux : Giardini Poseidon, Negombo, Castiglione.", es:"Sale desde Molo Beverello. Tambi\u00E9n accesible desde Pozzuoli (m\u00E1s cercano, m\u00E1s barato). Parques termales: Giardini Poseidon, Negombo, Castiglione." }
+        }
+    },
+    {
+        id: "procida", cat: "daytrip", coor: [40.75817, 14.02820],
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Procida%2C_La_Corricella.jpg/1280px-Procida%2C_La_Corricella.jpg",
+        nome: { en:"Procida", it:"Procida", fr:"Procida", es:"Procida" },
+        desc: {
+            en: "The smallest and most authentic island of the Gulf: a fishing village barely touched by mass tourism, with brightly coloured houses tumbling down to the sea at the iconic Marina Corricella. Italian Capital of Culture 2022. No cars in the old village. Procida is the antidote to crowded Capri \u2014 raw, beautiful and genuinely Neapolitan.",
+            it: "La pi\u00F9 piccola e autentica isola del Golfo: un borgo di pescatori quasi intatto dal turismo di massa, con case variopinte che scendono al mare nella pittoresca Marina Corricella. Capitale Italiana della Cultura 2022. Niente auto nel borgo antico. Procida \u00E8 l'antidoto alla Capri affollata \u2014 autentica, bellissima e genuinamente napoletana.",
+            fr: "La plus petite et la plus authentique \u00EEle du golfe : un village de p\u00EAcheurs \u00E0 peine touch\u00E9 par le tourisme de masse, avec ses maisons color\u00E9es qui d\u00E9gringolent jusqu'\u00E0 la mer \u00E0 la pittoresque Marina Corricella. Capitale italienne de la Culture 2022. Pas de voitures dans le vieux village. Procida est l'antidote \u00E0 une Capri bond\u00E9e \u2014 brute, belle et authentiquement napolitaine.",
+            es: "La isla m\u00E1s peque\u00F1a y aut\u00E9ntica del Golfo: un pueblo pesquero apenas tocado por el turismo masivo, con casas de colores que descienden hasta el mar en la pintoresca Marina Corricella. Capital Italiana de la Cultura 2022. Sin coches en el casco antiguo. Procida es el ant\u00EDdoto a la abarrotada Capri \u2014 cruda, hermosa y genuinamente napolitana."
+        },
+        distanza: { en:"~35 min by hydrofoil from Molo Beverello", it:"~35 min con aliscafo da Molo Beverello", fr:"~35 min en hydroglisseur depuis Molo Beverello", es:"~35 min en aliscafo desde Molo Beverello" },
+        sempreAperto: true,
+        ticketInfo: {
+            orari: [{ giorni:{ en:"All year", it:"Tutto l'anno", fr:"Toute l'ann\u00E9e", es:"Todo el a\u00F1o" }, ore:{ en:"Several daily departures", it:"Diverse partenze giornaliere", fr:"Plusieurs d\u00E9parts quotidiens", es:"Varias salidas diarias" } }],
+            biglietti: [
+                { tipo:{ en:"Hydrofoil one way", it:"Aliscafo andata", fr:"Hydroglisseur aller", es:"Aliscafo ida" }, prezzo:"~\u20AC15" },
+                { tipo:{ en:"Ferry one way", it:"Traghetto andata", fr:"Ferry aller", es:"Ferry ida" }, prezzo:"~\u20AC12" }
+            ],
+            note:{ en:"Departs from Molo Beverello. The most affordable island getaway from Naples.", it:"Partenze da Molo Beverello. La gita alle isole pi\u00F9 economica da Napoli.", fr:"D\u00E9part de Molo Beverello. L'escapade insulaire la plus abordable au d\u00E9part de Naples.", es:"Sale desde Molo Beverello. La escapada isle\u00F1a m\u00E1s asequible desde N\u00E1poles." }
+        }
     }
 ];
 
@@ -922,14 +1058,27 @@ const WIKI_PAGES = {
     "Catacombs of San Gennaro": "Catacombs_of_San_Gennaro",
     "Catacombe di San Gennaro": "Catacombs_of_San_Gennaro",
     "Catacombes de San Gennaro": "Catacombs_of_San_Gennaro",
-    "Catacumbas de San Genaro": "Catacombs_of_San_Gennaro"
+    "Catacumbas de San Genaro": "Catacombs_of_San_Gennaro",
+    "Pio Monte della Misericordia": "Pio_Monte_della_Misericordia",
+    "Pompeii": "Pompeii",
+    "Pompei": "Pompeii",
+    "Pompéi": "Pompeii",
+    "Pompeya": "Pompeii",
+    "Herculaneum": "Herculaneum",
+    "Ercolano": "Herculaneum",
+    "Herculanum": "Herculaneum",
+    "Herculano": "Herculaneum",
+    "Capri": "Capri",
+    "Ischia": "Ischia",
+    "Procida": "Procida"
 };
 
 const CATEGORIE = {
     monument: { color:"#C9A84C", emoji:"\u{1F3DB}\uFE0F" },
     museum:   { color:"#7B6FA0", emoji:"\u{1F3A8}" },
     transport:{ color:"#4A7BC4", emoji:"\u{1F6A2}" },
-    nature:   { color:"#5A9E6A", emoji:"\u{1F305}" }
+    nature:   { color:"#5A9E6A", emoji:"\u{1F305}" },
+    daytrip:  { color:"#E07B54", emoji:"\u26F5" }
 };
 
 const HOTEL = { coor:[40.844445798762386, 14.2496106966444] };
@@ -1080,6 +1229,7 @@ function setLang(lang) {
     document.getElementById("f-museum").textContent = t.museum;
     document.getElementById("f-transport").textContent = t.transport;
     document.getElementById("f-nature").textContent = t.nature;
+    document.getElementById("f-daytrip").textContent = t.daytrip;
 
     // Hotel popup
     hotelMarker.setPopupContent('<b style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif">Soul Art Hotel</b><br><small style="color:#888">' + t.youAreHere + '</small>');
