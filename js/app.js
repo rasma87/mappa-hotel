@@ -917,7 +917,7 @@ const POI_DATA = [
         }
     },
     {
-        id: "pompei", cat: "daytrip", coor: [40.74927, 14.48541],
+        id: "pompei", cat: "daytrip", coor: [40.74927, 14.48541], dirTo: [40.85314, 14.26879],
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg/1280px-Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg",
         nome: { en:"Pompeii", it:"Pompei", fr:"Pomp\u00E9i", es:"Pompeya" },
         desc: {
@@ -942,7 +942,7 @@ const POI_DATA = [
         }
     },
     {
-        id: "ercolano", cat: "daytrip", coor: [40.80560, 14.34820],
+        id: "ercolano", cat: "daytrip", coor: [40.80560, 14.34820], dirTo: [40.85314, 14.26879],
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Ercolano_-_panoramio_%2868%29.jpg/1280px-Ercolano_-_panoramio_%2868%29.jpg",
         nome: { en:"Herculaneum", it:"Ercolano", fr:"Herculanum", es:"Herculano" },
         desc: {
@@ -967,7 +967,7 @@ const POI_DATA = [
         }
     },
     {
-        id: "capri", cat: "daytrip", coor: [40.55008, 14.22907],
+        id: "capri", cat: "daytrip", coor: [40.55008, 14.22907], dirTo: [40.83820, 14.25479],
         imgForce: "https://viaggioin.it/wp-content/uploads/2023/05/Capri.png",
         nome: { en:"Capri", it:"Capri", fr:"Capri", es:"Capri" },
         desc: {
@@ -988,7 +988,7 @@ const POI_DATA = [
         }
     },
     {
-        id: "ischia", cat: "daytrip", coor: [40.73680, 13.90056],
+        id: "ischia", cat: "daytrip", coor: [40.73680, 13.90056], dirTo: [40.83820, 14.25479],
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Ischia_panorama.jpg/1280px-Ischia_panorama.jpg",
         nome: { en:"Ischia", it:"Ischia", fr:"Ischia", es:"Ischia" },
         desc: {
@@ -1009,7 +1009,7 @@ const POI_DATA = [
         }
     },
     {
-        id: "procida", cat: "daytrip", coor: [40.75817, 14.02820],
+        id: "procida", cat: "daytrip", coor: [40.75817, 14.02820], dirTo: [40.83820, 14.25479],
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Procida%2C_La_Corricella.jpg/1280px-Procida%2C_La_Corricella.jpg",
         nome: { en:"Procida", it:"Procida", fr:"Procida", es:"Procida" },
         desc: {
@@ -1225,8 +1225,9 @@ function openDetail(poi) {
     }
 
     document.getElementById("dir-label").textContent = t.directions;
+    const dest = poi.dirTo || poi.coor;
     document.getElementById("detail-directions").href =
-        "https://www.google.com/maps/dir/?api=1&origin=" + HOTEL.coor[0] + "," + HOTEL.coor[1] + "&destination=" + poi.coor[0] + "," + poi.coor[1] + "&travelmode=walking";
+        "https://www.google.com/maps/dir/?api=1&origin=" + HOTEL.coor[0] + "," + HOTEL.coor[1] + "&destination=" + dest[0] + "," + dest[1] + "&travelmode=walking";
     document.getElementById("detail-card").classList.add("open");
 }
 
