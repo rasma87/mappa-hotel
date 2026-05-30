@@ -1089,7 +1089,21 @@ const WIKI_PAGES = {
     "Herculano": "Herculaneum",
     "Capri": "Capri",
     "Ischia": "Ischia",
-    "Procida": "Procida"
+    "Procida": "Procida",
+    // POIs senza wiki precedente
+    "Museo Jago": "Jago_(sculptor)",
+    "Museo di Jago": "Jago_(sculptor)",
+    "Musée Jago": "Jago_(sculptor)",
+    "San Gregorio Armeno": "San_Gregorio_Armeno",
+    "Gesù Nuovo Church": "Gesù_Nuovo",
+    "Chiesa del Gesù Nuovo": "Gesù_Nuovo",
+    "Église du Gesù Nuovo": "Gesù_Nuovo",
+    "Iglesia del Gesú Nuevo": "Gesú_Nuevo",
+    "Castel Sant’Elmo & Piazza San Martino": "Certosa_di_San_Martino",
+    "Castel Sant’Elmo e P.za San Martino": "Certosa_di_San_Martino",
+    "Castel Sant’Elmo & Place San Martino": "Certosa_di_San_Martino",
+    "Castel Sant’Elmo y Plaza San Martino": "Certosa_di_San_Martino",
+    "Monte Echia": "Monte_Echia"
 };
 
 const CATEGORIE = {
