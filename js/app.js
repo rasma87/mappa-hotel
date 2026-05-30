@@ -1370,6 +1370,19 @@ function renderTransit(lang) {
             html += '<div class="transit-freq">' + (l.freq[lang]||l.freq.en) + '</div>';
             if (l.closureNote) html += '<div style="font-size:0.7rem;font-weight:600;color:#b71c1c;background:#fdecea;border-left:3px solid #b71c1c;border-radius:4px;padding:5px 8px;margin-top:7px">\u26A0\uFE0F ' + (l.closureNote[lang]||l.closureNote.en) + '</div>';
             if (l.note) html += '<div style="font-size:0.65rem;color:#888;margin-top:5px;font-style:italic">\u2139\uFE0F ' + (l.note[lang]||l.note.en) + '</div>';
+            // Fermate con link Google Maps
+            const lineStops = TRANSIT_STATIONS.filter(s => s.type === l.icon);
+            if (lineStops.length) {
+                html += '<div style="margin-top:9px;border-top:1px solid rgba(0,0,0,0.07);padding-top:7px">';
+                lineStops.forEach(stop => {
+                    const gmUrl = 'https://www.google.com/maps/dir/?api=1&origin=' + HOTEL.coor[0] + ',' + HOTEL.coor[1] + '&destination=' + stop.coor[0] + ',' + stop.coor[1] + '&travelmode=walking';
+                    html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:3px 0">';
+                    html += '<span style="font-size:0.78rem;color:var(--dark)">' + stop.label + '</span>';
+                    html += '<a href="' + gmUrl + '" target="_blank" style="font-size:0.62rem;color:#4285F4;text-decoration:none;background:#EAF1FF;padding:2px 8px;border-radius:10px;flex-shrink:0;margin-left:8px">\uD83E\uDDED</a>';
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
             html += '</div>';
         });
         html += '</div>';
@@ -1500,12 +1513,15 @@ TRANSIT_STATIONS.forEach(st => {
         className: "", iconSize: [isMetro ? 22 : 20, isMetro ? 22 : 20], iconAnchor: [isMetro ? 11 : 10, isMetro ? 11 : 10]
     });
     const marker = L.marker(st.coor, { icon, interactive:true });
+    const gmStUrl = 'https://www.google.com/maps/dir/?api=1&origin=' + HOTEL.coor[0] + ',' + HOTEL.coor[1] + '&destination=' + st.coor[0] + ',' + st.coor[1] + '&travelmode=walking';
     marker.bindPopup(
-        '<div style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif;min-width:120px">' +
-        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">' +
+        '<div style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif;min-width:140px">' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">' +
         '<span style="background:' + s.bg + ';color:white;border-radius:4px;padding:2px 6px;font-size:0.6rem;font-weight:700">' + st.type + '</span>' +
         '<b style="font-size:0.85rem">' + st.label + '</b></div>' +
-        '<div style="font-size:0.7rem;color:#888">' + (isMetro ? 'Metro' : 'Funicolare') + '</div></div>'
+        '<div style="font-size:0.7rem;color:#888;margin-bottom:8px">' + (isMetro ? 'Metro' : 'Funicolare') + '</div>' +
+        '<a href="' + gmStUrl + '" target="_blank" style="display:block;text-align:center;background:#4285F4;color:white;border-radius:6px;padding:5px 8px;font-size:0.72rem;font-weight:600;text-decoration:none">🧭 Google Maps</a>' +
+        '</div>'
     );
     transitMarkers.push(marker);
 });
