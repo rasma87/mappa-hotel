@@ -14,17 +14,11 @@ function mobileTab(tab) {
         if (el) el.classList.toggle('active', t === tab);
     });
 
-    // Mostra/nascondi marker stazioni transit sulla mappa
-    if (typeof transitMarkers !== 'undefined') {
-        transitMarkers.forEach(m => {
-            if (tab === 'transit') { if (!map.hasLayer(m)) m.addTo(map); }
-            else                   { if (map.hasLayer(m))  map.removeLayer(m); }
-        });
-    }
-
     if (tab === 'map') {
         panel.classList.remove('open');
         panel.classList.remove('transit-mode');
+        // Nascondi marker stazioni quando si torna alla mappa normale
+        transitMarkers.forEach(m => { try { if (map.hasLayer(m)) map.removeLayer(m); } catch(e){} });
         return;
     }
 
@@ -34,9 +28,18 @@ function mobileTab(tab) {
         // Bottom sheet: il pannello occupa il 50% inferiore, la mappa resta visibile sopra
         panel.classList.add('transit-mode');
         panel.classList.add('open');
+        // Aggiungi marker stazioni sulla mappa (eseguito dopo il layout per sicurezza)
+        setTimeout(function() {
+            transitMarkers.forEach(function(m) {
+                try { if (!map.hasLayer(m)) m.addTo(map); } catch(e) {}
+            });
+            map.invalidateSize();
+        }, 50);
         renderTransit(currentLang);
         inner.innerHTML = document.getElementById('panel-tab-transit').innerHTML;
     } else {
+        // Nascondi marker stazioni quando si passa ad altri tab
+        transitMarkers.forEach(m => { try { if (map.hasLayer(m)) map.removeLayer(m); } catch(e){} });
         panel.classList.remove('transit-mode');
         panel.classList.add('open');
         if (tab === 'places') {
