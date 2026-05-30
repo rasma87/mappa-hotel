@@ -232,6 +232,26 @@
         #mobile-panel                   { background: var(--pb); }
         .mob-tab.active                 { color: var(--pa); }
 
+        /* ── Transit bottom sheet ────────────────────────────────────── */
+        /* Quando attivo, il pannello occupa solo il 50% inferiore
+           lasciando la mappa visibile nella metà superiore dello schermo */
+        #mobile-panel.transit-mode {
+            height: 52%;
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 -6px 24px rgba(0,0,0,0.13);
+        }
+        /* Maniglia visiva in cima al drawer */
+        #mobile-panel.transit-mode::before {
+            content: '';
+            display: block;
+            width: 36px;
+            height: 4px;
+            background: #CCCCCC;
+            border-radius: 2px;
+            margin: 10px auto 2px;
+            flex-shrink: 0;
+        }
+
         /* ── Banner offline ──────────────────────────────────────────── */
         #offline-banner {
             display: none;

@@ -244,6 +244,26 @@
         #mobile-panel                   { background: var(--pb); }
         .mob-tab.active                 { color: var(--pa); }
 
+        /* ── Transit bottom sheet ────────────────────────────────────── */
+        /* Quando attivo, il pannello occupa solo il 50% inferiore
+           lasciando la mappa visibile nella metà superiore dello schermo */
+        #mobile-panel.transit-mode {
+            height: 52%;
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 -6px 24px rgba(0,0,0,0.13);
+        }
+        /* Maniglia visiva in cima al drawer */
+        #mobile-panel.transit-mode::before {
+            content: '';
+            display: block;
+            width: 36px;
+            height: 4px;
+            background: #CCCCCC;
+            border-radius: 2px;
+            margin: 10px auto 2px;
+            flex-shrink: 0;
+        }
+
         /* ── Banner offline ──────────────────────────────────────────── */
         #offline-banner {
             display: none;
@@ -362,20 +382,27 @@ function mobileTab(tab) {
 
     if (tab === 'map') {
         panel.classList.remove('open');
+        panel.classList.remove('transit-mode');
         return;
     }
 
-    panel.classList.add('open');
     const inner = document.getElementById('mobile-panel-inner');
 
-    if (tab === 'places') {
-        renderMobilePlaces();
-    } else if (tab === 'transit') {
+    if (tab === 'transit') {
+        // Bottom sheet: il pannello occupa il 50% inferiore, la mappa resta visibile sopra
+        panel.classList.add('transit-mode');
+        panel.classList.add('open');
         renderTransit(currentLang);
         inner.innerHTML = document.getElementById('panel-tab-transit').innerHTML;
-    } else if (tab === 'hotel') {
-        renderHotelInfo(currentLang);
-        inner.innerHTML = document.getElementById('panel-tab-hotel').innerHTML;
+    } else {
+        panel.classList.remove('transit-mode');
+        panel.classList.add('open');
+        if (tab === 'places') {
+            renderMobilePlaces();
+        } else if (tab === 'hotel') {
+            renderHotelInfo(currentLang);
+            inner.innerHTML = document.getElementById('panel-tab-hotel').innerHTML;
+        }
     }
 }
 

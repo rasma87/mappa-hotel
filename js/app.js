@@ -16,20 +16,27 @@ function mobileTab(tab) {
 
     if (tab === 'map') {
         panel.classList.remove('open');
+        panel.classList.remove('transit-mode');
         return;
     }
 
-    panel.classList.add('open');
     const inner = document.getElementById('mobile-panel-inner');
 
-    if (tab === 'places') {
-        renderMobilePlaces();
-    } else if (tab === 'transit') {
+    if (tab === 'transit') {
+        // Bottom sheet: il pannello occupa il 50% inferiore, la mappa resta visibile sopra
+        panel.classList.add('transit-mode');
+        panel.classList.add('open');
         renderTransit(currentLang);
         inner.innerHTML = document.getElementById('panel-tab-transit').innerHTML;
-    } else if (tab === 'hotel') {
-        renderHotelInfo(currentLang);
-        inner.innerHTML = document.getElementById('panel-tab-hotel').innerHTML;
+    } else {
+        panel.classList.remove('transit-mode');
+        panel.classList.add('open');
+        if (tab === 'places') {
+            renderMobilePlaces();
+        } else if (tab === 'hotel') {
+            renderHotelInfo(currentLang);
+            inner.innerHTML = document.getElementById('panel-tab-hotel').innerHTML;
+        }
     }
 }
 
