@@ -1321,7 +1321,8 @@ const TRANSIT = {
                 color:"#1565C0", icon:"MO",
                 first:"7:00", last:"22:00",
                 freq: { en:"Every 10 min", it:"Ogni 10 min", fr:"Toutes les 10 min", es:"Cada 10 min" },
-                note: null
+                note: null,
+                closureNote: { en:"Closed for maintenance works \u2014 reopening date TBC", it:"Chiusa per lavori di manutenzione \u2014 riapertura a data da destinarsi", fr:"Ferm\u00e9e pour travaux de maintenance \u2014 date de r\u00e9ouverture \u00e0 confirmer", es:"Cerrada por obras de mantenimiento \u2014 fecha de reapertura por confirmar" }
             },
             {
                 name: { en:"Funicolare di Mergellina", it:"Funicolare di Mergellina", fr:"Funiculaire de Mergellina", es:"Funicular de Mergellina" },
@@ -1360,6 +1361,7 @@ function renderTransit(lang) {
             html += '<div class="transit-hour-item"><span class="transit-hour-label">' + tu.last + '</span><span class="transit-hour-value">' + l.last + '</span></div>';
             html += '</div>';
             html += '<div class="transit-freq">' + (l.freq[lang]||l.freq.en) + '</div>';
+            if (l.closureNote) html += '<div style="font-size:0.7rem;font-weight:600;color:#b71c1c;background:#fdecea;border-left:3px solid #b71c1c;border-radius:4px;padding:5px 8px;margin-top:7px">\u26A0\uFE0F ' + (l.closureNote[lang]||l.closureNote.en) + '</div>';
             if (l.note) html += '<div style="font-size:0.65rem;color:#888;margin-top:5px;font-style:italic">\u2139\uFE0F ' + (l.note[lang]||l.note.en) + '</div>';
             html += '</div>';
         });
