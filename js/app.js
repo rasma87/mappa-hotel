@@ -1321,7 +1321,14 @@ const TRANSIT = {
                 color:"#1565C0", icon:"MO",
                 first:"7:00", last:"22:00",
                 freq: { en:"Every 10 min", it:"Ogni 10 min", fr:"Toutes les 10 min", es:"Cada 10 min" },
-                note: null
+                note: null,
+                closed: true,
+                closedNote: {
+                    en: "Closed for maintenance works \u2014 reopening date TBD",
+                    it: "Chiusa per lavori \u2014 data di riapertura da destinarsi",
+                    fr: "Ferm\u00e9e pour travaux \u2014 date de r\u00e9ouverture \u00e0 d\u00e9terminer",
+                    es: "Cerrado por obras \u2014 fecha de reapertura por determinar"
+                }
             },
             {
                 name: { en:"Funicolare di Mergellina", it:"Funicolare di Mergellina", fr:"Funiculaire de Mergellina", es:"Funicular de Mergellina" },
@@ -1350,16 +1357,21 @@ function renderTransit(lang) {
     function renderGroup(sectionTitle, lines) {
         html += '<div class="transit-section"><div class="transit-section-title">' + sectionTitle + '</div>';
         lines.forEach(l => {
-            html += '<div class="transit-line">';
+            const isClosed = !!l.closed;
+            html += '<div class="transit-line" style="' + (isClosed ? 'opacity:0.7;' : '') + '">';
+            if (isClosed) {
+                html += '<div style="background:#D32F2F;color:#fff;font-size:0.65rem;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:5px 10px;border-radius:6px 6px 0 0;margin:-10px -10px 8px -10px">'
+                      + '\u26A0\uFE0F ' + (l.closedNote[lang]||l.closedNote.en) + '</div>';
+            }
             html += '<div class="transit-line-header">';
-            html += '<span class="transit-badge" style="background:' + l.color + ';border-radius:6px;font-size:0.58rem">' + l.icon + '</span>';
+            html += '<span class="transit-badge" style="background:' + (isClosed ? '#9E9E9E' : l.color) + ';border-radius:6px;font-size:0.58rem">' + l.icon + '</span>';
             html += '<div><div class="transit-line-name">' + (l.name[lang]||l.name.en) + '</div>';
             html += '<div class="transit-line-sub">' + (l.sub[lang]||l.sub.en) + '</div></div></div>';
             html += '<div class="transit-hours">';
-            html += '<div class="transit-hour-item"><span class="transit-hour-label">' + tu.first + '</span><span class="transit-hour-value">' + l.first + '</span></div>';
-            html += '<div class="transit-hour-item"><span class="transit-hour-label">' + tu.last + '</span><span class="transit-hour-value">' + l.last + '</span></div>';
+            html += '<div class="transit-hour-item"><span class="transit-hour-label">' + tu.first + '</span><span class="transit-hour-value" style="' + (isClosed ? 'text-decoration:line-through;color:#aaa' : '') + '">' + l.first + '</span></div>';
+            html += '<div class="transit-hour-item"><span class="transit-hour-label">' + tu.last + '</span><span class="transit-hour-value" style="' + (isClosed ? 'text-decoration:line-through;color:#aaa' : '') + '">' + l.last + '</span></div>';
             html += '</div>';
-            html += '<div class="transit-freq">' + (l.freq[lang]||l.freq.en) + '</div>';
+            html += '<div class="transit-freq" style="' + (isClosed ? 'text-decoration:line-through;color:#aaa' : '') + '">' + (l.freq[lang]||l.freq.en) + '</div>';
             if (l.note) html += '<div style="font-size:0.65rem;color:#888;margin-top:5px;font-style:italic">\u2139\uFE0F ' + (l.note[lang]||l.note.en) + '</div>';
             html += '</div>';
         });
