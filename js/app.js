@@ -14,6 +14,14 @@ function mobileTab(tab) {
         if (el) el.classList.toggle('active', t === tab);
     });
 
+    // Mostra/nascondi marker stazioni transit sulla mappa
+    if (typeof transitMarkers !== 'undefined') {
+        transitMarkers.forEach(m => {
+            if (tab === 'transit') { if (!map.hasLayer(m)) m.addTo(map); }
+            else                   { if (map.hasLayer(m))  map.removeLayer(m); }
+        });
+    }
+
     if (tab === 'map') {
         panel.classList.remove('open');
         panel.classList.remove('transit-mode');
