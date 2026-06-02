@@ -336,7 +336,7 @@ const T = {
 const POI_DATA = [
     {
         id: "plebiscito", cat: "monument", coor: [40.8359, 14.2488],
-        imgForce: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/P.Plebiscito_Napoli.jpg/1280px-P.Plebiscito_Napoli.jpg",
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/P.Plebiscito_Napoli.jpg/1280px-P.Plebiscito_Napoli.jpg",
         nome: {
             en: "Piazza del Plebiscito & Royal Palace",
             it: "Piazza del Plebiscito e Palazzo Reale",
@@ -1040,6 +1040,10 @@ const POI_DATA = [
 
 const WIKI_PAGES = {
     "Piazza del Plebiscito": "Piazza_del_Plebiscito",
+    "Piazza del Plebiscito & Royal Palace": "Piazza_del_Plebiscito",
+    "Piazza del Plebiscito e Palazzo Reale": "Piazza_del_Plebiscito",
+    "Piazza del Plebiscito & Palais Royal": "Piazza_del_Plebiscito",
+    "Piazza del Plebiscito y Palacio Real": "Piazza_del_Plebiscito",
     "Castel dell'Ovo": "Castel_dell'Ovo",
     "Maschio Angioino": "Castel_Nuovo",
     "Galleria Umberto I": "Galleria_Umberto_I",
