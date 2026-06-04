@@ -594,6 +594,8 @@ const POI_DATA = [
     },
     {
         id: "pompei", cat: "daytrip", coor: [40.74927, 14.48541], dirTo: [40.85314, 14.26879],
+        dirLabel: { en:"→ Napoli Centrale", it:"→ Napoli Centrale", fr:"→ Napoli Centrale", es:"→ Napoli Centrale" },
+        travelTip: { en:"🚉 From Napoli Centrale take the Circumvesuviana (direction Sorrento) to 'Pompei Scavi – Villa dei Misteri' — about 35 min, €2.80 each way.", it:"🚉 Da Napoli Centrale prendi la Circumvesuviana (dir. Sorrento) fino a 'Pompei Scavi – Villa dei Misteri' — circa 35 min, €2,80 a/r.", fr:"🚉 Depuis Napoli Centrale, prenez la Circumvésuvienne (dir. Sorrento) jusqu'à 'Pompei Scavi – Villa dei Misteri' — environ 35 min, 2,80 € l'aller.", es:"🚉 Desde Napoli Centrale toma la Circumvesuviana (dir. Sorrento) hasta 'Pompei Scavi – Villa dei Misteri' — unos 35 min, 2,80 € ida." },
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg/1280px-Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg",
         nome: { en:"Pompeii", it:"Pompei", fr:"Pomp\u00E9i", es:"Pompeya" },
         desc: {
@@ -619,6 +621,8 @@ const POI_DATA = [
     },
     {
         id: "ercolano", cat: "daytrip", coor: [40.80560, 14.34820], dirTo: [40.85314, 14.26879],
+        dirLabel: { en:"→ Napoli Centrale", it:"→ Napoli Centrale", fr:"→ Napoli Centrale", es:"→ Napoli Centrale" },
+        travelTip: { en:"🚉 From Napoli Centrale take the Circumvesuviana (direction Sorrento) to 'Ercolano Scavi' — about 20 min, €2.50 each way.", it:"🚉 Da Napoli Centrale prendi la Circumvesuviana (dir. Sorrento) fino a 'Ercolano Scavi' — circa 20 min, €2,50 a/r.", fr:"🚉 Depuis Napoli Centrale, prenez la Circumvésuvienne (dir. Sorrento) jusqu'à 'Ercolano Scavi' — environ 20 min, 2,50 € l'aller.", es:"🚉 Desde Napoli Centrale toma la Circumvesuviana (dir. Sorrento) hasta 'Ercolano Scavi' — unos 20 min, 2,50 € ida." },
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Ercolano_-_panoramio_%2868%29.jpg/1280px-Ercolano_-_panoramio_%2868%29.jpg",
         nome: { en:"Herculaneum", it:"Ercolano", fr:"Herculanum", es:"Herculano" },
         desc: {
@@ -644,6 +648,8 @@ const POI_DATA = [
     },
     {
         id: "capri", cat: "daytrip", coor: [40.55008, 14.22907], dirTo: [40.83820, 14.25479],
+        dirLabel: { en:"→ Porto Beverello", it:"→ Porto Beverello", fr:"→ Porto Beverello", es:"→ Porto Beverello" },
+        travelTip: { en:"⛴ From Molo Beverello: hydrofoil (~50 min, ~€20) or ferry (~80 min, ~€11). Book in advance in summer.", it:"⛴ Dal Molo Beverello: aliscafo (~50 min, ~€20) o traghetto (~80 min, ~€11). Prenota in anticipo in estate.", fr:"⛴ Depuis Molo Beverello : hydroglisseur (~50 min, ~20 €) ou ferry (~80 min, ~11 €). Réservez à l'avance en été.", es:"⛴ Desde Molo Beverello: aliscafo (~50 min, ~20 €) o ferry (~80 min, ~11 €). Reserve con antelación en verano." },
         imgForce: "https://viaggioin.it/wp-content/uploads/2023/05/Capri.png",
         nome: { en:"Capri", it:"Capri", fr:"Capri", es:"Capri" },
         desc: {
@@ -665,6 +671,8 @@ const POI_DATA = [
     },
     {
         id: "ischia", cat: "daytrip", coor: [40.73680, 13.90056], dirTo: [40.83820, 14.25479],
+        dirLabel: { en:"→ Porto Beverello", it:"→ Porto Beverello", fr:"→ Porto Beverello", es:"→ Porto Beverello" },
+        travelTip: { en:"⛴ From Molo Beverello: ferry (~90 min, ~€14) or hydrofoil (~50 min, ~€20). Also reachable from Pozzuoli (closer, cheaper).", it:"⛴ Dal Molo Beverello: traghetto (~90 min, ~€14) o aliscafo (~50 min, ~€20). Raggiungibile anche da Pozzuoli (più vicino, più economico).", fr:"⛴ Depuis Molo Beverello : ferry (~90 min, ~14 €) ou hydroglisseur (~50 min, ~20 €). Aussi depuis Pozzuoli (plus proche, moins cher).", es:"⛴ Desde Molo Beverello: ferry (~90 min, ~14 €) o aliscafo (~50 min, ~20 €). También accesible desde Pozzuoli." },
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Ischia_panorama.jpg/1280px-Ischia_panorama.jpg",
         nome: { en:"Ischia", it:"Ischia", fr:"Ischia", es:"Ischia" },
         desc: {
@@ -686,6 +694,8 @@ const POI_DATA = [
     },
     {
         id: "procida", cat: "daytrip", coor: [40.75817, 14.02820], dirTo: [40.83820, 14.25479],
+        dirLabel: { en:"→ Porto Beverello", it:"→ Porto Beverello", fr:"→ Porto Beverello", es:"→ Porto Beverello" },
+        travelTip: { en:"⛴ From Molo Beverello: ferry (~70 min, ~€13) or hydrofoil (~35 min, ~€20). The most affordable island getaway from Naples.", it:"⛴ Dal Molo Beverello: traghetto (~70 min, ~€13) o aliscafo (~35 min, ~€20). L'isola più accessibile da Napoli.", fr:"⛴ Depuis Molo Beverello : ferry (~70 min, ~13 €) ou hydroglisseur (~35 min, ~20 €). L'île la plus abordable au départ de Naples.", es:"⛴ Desde Molo Beverello: ferry (~70 min, ~13 €) o aliscafo (~35 min, ~20 €). La escapada isleña más asequible desde Nápoles." },
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Procida%2C_La_Corricella.jpg/1280px-Procida%2C_La_Corricella.jpg",
         nome: { en:"Procida", it:"Procida", fr:"Procida", es:"Procida" },
         desc: {

@@ -218,7 +218,19 @@ function openDetail(poi) {
         tc.style.display = "none";
     }
 
-    document.getElementById("dir-label").textContent = t.directions;
+    // Travel tip box (daytrip POIs only)
+    const tipEl = document.getElementById("detail-travel-tip");
+    if (tipEl) {
+        if (poi.travelTip) {
+            tipEl.textContent = poi.travelTip[currentLang] || poi.travelTip.en;
+            tipEl.style.display = "block";
+        } else {
+            tipEl.style.display = "none";
+        }
+    }
+
+    const dirLbl = poi.dirLabel ? (poi.dirLabel[currentLang] || poi.dirLabel.en) : t.directions;
+    document.getElementById("dir-label").textContent = dirLbl;
     const dest = poi.dirTo || poi.coor;
     document.getElementById("detail-directions").href =
         "https://www.google.com/maps/dir/?api=1&origin=" + HOTEL.coor[0] + "," + HOTEL.coor[1] + "&destination=" + dest[0] + "," + dest[1] + "&travelmode=walking";
