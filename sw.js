@@ -1,6 +1,6 @@
 // ── Soul Art Hotel – Service Worker ──────────────────────────────────────────
 // Incrementa CACHE_VERSION per forzare l'aggiornamento su tutti i client
-const CACHE_VERSION = 7;
+const CACHE_VERSION = 8;
 const CACHE = 'soulart-v' + CACHE_VERSION;
 
 // App shell: caricata al primo avvio e sempre servita dalla cache
@@ -8,6 +8,9 @@ const APP_SHELL = [
     './',
     './index.html',
     './css/style.css',
+    './js/data-translations.js',
+    './js/data-poi.js',
+    './js/data-transit.js',
     './js/app.js',
     './img/logo-hotel.png',
     'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
