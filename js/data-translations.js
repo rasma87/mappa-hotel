@@ -99,7 +99,6 @@ function renderHotelInfo(lang) {
                         <h4>${s.reception_title}</h4>
                         <p>${s.reception_desc}</p>
                     </div>
-                    <span class="hotel-badge">\u2713 ${s.reception_badge}</span>
                 </div>
             </div>
             <div class="hotel-info-card">
