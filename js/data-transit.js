@@ -12,7 +12,7 @@ const TRANSIT = {
                 first:"5:30", last:"23:00",
                 freq: { en:"Every 6\u201310 min", it:"Ogni 6\u201310 min", fr:"Toutes les 6\u201310 min", es:"Cada 6\u201310 min" },
                 note: { en:"Until 2:00 on Fri & Sat nights", it:"Fino alle 2:00 ven. e sab. notte", fr:"Jusqu\u2019\u00E0 2h le ven. et sam.", es:"Hasta las 2:00 vier. y s\u00E1b." },
-                closureNote: { en:"Stations Piscinola and Frullone closed for maintenance works until September 2026", it:"Stazioni Piscinola e Frullone chiuse per lavori fino a settembre 2026", fr:"Stations Piscinola et Frullone ferm\u00E9es pour travaux jusqu\u2019en septembre 2026", es:"Estaciones Piscinola y Frullone cerradas por obras hasta septiembre de 2026" }
+                closureNote: { en:"Stations Piscinola, Chiaiano and Frullone closed for maintenance works until September 2026", it:"Stazioni Piscinola, Chiaiano e Frullone chiuse per lavori fino a settembre 2026", fr:"Stations Piscinola, Chiaiano et Frullone ferm\u00E9es pour travaux jusqu\u2019en septembre 2026", es:"Estaciones Piscinola, Chiaiano y Frullone cerradas por obras hasta septiembre de 2026" }
             },
             {
                 name: { en:"Line 2 \u2013 Pozzuoli / Gianturco", it:"Linea 2 \u2013 Pozzuoli / Gianturco", fr:"Ligne 2 \u2013 Pozzuoli / Gianturco", es:"L\u00EDnea 2 \u2013 Pozzuoli / Gianturco" },
