@@ -6,6 +6,7 @@
 // ── MOBILE TAB NAVIGATION ─────────────────────────────────────────────────────
 let currentMobileTab = 'map';
 let mobileCatFilter = 'all';
+let transitAddTimer = null;
 
 function mobileTab(tab) {
     if (window.innerWidth > 680) return;
@@ -20,19 +21,19 @@ function mobileTab(tab) {
     if (tab === 'map') {
         panel.classList.remove('open');
         panel.classList.remove('transit-mode');
-        // Nascondi marker stazioni quando si torna alla mappa normale
-        transitMarkers.forEach(m => { try { if (map.hasLayer(m)) map.removeLayer(m); } catch(e){} });
+        if (transitAddTimer) { clearTimeout(transitAddTimer); transitAddTimer = null; }
+        transitMarkers.forEach(m => { try { m.closePopup(); if (map.hasLayer(m)) map.removeLayer(m); } catch(e){} });
+        map.closePopup();
         return;
     }
 
     const inner = document.getElementById('mobile-panel-inner');
 
     if (tab === 'transit') {
-        // Bottom sheet: il pannello occupa il 50% inferiore, la mappa resta visibile sopra
         panel.classList.add('transit-mode');
         panel.classList.add('open');
-        // Aggiungi marker stazioni sulla mappa (eseguito dopo il layout per sicurezza)
-        setTimeout(function() {
+        transitAddTimer = setTimeout(function() {
+            transitAddTimer = null;
             transitMarkers.forEach(function(m) {
                 try { if (!map.hasLayer(m)) m.addTo(map); } catch(e) {}
             });
@@ -41,10 +42,12 @@ function mobileTab(tab) {
         renderTransit(currentLang);
         inner.innerHTML = document.getElementById('panel-tab-transit').innerHTML;
     } else {
-        // Nascondi marker stazioni quando si passa ad altri tab
-        transitMarkers.forEach(m => { try { if (map.hasLayer(m)) map.removeLayer(m); } catch(e){} });
+        if (transitAddTimer) { clearTimeout(transitAddTimer); transitAddTimer = null; }
+        transitMarkers.forEach(m => { try { m.closePopup(); if (map.hasLayer(m)) map.removeLayer(m); } catch(e){} });
+        map.closePopup();
         panel.classList.remove('transit-mode');
         panel.classList.add('open');
+        inner.innerHTML = '';
         if (tab === 'places') {
             renderMobilePlaces();
         } else if (tab === 'hotel') {
