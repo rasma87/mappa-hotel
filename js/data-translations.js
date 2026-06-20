@@ -81,8 +81,8 @@ function renderHotelInfo(lang) {
     const s = HOTEL_STRINGS[lang] || HOTEL_STRINGS.en;
     const el = document.getElementById("panel-tab-hotel");
     el.innerHTML = `
-        <div style="text-align:center;padding:12px 0 8px">
-            <img src="img/logo-hotel.png" style="width:100%;max-width:320px;height:auto;display:inline-block;border-radius:8px">
+        <div style="padding:0 0 20px">
+            <img src="img/logo-hotel.png" style="width:100%;height:auto;display:block;object-fit:contain">
         </div>
 
         <div class="hotel-info-section">
