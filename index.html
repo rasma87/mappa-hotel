@@ -32,9 +32,9 @@
         <button class="lang-btn" data-lang="es">ES</button>
     </div>
     <div id="panel-tabs">
+        <button class="panel-tab" id="tab-hotel" onclick="switchTab('hotel')"><span id="tab-hotel-label">🏨 Hotel</span></button>
         <button class="panel-tab active" id="tab-places" onclick="switchTab('places')"><span id="tab-places-label">🗺 Places</span></button>
         <button class="panel-tab" id="tab-transit" onclick="switchTab('transit')"><span id="tab-transit-label">🚇 Transport</span></button>
-        <button class="panel-tab" id="tab-hotel" onclick="switchTab('hotel')"><span id="tab-hotel-label">🏨 Hotel</span></button>
     </div>
 
     <div id="panel-tab-places">
@@ -66,7 +66,11 @@
 </div>
 
 <div id="mobile-tabs">
-    <button class="mob-tab active" id="mob-tab-map" onclick="mobileTab('map')">
+    <button class="mob-tab active" id="mob-tab-hotel" onclick="mobileTab('hotel')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span id="mobt-hotel">Hotel</span>
+    </button>
+    <button class="mob-tab" id="mob-tab-map" onclick="mobileTab('map')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
         <span id="mobt-map">Map</span>
     </button>
@@ -77,10 +81,6 @@
     <button class="mob-tab" id="mob-tab-transit" onclick="mobileTab('transit')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M8 13v4m8-4v4M6 17h12"/><circle cx="8.5" cy="9.5" r="1"/><circle cx="15.5" cy="9.5" r="1"/></svg>
         <span id="mobt-transit">Transport</span>
-    </button>
-    <button class="mob-tab" id="mob-tab-hotel" onclick="mobileTab('hotel')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <span id="mobt-hotel">Hotel</span>
     </button>
 </div>
 

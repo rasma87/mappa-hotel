@@ -412,14 +412,10 @@ TRANSIT_STATIONS.forEach(st => {
         className: "", iconSize: [isMetro ? 22 : 20, isMetro ? 22 : 20], iconAnchor: [isMetro ? 11 : 10, isMetro ? 11 : 10]
     });
     const marker = L.marker(st.coor, { icon, interactive:true });
-    const gmStUrl = 'https://www.google.com/maps/dir/?api=1&origin=' + HOTEL.coor[0] + ',' + HOTEL.coor[1] + '&destination=' + st.coor[0] + ',' + st.coor[1] + '&travelmode=walking';
     marker.bindPopup(
-        '<div style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif;min-width:140px">' +
-        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">' +
-        '<span style="background:' + s.bg + ';color:white;border-radius:4px;padding:2px 6px;font-size:0.6rem;font-weight:700">' + st.type + '</span>' +
-        '<b style="font-size:0.85rem">' + st.label + '</b></div>' +
-        '<div style="font-size:0.7rem;color:#888;margin-bottom:8px">' + (isMetro ? 'Metro' : 'Funicolare') + '</div>' +
-        '<a href="' + gmStUrl + '" target="_blank" style="display:block;text-align:center;background:#4285F4;color:white;border-radius:6px;padding:5px 8px;font-size:0.72rem;font-weight:600;text-decoration:none">🧭 Google Maps</a>' +
+        '<div style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif;display:flex;align-items:center;gap:6px;padding:2px 0">' +
+        '<span style="background:' + s.bg + ';color:white;border-radius:4px;padding:2px 6px;font-size:0.6rem;font-weight:700;flex-shrink:0">' + st.type + '</span>' +
+        '<b style="font-size:0.85rem">' + st.label + '</b>' +
         '</div>'
     );
     transitMarkers.push(marker);
@@ -457,4 +453,5 @@ const OFFLINE_MSG = {
 hotelMarker.bindPopup('<b style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif">Soul Art Hotel</b><br><small style="color:#888">' + T.it.youAreHere + '</small>');
 switchTab('places');
 setLang("it");
+mobileTab('hotel');
 
