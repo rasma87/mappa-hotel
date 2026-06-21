@@ -475,6 +475,10 @@ function renderHotelInfo(lang) {
             <img src="img/logo-hotel.png" style="width:100%;height:auto;display:block;object-fit:contain">
         </div>
 
+        <div style="display:flex;justify-content:center;gap:8px;padding:0 0 20px">
+            ${ ['it','en','fr','es'].map(l => `<button onclick="setLang('${l}')" class="lang-btn${l===lang?' active':''}" style="touch-action:manipulation">${l.toUpperCase()}</button>`).join('') }
+        </div>
+
         <div class="hotel-info-section">
             <div class="hotel-info-title">${s.reception_title}</div>
             <div class="hotel-info-card">
