@@ -123,10 +123,9 @@ function renderHotelInfo(lang) {
 
         <div class="hotel-info-section">
             <div class="hotel-info-title">${s.door_title}</div>
-            <div class="hotel-code-box">
-                <div class="hotel-code-label">${s.door_title}</div>
-                <div class="hotel-code-value">17+ok</div>
-                <div class="hotel-code-sub">${s.door_sub}</div>
+            <div class="hotel-code-box" style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+                <div class="hotel-code-sub" style="margin-top:0;color:#aaa;font-size:0.7rem;flex:1">${s.door_sub}</div>
+                <div class="hotel-code-value" style="font-size:1.5rem;letter-spacing:4px;flex-shrink:0">17+ok</div>
             </div>
         </div>
 
@@ -157,19 +156,18 @@ function renderHotelInfo(lang) {
                 </div>
                 <span class="hotel-contact-arrow">&#x203A;</span>
             </a>
-            <div class="hotel-info-card" style="margin-top:4px">
-                <div class="hotel-info-row">
-                    <div class="hotel-info-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#C9A84C"/>
-                        </svg>
-                    </div>
-                    <div class="hotel-info-text">
-                        <h4>${s.address_title}</h4>
-                        <p>${s.address_value}</p>
-                    </div>
+            <a class="hotel-contact-btn" href="https://www.google.com/maps/search/?api=1&query=Piazza+Carit%C3%A0+32+Napoli" target="_blank" style="margin-top:4px">
+                <div class="hotel-contact-icon" style="background:#FFF3E0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#C9A84C"/>
+                    </svg>
                 </div>
-            </div>
+                <div class="hotel-contact-text">
+                    <span>${s.address_title}</span>
+                    <strong>${s.address_value}</strong>
+                </div>
+                <span class="hotel-contact-arrow">&#x203A;</span>
+            </a>
         </div>
 
         <div class="hotel-info-section">
