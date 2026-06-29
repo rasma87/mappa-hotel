@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mappa-hotel",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8181"],
+      "port": 8181
+    },
+    {
+      "name": "spese2026",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8282", "--directory", "C:\\Users\\Utente\\Desktop\\Coding"],
+      "port": 8282
+    }
+  ]
+}

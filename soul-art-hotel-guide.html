@@ -1912,9 +1912,8 @@ function renderTransit(lang) {
                 html += '<div style="margin-top:9px;border-top:1px solid rgba(0,0,0,0.07);padding-top:7px">';
                 lineStops.forEach(stop => {
                     const gmUrl = 'https://www.google.com/maps/dir/?api=1&origin=' + HOTEL.coor[0] + ',' + HOTEL.coor[1] + '&destination=' + stop.coor[0] + ',' + stop.coor[1] + '&travelmode=walking';
-                    html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:3px 0">';
-                    html += '<span style="font-size:0.78rem;color:var(--dark)">' + stop.label + '</span>';
-                    html += '<a href="' + gmUrl + '" target="_blank" style="font-size:0.62rem;color:#4285F4;text-decoration:none;background:#EAF1FF;padding:2px 8px;border-radius:10px;flex-shrink:0;margin-left:8px">\uD83E\uDDED</a>';
+                    html += '<div style="padding:3px 0">';
+                    html += '<a href="' + gmUrl + '" target="_blank" style="font-size:0.78rem;color:#4285F4;text-decoration:none;display:block">' + stop.label + '</a>';
                     html += '</div>';
                 });
                 html += '</div>';
