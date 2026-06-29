@@ -355,7 +355,7 @@ function goToStation(idx) {
     const marker = transitMarkers[idx];
     if (!st) return;
     const focus = () => {
-        map.setView(st.coor, 17, { animate: true });
+        map.panTo(st.coor, { animate: true });
         if (marker) { if (!map.hasLayer(marker)) marker.addTo(map); marker.openPopup(); }
     };
     if (window.innerWidth <= 680) {
