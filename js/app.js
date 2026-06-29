@@ -21,6 +21,7 @@ function mobileTab(tab) {
     if (tab === 'map') {
         panel.classList.remove('open');
         panel.classList.remove('transit-mode');
+        panel.classList.remove('half-open');
         if (transitAddTimer) { clearTimeout(transitAddTimer); transitAddTimer = null; }
         transitMarkers.forEach(m => { try { m.closePopup(); if (map.hasLayer(m)) map.removeLayer(m); } catch(e){} });
         map.closePopup();
@@ -31,6 +32,7 @@ function mobileTab(tab) {
 
     if (tab === 'transit') {
         panel.classList.add('transit-mode');
+        panel.classList.remove('half-open');
         panel.classList.add('open');
         transitAddTimer = setTimeout(function() {
             transitAddTimer = null;
@@ -46,6 +48,7 @@ function mobileTab(tab) {
         transitMarkers.forEach(m => { try { m.closePopup(); if (map.hasLayer(m)) map.removeLayer(m); } catch(e){} });
         map.closePopup();
         panel.classList.remove('transit-mode');
+        panel.classList.toggle('half-open', tab === 'places');
         panel.classList.add('open');
         inner.innerHTML = '';
         if (tab === 'places') {
@@ -89,11 +92,7 @@ function setMobileFilter(cat) {
 function mobilePoi(id) {
     const poi = POI_DATA.find(p => p.id === id);
     if (!poi) return;
-    mobileTab('map');
-    setTimeout(() => {
-        map.setView(poi.coor, 16, {animate:true});
-        openDetail(poi);
-    }, 350);
+    map.panTo(poi.coor, { animate: true });
 }
 
 

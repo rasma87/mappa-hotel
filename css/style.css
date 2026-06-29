@@ -148,6 +148,7 @@
         /* MOBILE OVERLAY PANELS */
         #mobile-panel { display:block; position:fixed; bottom:56px; left:0; right:0; height:calc(100vh - 56px); height:calc(100dvh - 56px); z-index:940; background:var(--cream); overflow-y:auto; overscroll-behavior:contain; transform:translateY(110%); transition:transform 0.35s ease; pointer-events:none; }
         #mobile-panel.open { transform:translateY(0); pointer-events:auto; }
+        #mobile-panel.half-open { height:50dvh; height:50vh; }
         #mobile-panel-inner { padding:12px 14px 80px; }
 
         /* ── TEMA PANNELLO BIANCO / SCALE DI GRIGI ─────────────────────────── */
