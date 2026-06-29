@@ -1906,14 +1906,14 @@ function renderTransit(lang) {
             html += '<div class="transit-freq">' + (l.freq[lang]||l.freq.en) + '</div>';
             if (l.closureNote) html += '<div style="font-size:0.7rem;font-weight:600;color:#b71c1c;background:#fdecea;border-left:3px solid #b71c1c;border-radius:4px;padding:5px 8px;margin-top:7px">\u26A0\uFE0F ' + (l.closureNote[lang]||l.closureNote.en) + '</div>';
             if (l.note) html += '<div style="font-size:0.65rem;color:#888;margin-top:5px;font-style:italic">\u2139\uFE0F ' + (l.note[lang]||l.note.en) + '</div>';
-            // Fermate con link Google Maps
+            // Fermate: clic centra la mappa sulla stazione
             const lineStops = TRANSIT_STATIONS.filter(s => s.type === l.icon);
             if (lineStops.length) {
                 html += '<div style="margin-top:9px;border-top:1px solid rgba(0,0,0,0.07);padding-top:7px">';
                 lineStops.forEach(stop => {
-                    const gmUrl = 'https://www.google.com/maps/dir/?api=1&origin=' + HOTEL.coor[0] + ',' + HOTEL.coor[1] + '&destination=' + stop.coor[0] + ',' + stop.coor[1] + '&travelmode=walking';
-                    html += '<div style="padding:3px 0">';
-                    html += '<a href="' + gmUrl + '" target="_blank" style="font-size:0.78rem;color:#4285F4;text-decoration:none;display:block">' + stop.label + '</a>';
+                    const idx = TRANSIT_STATIONS.indexOf(stop);
+                    html += '<div onclick="goToStation(' + idx + ')" style="padding:3px 0;cursor:pointer">';
+                    html += '<span style="font-size:0.78rem;color:#4285F4">' + stop.label + '</span>';
                     html += '</div>';
                 });
                 html += '</div>';
@@ -1929,6 +1929,22 @@ function renderTransit(lang) {
     html += '<div class="transit-tip"><strong>' + tu.tipTitle + '</strong>' + tu.tip + '</div>';
 
     document.getElementById("panel-tab-transit").innerHTML = html;
+}
+
+function goToStation(idx) {
+    const st = TRANSIT_STATIONS[idx];
+    const marker = transitMarkers[idx];
+    if (!st) return;
+    const focus = () => {
+        map.setView(st.coor, 17, { animate: true });
+        if (marker) { if (!map.hasLayer(marker)) marker.addTo(map); marker.openPopup(); }
+    };
+    if (window.innerWidth <= 680) {
+        mobileTab('map');
+        setTimeout(focus, 350);
+    } else {
+        focus();
+    }
 }
 
 // ── TAB SWITCHING ─────────────────────────────────────────────────────────────
