@@ -10,6 +10,8 @@ let transitAddTimer = null;
 
 function mobileTab(tab) {
     if (window.innerWidth > 680) return;
+    // Ri-tap del tab attivo → chiude il pannello (torna alla mappa)
+    if (tab === currentMobileTab && tab !== 'map') tab = 'map';
     currentMobileTab = tab;
     const panel = document.getElementById('mobile-panel');
 
