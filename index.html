@@ -19,6 +19,11 @@
 </head>
 <body>
 
+<div id="splash">
+    <img src="img/logo-hotel.png" alt="Soul Art Hotel">
+    <span id="splash-tagline">Guest Guide</span>
+</div>
+<script>if(sessionStorage.getItem('splashed')){document.getElementById('splash').style.display='none';}else{sessionStorage.setItem('splashed','1');}</script>
 
 <div id="panel">
     <div id="panel-header">
