@@ -8,10 +8,10 @@ const POI_DATA = [
         url: "https://www.palazzorealenapoli.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/P.Plebiscito_Napoli.jpg/1280px-P.Plebiscito_Napoli.jpg",
         nome: {
-            en: "Piazza del Plebiscito & Royal Palace",
-            it: "Piazza del Plebiscito e Palazzo Reale",
-            fr: "Piazza del Plebiscito & Palais Royal",
-            es: "Piazza del Plebiscito y Palacio Real"
+            en: "Royal Palace of Naples",
+            it: "Palazzo Reale di Napoli",
+            fr: "Palais Royal de Naples",
+            es: "Palacio Real de Nápoles"
         },
         desc: {
             en: "The symbolic heart of Naples: its largest square, framed by the Basilica of San Francesco di Paola, opens directly onto the Royal Palace (1600) \u2014 residence of the Spanish viceroys and later the Bourbons. The eighteen royal apartments house extraordinary tapestries, paintings and period furniture. The square is free and unmissable at sunset; the Palace requires a ticket.",
@@ -731,11 +731,10 @@ const POI_DATA = [
 ];
 
 const WIKI_PAGES = {
-    "Piazza del Plebiscito": "Piazza_del_Plebiscito",
-    "Piazza del Plebiscito & Royal Palace": "Piazza_del_Plebiscito",
-    "Piazza del Plebiscito e Palazzo Reale": "Piazza_del_Plebiscito",
-    "Piazza del Plebiscito & Palais Royal": "Piazza_del_Plebiscito",
-    "Piazza del Plebiscito y Palacio Real": "Piazza_del_Plebiscito",
+    "Royal Palace of Naples": "Royal_Palace_of_Naples",
+    "Palazzo Reale di Napoli": "Royal_Palace_of_Naples",
+    "Palais Royal de Naples": "Royal_Palace_of_Naples",
+    "Palacio Real de Nápoles": "Royal_Palace_of_Naples",
     "Castel dell'Ovo": "Castel_dell'Ovo",
     "Maschio Angioino": "Castel_Nuovo",
     "Galleria Umberto I": "Galleria_Umberto_I",
