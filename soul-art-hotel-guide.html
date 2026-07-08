@@ -130,6 +130,8 @@
         #detail-travel-tip { display:none; background:#FFF8E7; border:1px solid #E8D5A3; border-left:3px solid var(--gold); border-radius:8px; padding:9px 12px; margin-bottom:14px; font-size:0.78rem; color:#5C4A1E; line-height:1.55; }
         #detail-directions { display:inline-flex; align-items:center; gap:8px; background:var(--dark); color:white; padding:11px 20px; border-radius:50px; font-size:0.72rem; font-weight:500; letter-spacing:2px; text-transform:uppercase; text-decoration:none; transition:background 0.2s; }
         #detail-directions:hover { background:var(--gold); }
+        #detail-website { display:none; align-items:center; gap:8px; background:transparent; color:var(--dark); border:1.5px solid var(--dark); padding:11px 20px; border-radius:50px; font-size:0.72rem; font-weight:500; letter-spacing:2px; text-transform:uppercase; text-decoration:none; transition:background 0.2s,color 0.2s; }
+        #detail-website:hover { background:var(--dark); color:white; }
         .custom-marker { width:32px; height:32px; border-radius:50%; border:2.5px solid white; display:flex; align-items:center; justify-content:center; font-size:13px; box-shadow:0 3px 12px rgba(0,0,0,0.3); cursor:pointer; }
         .hotel-marker-wrap { width:44px; height:44px; border-radius:50%; border:3px solid var(--gold); overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
         .hotel-marker-wrap img { width:100%; height:100%; object-fit:cover; }
@@ -409,6 +411,7 @@
         <div id="detail-ticket"></div>
         <div id="detail-travel-tip"></div>
         <a id="detail-directions" href="#" target="_blank">&#x1F9ED; <span id="dir-label">Directions</span></a>
+        <a id="detail-website" href="#" target="_blank">&#x1F310; <span id="web-label">Website</span></a>
     </div>
 </div>
 
@@ -621,6 +624,7 @@ const T = {
         hours: "Hours", tickets: "Tickets",
         ticketTitle: "\u{1F550} Opening Hours & Tickets",
         directions: "Directions",
+        website: "Website",
         youAreHere: "You are here \u2736",
         free: "Free",
         closed: "Closed"
@@ -634,6 +638,7 @@ const T = {
         hours: "Orari", tickets: "Biglietti",
         ticketTitle: "\u{1F550} Orari & Biglietti",
         directions: "Indicazioni",
+        website: "Sito web",
         youAreHere: "Siete qui \u2736",
         free: "Gratuito",
         closed: "Chiuso"
@@ -647,6 +652,7 @@ const T = {
         hours: "Horaires", tickets: "Billets",
         ticketTitle: "\u{1F550} Horaires & Billets",
         directions: "Itin\u00E9raire",
+        website: "Site web",
         youAreHere: "Vous \u00EAtes ici \u2736",
         free: "Gratuit",
         closed: "Ferm\u00E9"
@@ -660,6 +666,7 @@ const T = {
         hours: "Horario", tickets: "Entradas",
         ticketTitle: "\u{1F550} Horario & Entradas",
         directions: "C\u00F3mo llegar",
+        website: "Sitio web",
         youAreHere: "Est\u00E1is aqu\u00ED \u2736",
         free: "Gratis",
         closed: "Cerrado"
@@ -674,6 +681,7 @@ const T = {
 const POI_DATA = [
     {
         id: "plebiscito", cat: "monument", coor: [40.8359, 14.2488],
+        url: "https://www.palazzorealenapoli.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/P.Plebiscito_Napoli.jpg/1280px-P.Plebiscito_Napoli.jpg",
         nome: {
             en: "Piazza del Plebiscito & Royal Palace",
@@ -763,6 +771,7 @@ const POI_DATA = [
     },
     {
         id: "museo", cat: "museum", coor: [40.8534, 14.2505],
+        url: "https://mann-napoli.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Natmuseumnaples.jpg",
         nome: { en:"Museo Archeologico Nazionale", it:"Museo Archeologico Nazionale", fr:"Mus\u00E9e Arch\u00E9ologique National", es:"Museo Arqueol\u00F3gico Nacional" },
         desc: {
@@ -788,6 +797,7 @@ const POI_DATA = [
     },
     {
         id: "sansevero", cat: "museum", coor: [40.8494, 14.2549],
+        url: "https://www.museosansevero.it/",
         img: "https://back.museosansevero.it/uploads/statua-cristo-velato-napoli.jpg",
         nome: { en:"Cappella Sansevero & Cristo Velato", it:"Cappella Sansevero e Cristo Velato", fr:"Chapelle Sansevero & Christ Voil\u00E9", es:"Capilla Sansevero & Cristo Velado" },
         desc: {
@@ -825,6 +835,7 @@ const POI_DATA = [
     },
     {
         id: "sotterranea", cat: "monument", coor: [40.8511, 14.2568],
+        url: "https://www.napolisotterranea.org/",
         img: "https://www.finestresullarte.info/rivista/immagini/2022/fn/catacombe-di-san-gennaro.jpg",
         nome: { en:"Napoli Sotterranea", it:"Napoli Sotterranea", fr:"Naples Souterraine", es:"N\u00E1poles Subterr\u00E1nea" },
         desc: {
@@ -952,6 +963,7 @@ const POI_DATA = [
     },
     {
         id: "teatrosancarlo", cat: "museum", coor: [40.8376226617232, 14.249680712520334],
+        url: "https://www.teatrosancarlo.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Teatro_de_San_Carlos%2C_N%C3%A1poles%2C_Italia%2C_2023-03-25%2C_DD_184-186_HDR.jpg/1280px-Teatro_de_San_Carlos%2C_N%C3%A1poles%2C_Italia%2C_2023-03-25%2C_DD_184-186_HDR.jpg",
         nome: { en:"Teatro San Carlo", it:"Teatro San Carlo", fr:"Théâtre San Carlo", es:"Teatro San Carlo" },
         desc: {
@@ -1029,6 +1041,7 @@ const POI_DATA = [
     },
     {
         id: "acqua", cat: "museum", coor: [40.850464769811744, 14.25456832649659],
+        url: "https://www.lapismuseum.com/",
 	img: "https://www.lapismuseum.com/wp-content/uploads/2022/04/P1270249-1240x930.jpg",
         nome: { en:"Museo dell’Acqua", it:"Museo dell’Acqua", fr:"Musée de l’Eau", es:"Museo del Agua" },
         desc: {
@@ -1095,6 +1108,7 @@ const POI_DATA = [
     },
     {
         id: "tunnelborbonico", cat: "museum", coor: [40.83295939410339, 14.243427386383743],
+        url: "https://www.galleriaborbonica.com/",
         img: "https://www.galleriaborbonica.com/images/bg.jpg",
         nome: { en:"Bourbon Tunnel", it:"Tunnel Borbonico", fr:"Tunnel Bourbon", es:"Túnel Borbónico" },
         desc: {
@@ -1116,6 +1130,7 @@ const POI_DATA = [
     },
     {
         id: "capodimonte", cat: "museum", coor: [40.86716898102535, 14.251104579435037],
+        url: "https://capodimonte.cultura.gov.it/",
         img: "https://campaniateatrofestival.it/wp-content/uploads/2020/06/capodimonte.jpeg",
         nome: { en:"Capodimonte Museum & Park", it:"Museo e Bosco di Capodimonte", fr:"Musée et Parc de Capodimonte", es:"Museo y Parque de Capodimonte" },
         desc: {
@@ -1141,6 +1156,7 @@ const POI_DATA = [
     },
     {
         id: "madre", cat: "museum", coor: [40.85526768020886, 14.258543599027554],
+        url: "https://www.madrenapoli.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/6/65/Museo_Madre%2C.jpg",
         nome: { en:"MADRE Museum", it:"Museo Madre", fr:"Musée MADRE", es:"Museo MADRE" },
         desc: {
@@ -1217,6 +1233,7 @@ const POI_DATA = [
     },
     {
         id: "catacombegennaro", cat: "museum", coor: [40.86175, 14.24985],
+        url: "https://www.catacombedinapoli.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Catacombe_di_San_Gennaro_-_panoramio.jpg/1280px-Catacombe_di_San_Gennaro_-_panoramio.jpg",
         nome: { en:"Catacombs of San Gennaro", it:"Catacombe di San Gennaro", fr:"Catacombes de San Gennaro", es:"Catacumbas de San Genaro" },
         desc: {
@@ -1239,6 +1256,7 @@ const POI_DATA = [
     },
     {
         id: "piomonte", cat: "museum", coor: [40.85098, 14.25786],
+        url: "https://www.piomontedellamisericordia.it/",
         imgForce: "https://www.repstatic.it/content/localirep/img/rep-napoli/2024/05/11/100629280-fce13049-072e-42df-a1ba-b01e505c5ec7.jpg",
         nome: { en:"Pio Monte della Misericordia", it:"Pio Monte della Misericordia", fr:"Pio Monte della Misericordia", es:"Pio Monte della Misericordia" },
         desc: {
@@ -1263,6 +1281,7 @@ const POI_DATA = [
     },
     {
         id: "pompei", cat: "daytrip", coor: [40.74927, 14.48541], dirTo: [40.85314, 14.26879],
+        url: "https://pompeiisites.org/",
         dirLabel: { en:"→ Napoli Centrale", it:"→ Napoli Centrale", fr:"→ Napoli Centrale", es:"→ Napoli Centrale" },
         travelTip: { en:"🚉 From Napoli Centrale take the Circumvesuviana (direction Sorrento) to 'Pompei Scavi – Villa dei Misteri' — about 35 min, €2.80 each way.", it:"🚉 Da Napoli Centrale prendi la Circumvesuviana (dir. Sorrento) fino a 'Pompei Scavi – Villa dei Misteri' — circa 35 min, €2,80 a/r.", fr:"🚉 Depuis Napoli Centrale, prenez la Circumvésuvienne (dir. Sorrento) jusqu'à 'Pompei Scavi – Villa dei Misteri' — environ 35 min, 2,80 € l'aller.", es:"🚉 Desde Napoli Centrale toma la Circumvesuviana (dir. Sorrento) hasta 'Pompei Scavi – Villa dei Misteri' — unos 35 min, 2,80 € ida." },
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg/1280px-Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg",
@@ -1290,6 +1309,7 @@ const POI_DATA = [
     },
     {
         id: "ercolano", cat: "daytrip", coor: [40.80560, 14.34820], dirTo: [40.85314, 14.26879],
+        url: "https://ercolano.cultura.gov.it/",
         dirLabel: { en:"→ Napoli Centrale", it:"→ Napoli Centrale", fr:"→ Napoli Centrale", es:"→ Napoli Centrale" },
         travelTip: { en:"🚉 From Napoli Centrale take the Circumvesuviana (direction Sorrento) to 'Ercolano Scavi' — about 20 min, €2.50 each way.", it:"🚉 Da Napoli Centrale prendi la Circumvesuviana (dir. Sorrento) fino a 'Ercolano Scavi' — circa 20 min, €2,50 a/r.", fr:"🚉 Depuis Napoli Centrale, prenez la Circumvésuvienne (dir. Sorrento) jusqu'à 'Ercolano Scavi' — environ 20 min, 2,50 € l'aller.", es:"🚉 Desde Napoli Centrale toma la Circumvesuviana (dir. Sorrento) hasta 'Ercolano Scavi' — unos 20 min, 2,50 € ida." },
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Ercolano_-_panoramio_%2868%29.jpg/1280px-Ercolano_-_panoramio_%2868%29.jpg",
@@ -1847,6 +1867,12 @@ function openDetail(poi) {
     const dest = poi.dirTo || poi.coor;
     document.getElementById("detail-directions").href =
         "https://www.google.com/maps/dir/?api=1&origin=" + HOTEL.coor[0] + "," + HOTEL.coor[1] + "&destination=" + dest[0] + "," + dest[1] + "&travelmode=walking";
+    const wsEl = document.getElementById("detail-website");
+    if (wsEl) {
+        document.getElementById("web-label").textContent = t.website;
+        if (poi.url) { wsEl.href = poi.url; wsEl.style.display = "inline-flex"; }
+        else { wsEl.style.display = "none"; }
+    }
     document.getElementById("detail-card").classList.add("open");
 }
 

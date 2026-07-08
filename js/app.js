@@ -238,6 +238,12 @@ function openDetail(poi) {
     const dest = poi.dirTo || poi.coor;
     document.getElementById("detail-directions").href =
         "https://www.google.com/maps/dir/?api=1&origin=" + HOTEL.coor[0] + "," + HOTEL.coor[1] + "&destination=" + dest[0] + "," + dest[1] + "&travelmode=walking";
+    const wsEl = document.getElementById("detail-website");
+    if (wsEl) {
+        document.getElementById("web-label").textContent = t.website;
+        if (poi.url) { wsEl.href = poi.url; wsEl.style.display = "inline-flex"; }
+        else { wsEl.style.display = "none"; }
+    }
     document.getElementById("detail-card").classList.add("open");
 }
 

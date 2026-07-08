@@ -5,6 +5,7 @@
 const POI_DATA = [
     {
         id: "plebiscito", cat: "monument", coor: [40.8359, 14.2488],
+        url: "https://www.palazzorealenapoli.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/P.Plebiscito_Napoli.jpg/1280px-P.Plebiscito_Napoli.jpg",
         nome: {
             en: "Piazza del Plebiscito & Royal Palace",
@@ -94,6 +95,7 @@ const POI_DATA = [
     },
     {
         id: "museo", cat: "museum", coor: [40.8534, 14.2505],
+        url: "https://mann-napoli.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Natmuseumnaples.jpg",
         nome: { en:"Museo Archeologico Nazionale", it:"Museo Archeologico Nazionale", fr:"Mus\u00E9e Arch\u00E9ologique National", es:"Museo Arqueol\u00F3gico Nacional" },
         desc: {
@@ -119,6 +121,7 @@ const POI_DATA = [
     },
     {
         id: "sansevero", cat: "museum", coor: [40.8494, 14.2549],
+        url: "https://www.museosansevero.it/",
         img: "https://back.museosansevero.it/uploads/statua-cristo-velato-napoli.jpg",
         nome: { en:"Cappella Sansevero & Cristo Velato", it:"Cappella Sansevero e Cristo Velato", fr:"Chapelle Sansevero & Christ Voil\u00E9", es:"Capilla Sansevero & Cristo Velado" },
         desc: {
@@ -156,6 +159,7 @@ const POI_DATA = [
     },
     {
         id: "sotterranea", cat: "monument", coor: [40.8511, 14.2568],
+        url: "https://www.napolisotterranea.org/",
         img: "https://www.finestresullarte.info/rivista/immagini/2022/fn/catacombe-di-san-gennaro.jpg",
         nome: { en:"Napoli Sotterranea", it:"Napoli Sotterranea", fr:"Naples Souterraine", es:"N\u00E1poles Subterr\u00E1nea" },
         desc: {
@@ -283,6 +287,7 @@ const POI_DATA = [
     },
     {
         id: "teatrosancarlo", cat: "museum", coor: [40.8376226617232, 14.249680712520334],
+        url: "https://www.teatrosancarlo.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Teatro_de_San_Carlos%2C_N%C3%A1poles%2C_Italia%2C_2023-03-25%2C_DD_184-186_HDR.jpg/1280px-Teatro_de_San_Carlos%2C_N%C3%A1poles%2C_Italia%2C_2023-03-25%2C_DD_184-186_HDR.jpg",
         nome: { en:"Teatro San Carlo", it:"Teatro San Carlo", fr:"Théâtre San Carlo", es:"Teatro San Carlo" },
         desc: {
@@ -360,6 +365,7 @@ const POI_DATA = [
     },
     {
         id: "acqua", cat: "museum", coor: [40.850464769811744, 14.25456832649659],
+        url: "https://www.lapismuseum.com/",
 	img: "https://www.lapismuseum.com/wp-content/uploads/2022/04/P1270249-1240x930.jpg",
         nome: { en:"Museo dell’Acqua", it:"Museo dell’Acqua", fr:"Musée de l’Eau", es:"Museo del Agua" },
         desc: {
@@ -426,6 +432,7 @@ const POI_DATA = [
     },
     {
         id: "tunnelborbonico", cat: "museum", coor: [40.83295939410339, 14.243427386383743],
+        url: "https://www.galleriaborbonica.com/",
         img: "https://www.galleriaborbonica.com/images/bg.jpg",
         nome: { en:"Bourbon Tunnel", it:"Tunnel Borbonico", fr:"Tunnel Bourbon", es:"Túnel Borbónico" },
         desc: {
@@ -447,6 +454,7 @@ const POI_DATA = [
     },
     {
         id: "capodimonte", cat: "museum", coor: [40.86716898102535, 14.251104579435037],
+        url: "https://capodimonte.cultura.gov.it/",
         img: "https://campaniateatrofestival.it/wp-content/uploads/2020/06/capodimonte.jpeg",
         nome: { en:"Capodimonte Museum & Park", it:"Museo e Bosco di Capodimonte", fr:"Musée et Parc de Capodimonte", es:"Museo y Parque de Capodimonte" },
         desc: {
@@ -472,6 +480,7 @@ const POI_DATA = [
     },
     {
         id: "madre", cat: "museum", coor: [40.85526768020886, 14.258543599027554],
+        url: "https://www.madrenapoli.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/6/65/Museo_Madre%2C.jpg",
         nome: { en:"MADRE Museum", it:"Museo Madre", fr:"Musée MADRE", es:"Museo MADRE" },
         desc: {
@@ -548,6 +557,7 @@ const POI_DATA = [
     },
     {
         id: "catacombegennaro", cat: "museum", coor: [40.86175, 14.24985],
+        url: "https://www.catacombedinapoli.it/",
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Catacombe_di_San_Gennaro_-_panoramio.jpg/1280px-Catacombe_di_San_Gennaro_-_panoramio.jpg",
         nome: { en:"Catacombs of San Gennaro", it:"Catacombe di San Gennaro", fr:"Catacombes de San Gennaro", es:"Catacumbas de San Genaro" },
         desc: {
@@ -570,6 +580,7 @@ const POI_DATA = [
     },
     {
         id: "piomonte", cat: "museum", coor: [40.85098, 14.25786],
+        url: "https://www.piomontedellamisericordia.it/",
         imgForce: "https://www.repstatic.it/content/localirep/img/rep-napoli/2024/05/11/100629280-fce13049-072e-42df-a1ba-b01e505c5ec7.jpg",
         nome: { en:"Pio Monte della Misericordia", it:"Pio Monte della Misericordia", fr:"Pio Monte della Misericordia", es:"Pio Monte della Misericordia" },
         desc: {
@@ -594,6 +605,7 @@ const POI_DATA = [
     },
     {
         id: "pompei", cat: "daytrip", coor: [40.74927, 14.48541], dirTo: [40.85314, 14.26879],
+        url: "https://pompeiisites.org/",
         dirLabel: { en:"→ Napoli Centrale", it:"→ Napoli Centrale", fr:"→ Napoli Centrale", es:"→ Napoli Centrale" },
         travelTip: { en:"🚉 From Napoli Centrale take the Circumvesuviana (direction Sorrento) to 'Pompei Scavi – Villa dei Misteri' — about 35 min, €2.80 each way.", it:"🚉 Da Napoli Centrale prendi la Circumvesuviana (dir. Sorrento) fino a 'Pompei Scavi – Villa dei Misteri' — circa 35 min, €2,80 a/r.", fr:"🚉 Depuis Napoli Centrale, prenez la Circumvésuvienne (dir. Sorrento) jusqu'à 'Pompei Scavi – Villa dei Misteri' — environ 35 min, 2,80 € l'aller.", es:"🚉 Desde Napoli Centrale toma la Circumvesuviana (dir. Sorrento) hasta 'Pompei Scavi – Villa dei Misteri' — unos 35 min, 2,80 € ida." },
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg/1280px-Pompeii_-_Osteria_della_Via_di_Mercurio_-_Landscape.jpg",
@@ -621,6 +633,7 @@ const POI_DATA = [
     },
     {
         id: "ercolano", cat: "daytrip", coor: [40.80560, 14.34820], dirTo: [40.85314, 14.26879],
+        url: "https://ercolano.cultura.gov.it/",
         dirLabel: { en:"→ Napoli Centrale", it:"→ Napoli Centrale", fr:"→ Napoli Centrale", es:"→ Napoli Centrale" },
         travelTip: { en:"🚉 From Napoli Centrale take the Circumvesuviana (direction Sorrento) to 'Ercolano Scavi' — about 20 min, €2.50 each way.", it:"🚉 Da Napoli Centrale prendi la Circumvesuviana (dir. Sorrento) fino a 'Ercolano Scavi' — circa 20 min, €2,50 a/r.", fr:"🚉 Depuis Napoli Centrale, prenez la Circumvésuvienne (dir. Sorrento) jusqu'à 'Ercolano Scavi' — environ 20 min, 2,50 € l'aller.", es:"🚉 Desde Napoli Centrale toma la Circumvesuviana (dir. Sorrento) hasta 'Ercolano Scavi' — unos 20 min, 2,50 € ida." },
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Ercolano_-_panoramio_%2868%29.jpg/1280px-Ercolano_-_panoramio_%2868%29.jpg",

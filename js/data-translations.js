@@ -203,6 +203,7 @@ const T = {
         hours: "Hours", tickets: "Tickets",
         ticketTitle: "\u{1F550} Opening Hours & Tickets",
         directions: "Directions",
+        website: "Website",
         youAreHere: "You are here \u2736",
         free: "Free",
         closed: "Closed"
@@ -216,6 +217,7 @@ const T = {
         hours: "Orari", tickets: "Biglietti",
         ticketTitle: "\u{1F550} Orari & Biglietti",
         directions: "Indicazioni",
+        website: "Sito web",
         youAreHere: "Siete qui \u2736",
         free: "Gratuito",
         closed: "Chiuso"
@@ -229,6 +231,7 @@ const T = {
         hours: "Horaires", tickets: "Billets",
         ticketTitle: "\u{1F550} Horaires & Billets",
         directions: "Itin\u00E9raire",
+        website: "Site web",
         youAreHere: "Vous \u00EAtes ici \u2736",
         free: "Gratuit",
         closed: "Ferm\u00E9"
@@ -242,6 +245,7 @@ const T = {
         hours: "Horario", tickets: "Entradas",
         ticketTitle: "\u{1F550} Horario & Entradas",
         directions: "C\u00F3mo llegar",
+        website: "Sitio web",
         youAreHere: "Est\u00E1is aqu\u00ED \u2736",
         free: "Gratis",
         closed: "Cerrado"
