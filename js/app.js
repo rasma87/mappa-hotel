@@ -30,6 +30,10 @@ function mobileTab(tab) {
         return;
     }
 
+    // Chiudi la scheda dettaglio se è aperta
+    document.getElementById('detail-card').classList.remove('open');
+    currentOpenPoi = null;
+
     const inner = document.getElementById('mobile-panel-inner');
 
     if (tab === 'transit') {
@@ -188,6 +192,8 @@ function showFallback(wrap, poi) {
 // ── OPEN DETAIL ───────────────────────────────────────────────────────────────
 function openDetail(poi) {
     currentOpenPoi = poi;
+    // Su mobile chiudi il pannello se è aperto (evita sovrapposizione)
+    if (window.innerWidth <= 680 && currentMobileTab !== 'map') mobileTab('map');
     const t  = T[currentLang];
     const cat = CATEGORIE[poi.cat];
 
