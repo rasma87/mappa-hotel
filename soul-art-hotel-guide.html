@@ -168,7 +168,10 @@
         #mobile-panel { display:block; position:fixed; bottom:56px; left:0; right:0; height:calc(100vh - 56px); height:calc(100dvh - 56px); z-index:940; background:var(--cream); overflow-y:auto; overscroll-behavior:contain; transform:translateY(110%); transition:transform 0.35s ease; pointer-events:none; }
         #mobile-panel.open { transform:translateY(0); pointer-events:auto; }
         #mobile-panel.half-open { height:50dvh; height:50vh; }
-        #mobile-panel-inner { padding:12px 14px 80px; }
+        #mobile-panel-handle { display:flex; align-items:center; justify-content:center; padding:10px 12px 6px; position:sticky; top:0; background:inherit; z-index:2; flex-shrink:0; }
+        #mobile-panel-bar { width:38px; height:4px; background:var(--pb2); border-radius:2px; }
+        #mobile-panel-close { position:absolute; right:10px; background:none; border:none; font-size:1.3rem; line-height:1; color:var(--pm); cursor:pointer; padding:4px 10px; }
+        #mobile-panel-inner { padding:4px 14px 80px; }
 
         /* ── TEMA PANNELLO BIANCO / SCALE DI GRIGI ─────────────────────────── */
         :root {
@@ -391,6 +394,10 @@
 </div>
 
 <div id="mobile-panel">
+    <div id="mobile-panel-handle">
+        <div id="mobile-panel-bar"></div>
+        <button id="mobile-panel-close" onclick="mobileTab('map')" aria-label="Chiudi">&times;</button>
+    </div>
     <div id="mobile-panel-inner"></div>
 </div>
 
@@ -2100,6 +2107,23 @@ const OFFLINE_MSG = {
         banner.textContent = OFFLINE_MSG[currentLang] || OFFLINE_MSG.en;
     };
     updateStatus();
+})();
+
+// ── MOBILE PANEL: swipe-down to close ─────────────────────────────────────────
+(function() {
+    const panel = document.getElementById('mobile-panel');
+    if (!panel) return;
+    let startX = 0, startY = 0;
+    panel.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    }, { passive: true });
+    panel.addEventListener('touchend', function(e) {
+        if (panel.scrollTop > 0) return;
+        const dy = e.changedTouches[0].clientY - startY;
+        const dx = Math.abs(e.changedTouches[0].clientX - startX);
+        if (dy > 60 && dx < 80) mobileTab('map');
+    }, { passive: true });
 })();
 
 // ── INIT ──────────────────────────────────────────────────────────────────────

@@ -474,6 +474,23 @@ const OFFLINE_MSG = {
     updateStatus();
 })();
 
+// ── MOBILE PANEL: swipe-down to close ─────────────────────────────────────────
+(function() {
+    const panel = document.getElementById('mobile-panel');
+    if (!panel) return;
+    let startX = 0, startY = 0;
+    panel.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    }, { passive: true });
+    panel.addEventListener('touchend', function(e) {
+        if (panel.scrollTop > 0) return;
+        const dy = e.changedTouches[0].clientY - startY;
+        const dx = Math.abs(e.changedTouches[0].clientX - startX);
+        if (dy > 60 && dx < 80) mobileTab('map');
+    }, { passive: true });
+})();
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 hotelMarker.bindPopup('<b style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif">Soul Art Hotel</b><br><small style="color:#888">' + T.it.youAreHere + '</small>');
 switchTab('places');
