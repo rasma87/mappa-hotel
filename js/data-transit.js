@@ -40,7 +40,7 @@ const TRANSIT = {
                 color:"#1565C0", icon:"CH",
                 first:"6:30", last:"00:30",
                 freq: { en:"Every 10 min", it:"Ogni 10 min", fr:"Toutes les 10 min", es:"Cada 10 min" },
-                note: { en:"Closest stop to Castel Sant\u2019Elmo", it:"Pi\u00F9 vicina a Castel Sant\u2019Elmo", fr:"La plus proche du Castel Sant\u2019Elmo", es:"M\u00E1s cercana al Castel Sant\u2019Elmo" }
+                note: null
             },
             {
                 name: { en:"Funicolare di Montesanto", it:"Funicolare di Montesanto", fr:"Funiculaire de Montesanto", es:"Funicular de Montesanto" },
