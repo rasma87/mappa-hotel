@@ -8,10 +8,11 @@ let currentMobileTab = 'map';
 let mobileCatFilter = 'all';
 let transitAddTimer = null;
 
-function mobileTab(tab) {
+function mobileTab(tab, force) {
     if (window.innerWidth > 680) return;
     // Ri-tap del tab attivo → chiude il pannello (torna alla mappa)
-    if (tab === currentMobileTab && tab !== 'map') tab = 'map';
+    // force=true salta il toggle (usato per ri-renderizzare al cambio lingua)
+    if (!force && tab === currentMobileTab && tab !== 'map') tab = 'map';
     currentMobileTab = tab;
     const panel = document.getElementById('mobile-panel');
 
@@ -72,7 +73,8 @@ function renderMobilePlaces() {
     const cats    = ['all','monument','museum','transport','nature','daytrip'];
     const labels  = [t.all, t.monument, t.museum, t.transport, t.nature, t.daytrip];
 
-    const filterBar = '<div style="display:flex;gap:6px;flex-wrap:wrap;padding:10px 0 12px;position:sticky;top:0;background:var(--cream);z-index:1;border-bottom:1px solid #E0D8CC;margin-bottom:4px">' +
+    // top:20px = altezza della barra drag sticky sopra, così non si sovrappongono
+    const filterBar = '<div style="display:flex;gap:6px;flex-wrap:wrap;padding:10px 0 12px;position:sticky;top:20px;background:var(--pb);z-index:1;border-bottom:1px solid var(--pb2);margin-bottom:4px">' +
         cats.map((cat, i) => {
             const active = mobileCatFilter === cat;
             return '<button onclick="setMobileFilter(\'' + cat + '\')" style="touch-action:manipulation;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;border:1px solid ' + (active ? 'var(--gold)' : '#C8BFA8') + ';background:' + (active ? 'var(--gold)' : 'transparent') + ';color:' + (active ? 'white' : 'var(--text-muted)') + ';padding:5px 10px;border-radius:20px;cursor:pointer">' + labels[i] + '</button>';
@@ -98,7 +100,11 @@ function setMobileFilter(cat) {
 function mobilePoi(id) {
     const poi = POI_DATA.find(p => p.id === id);
     if (!poi) return;
-    map.panTo(poi.coor, { animate: true });
+    // Il pannello mezza-altezza copre la parte bassa della mappa:
+    // sposta il centro così il POI cade nella metà visibile in alto
+    const zoom = map.getZoom();
+    const pt = map.project(poi.coor, zoom).add([0, map.getSize().y * 0.25]);
+    map.panTo(map.unproject(pt, zoom), { animate: true });
 }
 
 
@@ -149,7 +155,12 @@ POI_DATA.forEach(poi => {
 });
 
 // ── IMAGE LOADING ─────────────────────────────────────────────────────────────
+// imgLoadSeq: token che invalida le fetch Wikipedia lente quando l'utente
+// apre un altro POI prima che la precedente sia arrivata
+let imgLoadSeq = 0;
+
 function loadImage(poi) {
+    const seq = ++imgLoadSeq;
     const imgEl = document.getElementById("detail-img");
     const wrap  = document.getElementById("detail-img-wrap");
     imgEl.classList.remove("loaded");
@@ -158,31 +169,37 @@ function loadImage(poi) {
     if (oldPh) oldPh.remove();
 
     // imgForce: URL esplicita che bypassa Wikipedia (solo per immagini custom)
-    if (poi.imgForce) { applyImg(imgEl, poi.imgForce, wrap, poi); return; }
+    if (poi.imgForce) { applyImg(imgEl, poi.imgForce, wrap, poi, seq); return; }
 
     const poiName = poi.nome[currentLang] || poi.nome.en;
     const page = WIKI_PAGES[poiName] || WIKI_PAGES[poi.nome.en];
 
-    if (imgCache[poi.id]) { applyImg(imgEl, imgCache[poi.id], wrap, poi); return; }
-    if (!page) { poi.img ? applyImg(imgEl, poi.img, wrap, poi) : showFallback(wrap, poi); return; }
+    if (imgCache[poi.id]) { applyImg(imgEl, imgCache[poi.id], wrap, poi, seq); return; }
+    if (!page) { poi.img ? applyImg(imgEl, poi.img, wrap, poi, seq) : showFallback(wrap, poi); return; }
 
     fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(page))
         .then(r => r.json())
         .then(d => {
             const src = (d && d.originalimage && d.originalimage.source) || (d && d.thumbnail && d.thumbnail.source);
-            if (src) { imgCache[poi.id] = src; applyImg(imgEl, src, wrap, poi); }
-            else if (poi.img) { applyImg(imgEl, poi.img, wrap, poi); }
+            if (src) imgCache[poi.id] = src;
+            if (seq !== imgLoadSeq) return; // nel frattempo è stato aperto un altro POI
+            if (src) { applyImg(imgEl, src, wrap, poi, seq); }
+            else if (poi.img) { applyImg(imgEl, poi.img, wrap, poi, seq); }
             else showFallback(wrap, poi);
         })
-        .catch(() => poi.img ? applyImg(imgEl, poi.img, wrap, poi) : showFallback(wrap, poi));
+        .catch(() => {
+            if (seq !== imgLoadSeq) return;
+            poi.img ? applyImg(imgEl, poi.img, wrap, poi, seq) : showFallback(wrap, poi);
+        });
 }
 
-function applyImg(imgEl, src, wrap, poi) {
-    imgEl.onload  = () => imgEl.classList.add("loaded");
-    imgEl.onerror = () => showFallback(wrap, poi);
+function applyImg(imgEl, src, wrap, poi, seq) {
+    imgEl.onload  = () => { if (seq === imgLoadSeq) imgEl.classList.add("loaded"); };
+    imgEl.onerror = () => { if (seq === imgLoadSeq) showFallback(wrap, poi); };
     imgEl.src = src;
 }
 function showFallback(wrap, poi) {
+    if (wrap.querySelector("#detail-img-placeholder")) return;
     const ph = document.createElement("div");
     ph.id = "detail-img-placeholder";
     ph.textContent = poi ? CATEGORIE[poi.cat].emoji : "\u{1F4CD}";
@@ -309,8 +326,8 @@ function setLang(lang) {
         const el = document.getElementById('mobt-' + t);
         if (el) el.textContent = ml[t];
     });
-    // Re-render mobile panel if open
-    if (currentMobileTab !== 'map') mobileTab(currentMobileTab);
+    // Re-render mobile panel if open (force: non è un re-tap, non deve chiudere)
+    if (currentMobileTab !== 'map') mobileTab(currentMobileTab, true);
 
     // Aggiorna testo banner offline nella nuova lingua
     if (typeof window._updateOfflineBanner === 'function') window._updateOfflineBanner();
@@ -413,10 +430,14 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
 });
 
 // Close card
-document.getElementById("detail-close").addEventListener("click", () => {
+function closeDetail() {
     document.getElementById("detail-card").classList.remove("open");
     document.querySelectorAll(".poi-item").forEach(el => el.classList.remove("active"));
     currentOpenPoi = null;
+}
+document.getElementById("detail-close").addEventListener("click", closeDetail);
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && currentOpenPoi) closeDetail();
 });
 
 // Filters

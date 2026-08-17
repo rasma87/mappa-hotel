@@ -1,12 +1,13 @@
 // ── Soul Art Hotel – Service Worker ──────────────────────────────────────────
 // Incrementa CACHE_VERSION per forzare l'aggiornamento su tutti i client
-const CACHE_VERSION = 29;
+const CACHE_VERSION = 30;
 const CACHE = 'soulart-v' + CACHE_VERSION;
 
 // App shell: caricata al primo avvio e sempre servita dalla cache
 const APP_SHELL = [
     './',
     './index.html',
+    './manifest.json',
     './css/style.css',
     './js/data-translations.js',
     './js/data-poi.js',
@@ -112,9 +113,13 @@ async function cacheFirst(req) {
         }
         return res;
     } catch {
-        // Fallback all'index.html per le navigazioni
-        const fallback = await caches.match('./index.html');
-        return fallback || new Response('Offline', { status: 503 });
+        // Fallback all'index.html SOLO per le navigazioni: restituirlo per
+        // richieste JS/CSS servirebbe contenuto del tipo sbagliato
+        if (req.mode === 'navigate') {
+            const fallback = await caches.match('./index.html');
+            if (fallback) return fallback;
+        }
+        return new Response('Offline', { status: 503 });
     }
 }
 
