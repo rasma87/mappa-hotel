@@ -18,9 +18,19 @@ css/
 img/
 └── logo-hotel.png
 index.html                 — carica i 4 JS in ordine
-sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 8)
+sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 31)
 soul-art-hotel-guide.html  — file standalone con tutto inlined (per distribuzione diretta)
 ```
+
+---
+
+## Lavoro da due PC (albergo + casa)
+
+Il progetto viene modificato da due computer, sincronizzati solo tramite GitHub.
+
+- **A inizio sessione, prima di qualsiasi modifica:** `git pull --rebase origin master`
+- **A fine lavoro:** sempre commit + push, così l'altro PC trova la versione aggiornata
+- Conflitto su `CACHE_VERSION` in `sw.js`: usare il valore più alto tra i due + 1
 
 ---
 
@@ -62,7 +72,7 @@ git add -A && git commit -m "descrizione" && git push origin master
 
 ```js
 // sw.js – riga 3
-const CACHE_VERSION = 8;  // incrementare ad ogni deploy con modifiche
+const CACHE_VERSION = 31;  // incrementare ad ogni deploy con modifiche
 ```
 
 Dopo il bump l'utente deve: aprire l'app → aspettare 10 sec → chiudere e riaprire la scheda.
