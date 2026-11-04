@@ -1,6 +1,6 @@
 // ── Soul Art Hotel – Service Worker ──────────────────────────────────────────
 // Incrementa CACHE_VERSION per forzare l'aggiornamento su tutti i client
-const CACHE_VERSION = 32;
+const CACHE_VERSION = 33;
 const CACHE = 'soulart-v' + CACHE_VERSION;
 
 // App shell: caricata al primo avvio e sempre servita dalla cache
@@ -62,10 +62,10 @@ self.addEventListener('fetch', event => {
     if (req.method !== 'GET') return;
     if (!url.protocol.startsWith('http')) return;
 
-    // 1. TILE DELLA MAPPA (CartoDB) → cache-first con gestione opaque
-    //    CartoDB non invia header CORS → le risposte sono "opaque" (status 0).
+    // 1. TILE DELLA MAPPA (OpenStreetMap) → cache-first con gestione opaque
+    //    Le immagini cross-origin senza CORS danno risposte "opaque" (status 0).
     //    Vanno comunque salvate in cache controllando status === 0.
-    if (url.hostname.includes('cartocdn.com')) {
+    if (url.hostname === 'tile.openstreetmap.org') {
         event.respondWith(cacheTile(req));
         return;
     }

@@ -38,7 +38,7 @@ npx serve .
 
 - HTML5 / CSS3 / JavaScript ES6
 - [Leaflet 1.9.4](https://leafletjs.com/)
-- [CartoDB Basemaps](https://carto.com/basemaps/)
+- [OpenStreetMap](https://www.openstreetmap.org/copyright) per lo sfondo della mappa
 - [Wikipedia REST API](https://en.wikipedia.org/api/rest_v1/) per le immagini
 
 ---

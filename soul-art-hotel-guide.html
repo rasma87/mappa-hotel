@@ -1806,8 +1806,8 @@ let currentOpenPoi = null;
 
 // ── MAP ───────────────────────────────────────────────────────────────────────
 const map = L.map("map", { zoomControl:false }).setView(HOTEL.coor, 14);
-L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-    attribution:"\u00A9 OpenStreetMap, \u00A9 CARTO", subdomains:"abcd", maxZoom:19
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution:'\u00A9 <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>', maxZoom:19
 }).addTo(map);
 L.control.zoom({ position:"bottomright" }).addTo(map);
 
