@@ -1,5 +1,5 @@
 // ── Soul Art Hotel – TRANSLATIONS ──────────────────────────────────────────
-// MOBILE_TAB_LABELS · HOTEL_STRINGS · T
+// MOBILE_TAB_LABELS · HOTEL_STRINGS · T · WEATHER_UI
 
 // ── MOBILE TAB LABEL TRANSLATIONS ────────────────────────────────────────────
 const MOBILE_TAB_LABELS = {
@@ -249,5 +249,29 @@ const T = {
         youAreHere: "Est\u00E1is aqu\u00ED \u2736",
         free: "Gratis",
         closed: "Cerrado"
+    }
+};
+
+// ── WEATHER ───────────────────────────────────────────────────────────────────
+const WEATHER_UI = {
+    en: {
+        title: "Weather in Naples", today: "Today", feelsLike: "Feels like", wind: "Wind", rain: "Rain", sunset: "Sunset",
+        updated: "Updated at", close: "Close",
+        types: { clear:"Clear", mostlyClear:"Mostly clear", partly:"Partly cloudy", overcast:"Overcast", fog:"Fog", drizzle:"Drizzle", rain:"Rain", snow:"Snow", showers:"Showers", storm:"Thunderstorm" }
+    },
+    it: {
+        title: "Meteo a Napoli", today: "Oggi", feelsLike: "Percepita", wind: "Vento", rain: "Pioggia", sunset: "Tramonto",
+        updated: "Aggiornato alle", close: "Chiudi",
+        types: { clear:"Sereno", mostlyClear:"Prevalentemente sereno", partly:"Parzialmente nuvoloso", overcast:"Coperto", fog:"Nebbia", drizzle:"Pioviggine", rain:"Pioggia", snow:"Neve", showers:"Rovesci", storm:"Temporale" }
+    },
+    fr: {
+        title: "Météo à Naples", today: "Auj.", feelsLike: "Ressenti", wind: "Vent", rain: "Pluie", sunset: "Coucher",
+        updated: "Mis à jour à", close: "Fermer",
+        types: { clear:"Dégagé", mostlyClear:"Plutôt dégagé", partly:"Partiellement nuageux", overcast:"Couvert", fog:"Brouillard", drizzle:"Bruine", rain:"Pluie", snow:"Neige", showers:"Averses", storm:"Orage" }
+    },
+    es: {
+        title: "Tiempo en Nápoles", today: "Hoy", feelsLike: "Sensación", wind: "Viento", rain: "Lluvia", sunset: "Atardecer",
+        updated: "Actualizado a las", close: "Cerrar",
+        types: { clear:"Despejado", mostlyClear:"Mayormente despejado", partly:"Parcialmente nuboso", overcast:"Cubierto", fog:"Niebla", drizzle:"Llovizna", rain:"Lluvia", snow:"Nieve", showers:"Chubascos", storm:"Tormenta" }
     }
 };

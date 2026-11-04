@@ -10,6 +10,7 @@ let transitAddTimer = null;
 
 function mobileTab(tab, force) {
     if (window.innerWidth > 680) return;
+    closeWeather();
     // Ri-tap del tab attivo → chiude il pannello (torna alla mappa)
     // force=true salta il toggle (usato per ri-renderizzare al cambio lingua)
     if (!force && tab === currentMobileTab && tab !== 'map') tab = 'map';
@@ -211,6 +212,7 @@ function openDetail(poi) {
     currentOpenPoi = poi;
     // Su mobile chiudi il pannello se è aperto (evita sovrapposizione)
     if (window.innerWidth <= 680 && currentMobileTab !== 'map') mobileTab('map');
+    if (window.innerWidth <= 680) closeWeather();
     const t  = T[currentLang];
     const cat = CATEGORIE[poi.cat];
 
@@ -331,6 +333,8 @@ function setLang(lang) {
 
     // Aggiorna testo banner offline nella nuova lingua
     if (typeof window._updateOfflineBanner === 'function') window._updateOfflineBanner();
+
+    renderWeather();
 }
 
 
@@ -518,9 +522,123 @@ const OFFLINE_MSG = {
     }, { passive: true });
 })();
 
+// ── METEO ─────────────────────────────────────────────────────────────────────
+const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=" + HOTEL.coor[0].toFixed(2) + "&longitude=" + HOTEL.coor[1].toFixed(2) +
+    "&current=temperature_2m,apparent_temperature,is_day,weather_code,wind_speed_10m" +
+    "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunset" +
+    "&timezone=Europe%2FRome&forecast_days=5";
+const WEATHER_REFRESH_MS = 30 * 60 * 1000;
+// Oltre questa età un dato letto dalla cache offline non descrive più il tempo attuale
+const WEATHER_MAX_AGE_MS = 6 * 60 * 60 * 1000;
+// Codici WMO restituiti da Open-Meteo
+const WEATHER_TYPES = {
+    clear:       { icon:"☀️", codes:[0] },
+    mostlyClear: { icon:"🌤️", codes:[1] },
+    partly:      { icon:"⛅", codes:[2] },
+    overcast:    { icon:"☁️", codes:[3] },
+    fog:         { icon:"🌫️", codes:[45,48] },
+    drizzle:     { icon:"🌦️", codes:[51,53,55,56,57] },
+    rain:        { icon:"🌧️", codes:[61,63,65,66,67] },
+    snow:        { icon:"🌨️", codes:[71,73,75,77,85,86] },
+    showers:     { icon:"🌦️", codes:[80,81,82] },
+    storm:       { icon:"⛈️", codes:[95,96,99] }
+};
+let weatherData = null;
+let weatherFetchedAt = 0;
+
+function weatherType(code) {
+    return Object.keys(WEATHER_TYPES).find(k => WEATHER_TYPES[k].codes.includes(code)) || "overcast";
+}
+
+function isWeatherFresh(d) {
+    if (!d || !d.current || !d.daily) return false;
+    const measuredAt = Date.parse(d.current.time + ":00Z") - d.utc_offset_seconds * 1000;
+    return Date.now() - measuredAt < WEATHER_MAX_AGE_MS;
+}
+
+function renderWeather() {
+    const chip = document.getElementById("weather-chip");
+    const card = document.getElementById("weather-card");
+    const d = weatherData;
+    const fresh = isWeatherFresh(d);
+    chip.classList.toggle("ready", fresh);
+    if (!fresh) { closeWeather(); return; }
+
+    const u = WEATHER_UI[currentLang] || WEATHER_UI.en;
+    const cur = d.current;
+    const type = weatherType(cur.weather_code);
+    const isClearNight = !cur.is_day && (type === "clear" || type === "mostlyClear");
+    const icon = isClearNight ? "🌙" : WEATHER_TYPES[type].icon;
+    const temp = Math.round(cur.temperature_2m) + "°";
+    const rain = d.daily.precipitation_probability_max[0];
+
+    chip.innerHTML = '<span aria-hidden="true">' + icon + '</span>' + temp;
+    chip.setAttribute("aria-label", u.title + ": " + temp + ", " + u.types[type]);
+    card.setAttribute("aria-label", u.title);
+
+    const stat = (label, value) => '<div class="weather-stat"><span>' + label + '</span><strong>' + value + '</strong></div>';
+    const dayFormat = new Intl.DateTimeFormat(currentLang, { weekday:"short", timeZone:"UTC" });
+    const days = d.daily.time.map((day, i) =>
+        '<div class="weather-day">' +
+            '<span class="weather-day-name">' + (i === 0 ? u.today : dayFormat.format(new Date(day))) + '</span>' +
+            '<span class="weather-day-icon" title="' + u.types[weatherType(d.daily.weather_code[i])] + '">' + WEATHER_TYPES[weatherType(d.daily.weather_code[i])].icon + '</span>' +
+            '<strong>' + Math.round(d.daily.temperature_2m_max[i]) + '°</strong>' +
+            '<span class="weather-day-min">' + Math.round(d.daily.temperature_2m_min[i]) + '°</span>' +
+        '</div>'
+    ).join("");
+
+    card.innerHTML =
+        '<button class="weather-close" type="button" onclick="closeWeather()" aria-label="' + u.close + '">&times;</button>' +
+        '<div class="weather-title">' + u.title + '</div>' +
+        '<div class="weather-now">' +
+            '<span class="weather-now-icon" aria-hidden="true">' + icon + '</span>' +
+            '<div><div class="weather-now-temp">' + temp + '</div><div class="weather-now-desc">' + u.types[type] + '</div></div>' +
+        '</div>' +
+        '<div class="weather-stats">' +
+            stat(u.feelsLike, Math.round(cur.apparent_temperature) + "°") +
+            stat(u.wind, Math.round(cur.wind_speed_10m) + " km/h") +
+            stat(u.rain, rain == null ? "–" : rain + "%") +
+            stat(u.sunset, d.daily.sunset[0].slice(11, 16)) +
+        '</div>' +
+        '<div class="weather-days">' + days + '</div>' +
+        '<div class="weather-foot">' + u.updated + ' ' + cur.time.slice(11, 16) + ' · <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></div>';
+}
+
+function setWeatherOpen(open) {
+    document.getElementById("weather-card").classList.toggle("open", open);
+    document.getElementById("weather-chip").setAttribute("aria-expanded", String(open));
+}
+function closeWeather() { setWeatherOpen(false); }
+
+function loadWeather() {
+    weatherFetchedAt = Date.now();
+    fetch(WEATHER_URL)
+        .then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(d => { weatherData = d; })
+        .catch(() => {})
+        .then(renderWeather);
+}
+
+function refreshWeatherIfDue() {
+    if (!document.hidden && Date.now() - weatherFetchedAt > WEATHER_REFRESH_MS) loadWeather();
+}
+
+document.getElementById("weather-chip").addEventListener("click", () => {
+    const open = !document.getElementById("weather-card").classList.contains("open");
+    // Su mobile la card meteo e la scheda dettaglio occuperebbero lo stesso spazio
+    if (open && window.innerWidth <= 680 && currentOpenPoi) closeDetail();
+    setWeatherOpen(open);
+});
+map.on("click", closeWeather);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeWeather(); });
+document.addEventListener("visibilitychange", refreshWeatherIfDue);
+window.addEventListener("online", loadWeather);
+setInterval(refreshWeatherIfDue, 5 * 60 * 1000);
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 hotelMarker.bindPopup('<b style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif">Soul Art Hotel</b><br><small style="color:#888">' + T.it.youAreHere + '</small>');
 switchTab('places');
 setLang("it");
 mobileTab('hotel');
+loadWeather();
 

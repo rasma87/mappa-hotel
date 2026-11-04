@@ -9,7 +9,7 @@ PWA interattiva per ospiti dell'hotel: mappa Leaflet di Napoli con POI, trasport
 
 ```
 js/
-├── data-translations.js   — MOBILE_TAB_LABELS · HOTEL_STRINGS · T (stringhe multilingua)
+├── data-translations.js   — MOBILE_TAB_LABELS · HOTEL_STRINGS · T · WEATHER_UI (stringhe multilingua)
 ├── data-poi.js            — POI_DATA · WIKI_PAGES · CATEGORIE
 ├── data-transit.js        — TRANSIT · TRANSIT_UI · TRANSIT_STATIONS · STATION_STYLE
 └── app.js                 — tutta la logica (mappa, UI, rendering, init)
@@ -18,7 +18,7 @@ css/
 img/
 └── logo-hotel.png
 index.html                 — carica i 4 JS in ordine
-sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 31)
+sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 32)
 soul-art-hotel-guide.html  — file standalone con tutto inlined (per distribuzione diretta)
 ```
 
@@ -72,7 +72,7 @@ git add -A && git commit -m "descrizione" && git push origin master
 
 ```js
 // sw.js – riga 3
-const CACHE_VERSION = 31;  // incrementare ad ogni deploy con modifiche
+const CACHE_VERSION = 32;  // incrementare ad ogni deploy con modifiche
 ```
 
 Dopo il bump l'utente deve: aprire l'app → aspettare 10 sec → chiudere e riaprire la scheda.
@@ -155,6 +155,15 @@ Coordinate: `[40.844445798762386, 14.2496106966444]` (in `js/app.js` → `const 
 - `STATION_STYLE` → colori/label badge per tipo stazione (M1, M2, FC, CH, MO)
 
 **Chiusura funicolare**: campo `closureNote` nell'oggetto linea → banner rosso nel pannello.
+
+---
+
+## Meteo (`app.js` → sezione METEO)
+
+- Dati da Open-Meteo (nessuna chiave; URL in `WEATHER_URL`), aggiornati ogni 30 min. Il piano gratuito è solo per uso non commerciale.
+- Il SW usa network-first per `open-meteo.com`: offline mostra l'ultimo dato salvato.
+- Se non ci sono dati, o sono più vecchi di 6 ore (`WEATHER_MAX_AGE_MS`), il tasto meteo resta nascosto.
+- Testi in `WEATHER_UI`; codici WMO → icona/descrizione in `WEATHER_TYPES`.
 
 ---
 

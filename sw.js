@@ -1,6 +1,6 @@
 // ── Soul Art Hotel – Service Worker ──────────────────────────────────────────
 // Incrementa CACHE_VERSION per forzare l'aggiornamento su tutti i client
-const CACHE_VERSION = 31;
+const CACHE_VERSION = 32;
 const CACHE = 'soulart-v' + CACHE_VERSION;
 
 // App shell: caricata al primo avvio e sempre servita dalla cache
@@ -77,6 +77,12 @@ self.addEventListener('fetch', event => {
                 new Response('{}', { headers: { 'Content-Type': 'application/json' } })
             )
         );
+        return;
+    }
+
+    // 2b. METEO (Open-Meteo) → network-first: mai cache-first, altrimenti resterebbe fermo al primo dato
+    if (url.hostname.includes('open-meteo.com')) {
+        event.respondWith(networkFirstWithCache(req));
         return;
     }
 
