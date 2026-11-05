@@ -18,7 +18,7 @@ css/
 img/
 └── logo-hotel.png
 index.html                 — carica i 4 JS in ordine
-sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 33)
+sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 34)
 soul-art-hotel-guide.html  — file standalone con tutto inlined (per distribuzione diretta)
 ```
 
@@ -72,7 +72,7 @@ git add -A && git commit -m "descrizione" && git push origin master
 
 ```js
 // sw.js – riga 3
-const CACHE_VERSION = 33;  // incrementare ad ogni deploy con modifiche
+const CACHE_VERSION = 34;  // incrementare ad ogni deploy con modifiche
 ```
 
 Dopo il bump l'utente deve: aprire l'app → aspettare 10 sec → chiudere e riaprire la scheda.
@@ -160,10 +160,12 @@ Coordinate: `[40.844445798762386, 14.2496106966444]` (in `js/app.js` → `const 
 
 ## Meteo (`app.js` → sezione METEO)
 
-- Dati da Open-Meteo (nessuna chiave; URL in `WEATHER_URL`), aggiornati ogni 30 min. Il piano gratuito è solo per uso non commerciale.
-- Il SW usa network-first per `open-meteo.com`: offline mostra l'ultimo dato salvato.
+- Dati da MET Norway (nessuna chiave; licenza CC BY 4.0: la citazione nella scheda meteo è obbligatoria). URL in `WEATHER_URL` e `SUNSET_URL`, aggiornati ogni 30 min.
+- Condizioni MET per le chiamate dal browser: solo richieste semplici, senza header personalizzati, e traffico basso. Con molto traffico serve un proxy con cache.
+- Previsioni in UTC, orarie per circa 60 ore e poi ogni 6 ore: `weatherDays()` le raggruppa per giorno a Napoli. MET non fornisce la probabilità di pioggia, quindi si mostrano i mm previsti.
+- Il SW usa network-first per `api.met.no`, con `ignoreVary`: offline mostra l'ultimo dato salvato.
 - Se non ci sono dati, o sono più vecchi di 6 ore (`WEATHER_MAX_AGE_MS`), il tasto meteo resta nascosto.
-- Testi in `WEATHER_UI`; codici WMO → icona/descrizione in `WEATHER_TYPES`.
+- Testi in `WEATHER_UI`; simboli MET → tipo con `weatherType()`, tipo → icona in `WEATHER_TYPES`.
 
 ---
 

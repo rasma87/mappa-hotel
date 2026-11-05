@@ -523,37 +523,87 @@ const OFFLINE_MSG = {
 })();
 
 // ── METEO ─────────────────────────────────────────────────────────────────────
-const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=" + HOTEL.coor[0].toFixed(2) + "&longitude=" + HOTEL.coor[1].toFixed(2) +
-    "&current=temperature_2m,apparent_temperature,is_day,weather_code,wind_speed_10m" +
-    "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunset" +
-    "&timezone=Europe%2FRome&forecast_days=5";
+// MET Norway ammette chiamate dirette dal browser solo se semplici: niente header personalizzati
+const WEATHER_COORDS = "lat=" + HOTEL.coor[0].toFixed(2) + "&lon=" + HOTEL.coor[1].toFixed(2);
+const WEATHER_URL = "https://api.met.no/weatherapi/locationforecast/2.0/complete?" + WEATHER_COORDS;
+const SUNSET_URL = "https://api.met.no/weatherapi/sunrise/3.0/sun?" + WEATHER_COORDS;
 const WEATHER_REFRESH_MS = 30 * 60 * 1000;
-// Oltre questa età un dato letto dalla cache offline non descrive più il tempo attuale
+// Oltre questa età le previsioni lette dalla cache offline non sono più affidabili
 const WEATHER_MAX_AGE_MS = 6 * 60 * 60 * 1000;
-// Codici WMO restituiti da Open-Meteo
+const WEATHER_DAYS = 5;
 const WEATHER_TYPES = {
-    clear:       { icon:"☀️", codes:[0] },
-    mostlyClear: { icon:"🌤️", codes:[1] },
-    partly:      { icon:"⛅", codes:[2] },
-    overcast:    { icon:"☁️", codes:[3] },
-    fog:         { icon:"🌫️", codes:[45,48] },
-    drizzle:     { icon:"🌦️", codes:[51,53,55,56,57] },
-    rain:        { icon:"🌧️", codes:[61,63,65,66,67] },
-    snow:        { icon:"🌨️", codes:[71,73,75,77,85,86] },
-    showers:     { icon:"🌦️", codes:[80,81,82] },
-    storm:       { icon:"⛈️", codes:[95,96,99] }
+    clear:       { icon:"☀️" },
+    mostlyClear: { icon:"🌤️" },
+    partly:      { icon:"⛅" },
+    overcast:    { icon:"☁️" },
+    fog:         { icon:"🌫️" },
+    lightRain:   { icon:"🌦️" },
+    rain:        { icon:"🌧️" },
+    showers:     { icon:"🌦️" },
+    sleet:       { icon:"🌨️" },
+    snow:        { icon:"🌨️" },
+    storm:       { icon:"⛈️" }
 };
+const ROME_DATE = new Intl.DateTimeFormat("en-GB", { timeZone:"Europe/Rome", year:"numeric", month:"2-digit", day:"2-digit" });
+const ROME_TIME = new Intl.DateTimeFormat("en-GB", { timeZone:"Europe/Rome", hour:"2-digit", minute:"2-digit", hourCycle:"h23" });
 let weatherData = null;
+let weatherSunset = null;
 let weatherFetchedAt = 0;
 
-function weatherType(code) {
-    return Object.keys(WEATHER_TYPES).find(k => WEATHER_TYPES[k].codes.includes(code)) || "overcast";
+function romeDay(date) {
+    const p = {};
+    ROME_DATE.formatToParts(date).forEach(part => { p[part.type] = part.value; });
+    return p.year + "-" + p.month + "-" + p.day;
+}
+
+// Es. "lightrainshowers_day" → "showers"
+function weatherType(symbol) {
+    const s = symbol.split("_")[0];
+    if (s.includes("thunder")) return "storm";
+    if (s.includes("snow")) return "snow";
+    if (s.includes("sleet")) return "sleet";
+    if (s.includes("rainshowers")) return "showers";
+    if (s.includes("rain")) return s.startsWith("light") ? "lightRain" : "rain";
+    return { clearsky:"clear", fair:"mostlyClear", partlycloudy:"partly", cloudy:"overcast", fog:"fog" }[s] || "overcast";
+}
+
+// Simbolo del periodo più lungo che non sconfina nel giorno dopo
+function daySymbol(entry, day) {
+    const start = Date.parse(entry.time);
+    const spans = [12, 6, 1].filter(h => entry.data["next_" + h + "_hours"]);
+    const span = spans.find(h => romeDay(new Date(start + (h - 1) * 3600000)) === day) || spans[0];
+    return span ? entry.data["next_" + span + "_hours"].summary.symbol_code : "cloudy";
+}
+
+// Le previsioni sono orarie (poi ogni 6 ore) e in UTC: raggruppa per giorno di calendario a Napoli
+function weatherDays(entries) {
+    const days = [];
+    entries.forEach(entry => {
+        const day = romeDay(new Date(entry.time));
+        let group = days[days.length - 1];
+        if (!group || group.day !== day) {
+            group = { day, entries:[], temps:[], rain:0 };
+            days.push(group);
+        }
+        group.entries.push(entry);
+        group.temps.push(entry.data.instant.details.air_temperature);
+        const next1 = entry.data.next_1_hours;
+        if (next1) group.rain += next1.details.precipitation_amount || 0;
+        const next6 = entry.data.next_6_hours;
+        if (next6 && next6.details.air_temperature_max !== undefined &&
+            romeDay(new Date(Date.parse(entry.time) + 5 * 3600000)) === day) {
+            group.temps.push(next6.details.air_temperature_max, next6.details.air_temperature_min);
+        }
+    });
+    return days.slice(0, WEATHER_DAYS).map(group => {
+        const daytime = group.entries.find(e => ROME_TIME.format(new Date(e.time)) >= "06:00") || group.entries[0];
+        return { day:group.day, rain:group.rain, max:Math.max(...group.temps), min:Math.min(...group.temps), symbol:daySymbol(daytime, group.day) };
+    });
 }
 
 function isWeatherFresh(d) {
-    if (!d || !d.current || !d.daily) return false;
-    const measuredAt = Date.parse(d.current.time + ":00Z") - d.utc_offset_seconds * 1000;
-    return Date.now() - measuredAt < WEATHER_MAX_AGE_MS;
+    const series = d && d.properties && d.properties.timeseries;
+    return !!(series && series.length) && Date.now() - Date.parse(series[0].time) < WEATHER_MAX_AGE_MS;
 }
 
 function renderWeather() {
@@ -565,12 +615,21 @@ function renderWeather() {
     if (!fresh) { closeWeather(); return; }
 
     const u = WEATHER_UI[currentLang] || WEATHER_UI.en;
-    const cur = d.current;
-    const type = weatherType(cur.weather_code);
-    const isClearNight = !cur.is_day && (type === "clear" || type === "mostlyClear");
+    const series = d.properties.timeseries;
+    let curIdx = 0;
+    series.forEach((entry, i) => { if (Date.parse(entry.time) <= Date.now()) curIdx = i; });
+    const cur = series[curIdx];
+    const now = cur.data.instant.details;
+    const symbol = cur.data.next_1_hours ? cur.data.next_1_hours.summary.symbol_code : "cloudy";
+    const type = weatherType(symbol);
+    const isClearNight = symbol.endsWith("_night") && (type === "clear" || type === "mostlyClear");
     const icon = isClearNight ? "🌙" : WEATHER_TYPES[type].icon;
-    const temp = Math.round(cur.temperature_2m) + "°";
-    const rain = d.daily.precipitation_probability_max[0];
+    const temp = Math.round(now.air_temperature) + "°";
+    const dayList = weatherDays(series.slice(curIdx));
+    const feelsLike = now.apparent_air_temperature;
+    const rainText = dayList[0].rain.toLocaleString(currentLang, { maximumFractionDigits:1 }) + " mm";
+    const sunsetText = weatherSunset ? ROME_TIME.format(new Date(weatherSunset)) : "–";
+    const updatedText = ROME_TIME.format(new Date(d.properties.meta.updated_at));
 
     chip.innerHTML = '<span aria-hidden="true">' + icon + '</span>' + temp;
     chip.setAttribute("aria-label", u.title + ": " + temp + ", " + u.types[type]);
@@ -578,14 +637,15 @@ function renderWeather() {
 
     const stat = (label, value) => '<div class="weather-stat"><span>' + label + '</span><strong>' + value + '</strong></div>';
     const dayFormat = new Intl.DateTimeFormat(currentLang, { weekday:"short", timeZone:"UTC" });
-    const days = d.daily.time.map((day, i) =>
-        '<div class="weather-day">' +
-            '<span class="weather-day-name">' + (i === 0 ? u.today : dayFormat.format(new Date(day))) + '</span>' +
-            '<span class="weather-day-icon" title="' + u.types[weatherType(d.daily.weather_code[i])] + '">' + WEATHER_TYPES[weatherType(d.daily.weather_code[i])].icon + '</span>' +
-            '<strong>' + Math.round(d.daily.temperature_2m_max[i]) + '°</strong>' +
-            '<span class="weather-day-min">' + Math.round(d.daily.temperature_2m_min[i]) + '°</span>' +
-        '</div>'
-    ).join("");
+    const days = dayList.map((item, i) => {
+        const dayType = weatherType(item.symbol);
+        return '<div class="weather-day">' +
+            '<span class="weather-day-name">' + (i === 0 ? u.today : dayFormat.format(new Date(item.day))) + '</span>' +
+            '<span class="weather-day-icon" title="' + u.types[dayType] + '">' + WEATHER_TYPES[dayType].icon + '</span>' +
+            '<strong>' + Math.round(item.max) + '°</strong>' +
+            '<span class="weather-day-min">' + Math.round(item.min) + '°</span>' +
+        '</div>';
+    }).join("");
 
     card.innerHTML =
         '<button class="weather-close" type="button" onclick="closeWeather()" aria-label="' + u.close + '">&times;</button>' +
@@ -595,13 +655,13 @@ function renderWeather() {
             '<div><div class="weather-now-temp">' + temp + '</div><div class="weather-now-desc">' + u.types[type] + '</div></div>' +
         '</div>' +
         '<div class="weather-stats">' +
-            stat(u.feelsLike, Math.round(cur.apparent_temperature) + "°") +
-            stat(u.wind, Math.round(cur.wind_speed_10m) + " km/h") +
-            stat(u.rain, rain == null ? "–" : rain + "%") +
-            stat(u.sunset, d.daily.sunset[0].slice(11, 16)) +
+            stat(u.feelsLike, feelsLike === undefined ? "–" : Math.round(feelsLike) + "°") +
+            stat(u.wind, Math.round(now.wind_speed * 3.6) + " km/h") +
+            stat(u.rain, rainText) +
+            stat(u.sunset, sunsetText) +
         '</div>' +
         '<div class="weather-days">' + days + '</div>' +
-        '<div class="weather-foot">' + u.updated + ' ' + cur.time.slice(11, 16) + ' · <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></div>';
+        '<div class="weather-foot">' + u.updated + ' ' + updatedText + '<br>' + u.source + ' <a href="https://api.met.no/doc/License" target="_blank" rel="noopener">MET Norway (CC BY 4.0)</a></div>';
 }
 
 function setWeatherOpen(open) {
@@ -610,11 +670,19 @@ function setWeatherOpen(open) {
 }
 function closeWeather() { setWeatherOpen(false); }
 
+function fetchJson(url) {
+    return fetch(url).then(r => r.ok ? r.json() : Promise.reject(r.status));
+}
+
 function loadWeather() {
-    weatherFetchedAt = Date.now();
-    fetch(WEATHER_URL)
-        .then(r => r.ok ? r.json() : Promise.reject(r.status))
-        .then(d => { weatherData = d; })
+    fetchJson(SUNSET_URL + "&date=" + romeDay(new Date()))
+        .then(sun => { weatherSunset = sun.properties.sunset.time; })
+        .catch(() => {})
+        .then(() => fetchJson(WEATHER_URL))
+        .then(forecast => {
+            weatherData = forecast;
+            weatherFetchedAt = Date.now();
+        })
         .catch(() => {})
         .then(renderWeather);
 }

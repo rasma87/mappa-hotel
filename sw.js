@@ -1,6 +1,6 @@
 // ── Soul Art Hotel – Service Worker ──────────────────────────────────────────
 // Incrementa CACHE_VERSION per forzare l'aggiornamento su tutti i client
-const CACHE_VERSION = 33;
+const CACHE_VERSION = 34;
 const CACHE = 'soulart-v' + CACHE_VERSION;
 
 // App shell: caricata al primo avvio e sempre servita dalla cache
@@ -80,8 +80,8 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // 2b. METEO (Open-Meteo) → network-first: mai cache-first, altrimenti resterebbe fermo al primo dato
-    if (url.hostname.includes('open-meteo.com')) {
+    // 2b. METEO (MET Norway) → network-first: mai cache-first, altrimenti resterebbe fermo al primo dato
+    if (url.hostname === 'api.met.no') {
         event.respondWith(networkFirstWithCache(req));
         return;
     }
@@ -168,7 +168,8 @@ async function networkFirstWithCache(req) {
         }
         return res;
     } catch {
-        const cached = await caches.match(req);
+        // ignoreVary: MET Norway risponde con Vary e senza non si ritroverebbe il dato salvato
+        const cached = await caches.match(req, { ignoreVary: true });
         return cached || new Response('', { status: 503 });
     }
 }

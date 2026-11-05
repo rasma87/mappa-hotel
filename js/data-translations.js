@@ -256,22 +256,22 @@ const T = {
 const WEATHER_UI = {
     en: {
         title: "Weather in Naples", today: "Today", feelsLike: "Feels like", wind: "Wind", rain: "Rain", sunset: "Sunset",
-        updated: "Updated at", close: "Close",
-        types: { clear:"Clear", mostlyClear:"Mostly clear", partly:"Partly cloudy", overcast:"Overcast", fog:"Fog", drizzle:"Drizzle", rain:"Rain", snow:"Snow", showers:"Showers", storm:"Thunderstorm" }
+        updated: "Updated at", source: "Based on data from", close: "Close",
+        types: { clear:"Clear", mostlyClear:"Mostly clear", partly:"Partly cloudy", overcast:"Overcast", fog:"Fog", lightRain:"Light rain", rain:"Rain", showers:"Showers", sleet:"Sleet", snow:"Snow", storm:"Thunderstorm" }
     },
     it: {
         title: "Meteo a Napoli", today: "Oggi", feelsLike: "Percepita", wind: "Vento", rain: "Pioggia", sunset: "Tramonto",
-        updated: "Aggiornato alle", close: "Chiudi",
-        types: { clear:"Sereno", mostlyClear:"Prevalentemente sereno", partly:"Parzialmente nuvoloso", overcast:"Coperto", fog:"Nebbia", drizzle:"Pioviggine", rain:"Pioggia", snow:"Neve", showers:"Rovesci", storm:"Temporale" }
+        updated: "Aggiornato alle", source: "Elaborazione su dati", close: "Chiudi",
+        types: { clear:"Sereno", mostlyClear:"Prevalentemente sereno", partly:"Parzialmente nuvoloso", overcast:"Coperto", fog:"Nebbia", lightRain:"Pioggia debole", rain:"Pioggia", showers:"Rovesci", sleet:"Nevischio", snow:"Neve", storm:"Temporale" }
     },
     fr: {
         title: "Météo à Naples", today: "Auj.", feelsLike: "Ressenti", wind: "Vent", rain: "Pluie", sunset: "Coucher",
-        updated: "Mis à jour à", close: "Fermer",
-        types: { clear:"Dégagé", mostlyClear:"Plutôt dégagé", partly:"Partiellement nuageux", overcast:"Couvert", fog:"Brouillard", drizzle:"Bruine", rain:"Pluie", snow:"Neige", showers:"Averses", storm:"Orage" }
+        updated: "Mis à jour à", source: "D'après les données de", close: "Fermer",
+        types: { clear:"Dégagé", mostlyClear:"Plutôt dégagé", partly:"Partiellement nuageux", overcast:"Couvert", fog:"Brouillard", lightRain:"Pluie faible", rain:"Pluie", showers:"Averses", sleet:"Neige fondue", snow:"Neige", storm:"Orage" }
     },
     es: {
         title: "Tiempo en Nápoles", today: "Hoy", feelsLike: "Sensación", wind: "Viento", rain: "Lluvia", sunset: "Atardecer",
-        updated: "Actualizado a las", close: "Cerrar",
-        types: { clear:"Despejado", mostlyClear:"Mayormente despejado", partly:"Parcialmente nuboso", overcast:"Cubierto", fog:"Niebla", drizzle:"Llovizna", rain:"Lluvia", snow:"Nieve", showers:"Chubascos", storm:"Tormenta" }
+        updated: "Actualizado a las", source: "Basado en datos de", close: "Cerrar",
+        types: { clear:"Despejado", mostlyClear:"Mayormente despejado", partly:"Parcialmente nuboso", overcast:"Cubierto", fog:"Niebla", lightRain:"Lluvia débil", rain:"Lluvia", showers:"Chubascos", sleet:"Aguanieve", snow:"Nieve", storm:"Tormenta" }
     }
 };
