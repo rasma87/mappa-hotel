@@ -18,7 +18,7 @@ css/
 img/
 └── logo-hotel.png
 index.html                 — carica i 4 JS in ordine
-sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 34)
+sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 35)
 soul-art-hotel-guide.html  — file standalone con tutto inlined (per distribuzione diretta)
 ```
 
@@ -72,7 +72,7 @@ git add -A && git commit -m "descrizione" && git push origin master
 
 ```js
 // sw.js – riga 3
-const CACHE_VERSION = 34;  // incrementare ad ogni deploy con modifiche
+const CACHE_VERSION = 35;  // incrementare ad ogni deploy con modifiche
 ```
 
 Dopo il bump l'utente deve: aprire l'app → aspettare 10 sec → chiudere e riaprire la scheda.
@@ -152,7 +152,7 @@ Coordinate: `[40.844445798762386, 14.2496106966444]` (in `js/app.js` → `const 
 - `TRANSIT` → dati linee metro/funicolare (orari, frequenze, chiusure)
 - `TRANSIT_UI` → etichette multilingua pannello trasporti
 - `TRANSIT_STATIONS` → coordinate fermate per i marker sulla mappa
-- `STATION_STYLE` → colori/label badge per tipo stazione (M1, M2, FC, CH, MO)
+- `STATION_STYLE` → colori e label di linee e fermate (M1 giallo, M2 blu, funicolari arancione): unico punto da cui cambiarli
 
 **Chiusura funicolare**: campo `closureNote` nell'oggetto linea → banner rosso nel pannello.
 

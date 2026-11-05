@@ -349,7 +349,8 @@ function renderTransit(lang) {
         lines.forEach(l => {
             html += '<div class="transit-line">';
             html += '<div class="transit-line-header">';
-            html += '<span class="transit-badge" style="background:' + l.color + ';border-radius:6px;font-size:0.58rem">' + l.icon + '</span>';
+            const lineStyle = STATION_STYLE[l.icon];
+            html += '<span class="transit-badge" style="background:' + lineStyle.bg + ';color:' + lineStyle.fg + ';border-radius:6px;font-size:0.58rem">' + l.icon + '</span>';
             html += '<div><div class="transit-line-name">' + (l.name[lang]||l.name.en) + '</div>';
             html += '<div class="transit-line-sub">' + (l.sub[lang]||l.sub.en) + '</div></div></div>';
             html += '<div class="transit-hours">';
@@ -376,9 +377,9 @@ function renderTransit(lang) {
         html += '</div>';
     }
 
-    renderGroup('<span class="transit-badge" style="background:#E53935;margin-right:4px">M</span>' + tu.metro, TRANSIT.metro.lines);
+    renderGroup('<span class="transit-badge" style="background:var(--pa);margin-right:4px">M</span>' + tu.metro, TRANSIT.metro.lines);
     html += '<div class="transit-divider"></div>';
-    renderGroup('<span class="transit-badge" style="background:#1565C0;margin-right:4px">F</span>' + tu.funicolare, TRANSIT.funicolare.lines);
+    renderGroup('<span class="transit-badge" style="background:' + STATION_STYLE.FC.bg + ';color:' + STATION_STYLE.FC.fg + ';margin-right:4px">F</span>' + tu.funicolare, TRANSIT.funicolare.lines);
     html += '<div class="transit-tip"><strong>' + tu.tipTitle + '</strong>' + tu.tip + '</div>';
 
     document.getElementById("panel-tab-transit").innerHTML = html;
@@ -464,13 +465,13 @@ TRANSIT_STATIONS.forEach(st => {
     const s = STATION_STYLE[st.type];
     const isMetro = st.type.startsWith("M");
     const icon = L.divIcon({
-        html: '<div style="width:' + (isMetro ? 22 : 20) + 'px;height:' + (isMetro ? 22 : 20) + 'px;border-radius:50%;background:' + s.bg + ';border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:white;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,0.35)">' + s.label + '</div>',
+        html: '<div style="width:' + (isMetro ? 22 : 20) + 'px;height:' + (isMetro ? 22 : 20) + 'px;border-radius:50%;background:' + s.bg + ';border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:' + s.fg + ';font-family:Helvetica Neue,Helvetica,Arial,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,0.35)">' + s.label + '</div>',
         className: "", iconSize: [isMetro ? 22 : 20, isMetro ? 22 : 20], iconAnchor: [isMetro ? 11 : 10, isMetro ? 11 : 10]
     });
     const marker = L.marker(st.coor, { icon, interactive:true });
     marker.bindPopup(
         '<div style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif;display:flex;align-items:center;gap:6px;padding:2px 0">' +
-        '<span style="background:' + s.bg + ';color:white;border-radius:4px;padding:2px 6px;font-size:0.6rem;font-weight:700;flex-shrink:0">' + st.type + '</span>' +
+        '<span style="background:' + s.bg + ';color:' + s.fg + ';border-radius:4px;padding:2px 6px;font-size:0.6rem;font-weight:700;flex-shrink:0">' + st.type + '</span>' +
         '<b style="font-size:0.85rem">' + st.label + '</b>' +
         '</div>'
     );

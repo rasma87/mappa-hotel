@@ -8,7 +8,7 @@ const TRANSIT = {
             {
                 name: { en:"Line 1 \u2013 Piscinola / Garibaldi", it:"Linea 1 \u2013 Piscinola / Garibaldi", fr:"Ligne 1 \u2013 Piscinola / Garibaldi", es:"L\u00EDnea 1 \u2013 Piscinola / Garibaldi" },
                 sub:  { en:"Vomero \u00B7 Chiaia \u00B7 City Centre", it:"Vomero \u00B7 Chiaia \u00B7 Centro", fr:"Vomero \u00B7 Chiaia \u00B7 Centre-ville", es:"Vomero \u00B7 Chiaia \u00B7 Centro" },
-                color:"#E53935", icon:"M1",
+                icon:"M1",
                 first:"5:30", last:"23:00",
                 freq: { en:"Every 6\u201310 min", it:"Ogni 6\u201310 min", fr:"Toutes les 6\u201310 min", es:"Cada 6\u201310 min" },
                 note: { en:"Until 2:00 on Fri & Sat nights", it:"Fino alle 2:00 ven. e sab. notte", fr:"Jusqu\u2019\u00E0 2h le ven. et sam.", es:"Hasta las 2:00 vier. y s\u00E1b." },
@@ -17,7 +17,7 @@ const TRANSIT = {
             {
                 name: { en:"Line 2 \u2013 Pozzuoli / Gianturco", it:"Linea 2 \u2013 Pozzuoli / Gianturco", fr:"Ligne 2 \u2013 Pozzuoli / Gianturco", es:"L\u00EDnea 2 \u2013 Pozzuoli / Gianturco" },
                 sub:  { en:"Mergellina \u00B7 P. Amedeo \u00B7 Garibaldi", it:"Mergellina \u00B7 P.za Amedeo \u00B7 Garibaldi", fr:"Mergellina \u00B7 P. Amedeo \u00B7 Garibaldi", es:"Mergellina \u00B7 P. Amedeo \u00B7 Garibaldi" },
-                color:"#E53935", icon:"M2",
+                icon:"M2",
                 first:"5:00", last:"23:00",
                 freq: { en:"Every 8\u201312 min", it:"Ogni 8\u201312 min", fr:"Toutes les 8\u201312 min", es:"Cada 8\u201312 min" },
                 note: null
@@ -29,7 +29,7 @@ const TRANSIT = {
             {
                 name: { en:"Funicolare Centrale", it:"Funicolare Centrale", fr:"Funiculaire Central", es:"Funicular Central" },
                 sub:  { en:"Augusteo \u2192 Vomero (P. Fuga)", it:"Augusteo \u2192 Vomero (P.za Fuga)", fr:"Augusteo \u2192 Vomero (P. Fuga)", es:"Augusteo \u2192 Vomero (P. Fuga)" },
-                color:"#1565C0", icon:"FC",
+                icon:"FC",
                 first:"6:00", last:"00:30",
                 freq: { en:"Every 10 min", it:"Ogni 10 min", fr:"Toutes les 10 min", es:"Cada 10 min" },
                 note: { en:"Until 1:30 on Fri & Sat", it:"Fino all\u20191:30 ven. e sab.", fr:"Jusqu\u2019\u00E0 1h30 ven. & sam.", es:"Hasta la 1:30 vier. y s\u00E1b." }
@@ -37,7 +37,7 @@ const TRANSIT = {
             {
                 name: { en:"Funicolare di Chiaia", it:"Funicolare di Chiaia", fr:"Funiculaire de Chiaia", es:"Funicular de Chiaia" },
                 sub:  { en:"P. Margherita \u2192 Via Cimarosa", it:"P. Margherita \u2192 Via Cimarosa", fr:"P. Margherita \u2192 Via Cimarosa", es:"P. Margherita \u2192 Via Cimarosa" },
-                color:"#1565C0", icon:"CH",
+                icon:"CH",
                 first:"6:30", last:"00:30",
                 freq: { en:"Every 10 min", it:"Ogni 10 min", fr:"Toutes les 10 min", es:"Cada 10 min" },
                 note: null
@@ -45,7 +45,7 @@ const TRANSIT = {
             {
                 name: { en:"Funicolare di Montesanto", it:"Funicolare di Montesanto", fr:"Funiculaire de Montesanto", es:"Funicular de Montesanto" },
                 sub:  { en:"Montesanto \u2192 Via Morghen", it:"Montesanto \u2192 Via Morghen", fr:"Montesanto \u2192 Via Morghen", es:"Montesanto \u2192 Via Morghen" },
-                color:"#1565C0", icon:"MO",
+                icon:"MO",
                 first:"7:00", last:"22:00",
                 freq: { en:"Every 10 min", it:"Ogni 10 min", fr:"Toutes les 10 min", es:"Cada 10 min" },
                 note: null,
@@ -54,7 +54,7 @@ const TRANSIT = {
             {
                 name: { en:"Funicolare di Mergellina", it:"Funicolare di Mergellina", fr:"Funiculaire de Mergellina", es:"Funicular de Mergellina" },
                 sub:  { en:"Via Mergellina \u2192 Via Manzoni", it:"Via Mergellina \u2192 Via Manzoni", fr:"Via Mergellina \u2192 Via Manzoni", es:"Via Mergellina \u2192 Via Manzoni" },
-                color:"#1565C0", icon:"ME",
+                icon:"ME",
                 first:"7:00", last:"22:00",
                 freq: { en:"Every 12 min", it:"Ogni 12 min", fr:"Toutes les 12 min", es:"Cada 12 min" },
                 note: null
@@ -117,10 +117,16 @@ const TRANSIT_STATIONS = [
     { type:"MO", label:"Via Morghen",      coor:[40.84432690165668, 14.235852357382303] },
 ];
 
+// Colori di linee e fermate. fg è il testo: scuro su giallo e arancione, dove il bianco non si legge
+const LINE_YELLOW = { bg:"#FFD600", fg:"#1A1A1A" };
+const LINE_BLUE   = { bg:"#1565C0", fg:"#FFFFFF" };
+const LINE_ORANGE = { bg:"#F57C00", fg:"#1A1A1A" };
+
 const STATION_STYLE = {
-    M1: { bg:"#E53935", label:"M1" },
-    M2: { bg:"#E53935", label:"M2" },
-    FC: { bg:"#1565C0", label:"FC" },
-    CH: { bg:"#1565C0", label:"CH" },
-    MO: { bg:"#1565C0", label:"MO" },
+    M1: { ...LINE_YELLOW, label:"M1" },
+    M2: { ...LINE_BLUE,   label:"M2" },
+    FC: { ...LINE_ORANGE, label:"FC" },
+    CH: { ...LINE_ORANGE, label:"CH" },
+    MO: { ...LINE_ORANGE, label:"MO" },
+    ME: { ...LINE_ORANGE, label:"ME" },
 };

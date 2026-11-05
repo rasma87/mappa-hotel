@@ -1,6 +1,6 @@
 // ── Soul Art Hotel – Service Worker ──────────────────────────────────────────
 // Incrementa CACHE_VERSION per forzare l'aggiornamento su tutti i client
-const CACHE_VERSION = 34;
+const CACHE_VERSION = 35;
 const CACHE = 'soulart-v' + CACHE_VERSION;
 
 // App shell: caricata al primo avvio e sempre servita dalla cache
@@ -28,12 +28,14 @@ const BLANK_TILE = Uint8Array.from(atob(
 
 // ── INSTALL ───────────────────────────────────────────────────────────────────
 // Usa Promise.allSettled così un singolo URL fallito non blocca tutto
+// cache:'reload' salta la cache HTTP: altrimenti una versione nuova può salvare
+// file vecchi e mischiare JS incompatibili tra loro
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE).then(cache =>
             Promise.allSettled(
                 APP_SHELL.map(url =>
-                    cache.add(url).catch(err =>
+                    cache.add(new Request(url, { cache: 'reload' })).catch(err =>
                         console.warn('[SW] Pre-cache fallito:', url, err)
                     )
                 )
