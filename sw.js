@@ -1,6 +1,6 @@
 // ── Soul Art Hotel – Service Worker ──────────────────────────────────────────
 // Incrementa CACHE_VERSION per forzare l'aggiornamento su tutti i client
-const CACHE_VERSION = 35;
+const CACHE_VERSION = 36;
 const CACHE = 'soulart-v' + CACHE_VERSION;
 
 // App shell: caricata al primo avvio e sempre servita dalla cache

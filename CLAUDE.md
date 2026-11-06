@@ -18,7 +18,7 @@ css/
 img/
 └── logo-hotel.png
 index.html                 — carica i 4 JS in ordine
-sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 35)
+sw.js                      — Service Worker PWA (CACHE_VERSION attuale: 36)
 soul-art-hotel-guide.html  — file standalone con tutto inlined (per distribuzione diretta)
 ```
 
@@ -72,7 +72,7 @@ git add -A && git commit -m "descrizione" && git push origin master
 
 ```js
 // sw.js – riga 3
-const CACHE_VERSION = 35;  // incrementare ad ogni deploy con modifiche
+const CACHE_VERSION = 36;  // incrementare ad ogni deploy con modifiche
 ```
 
 Dopo il bump l'utente deve: aprire l'app → aspettare 10 sec → chiudere e riaprire la scheda.
